@@ -1,14 +1,10 @@
 # automating-esg-data-extraction-and-performance-analysis
 
----
-
 ## Repository Description
 This repository contains the code, documentation, and resources for Group 6 of the NUS course DSA3101: Data Science in Practice for the AY24/45 Semester 2.
 
 ## Project Description
 This project aims to design an automated ESG data extraction and performance evaluation system through the use of Natural Language Processing techniques.
-
----
 
 ## Contributing
 All contributions are to be merged to main via pull request.
@@ -29,6 +25,4 @@ Follows general software engineering practices. Some examples of good practices 
 - Refactor overly complex code into smaller chunks of code
 - Code should avoid being interdependent (Changing 1 code chunk does not require huge changes across other code chunks and modules)
 - Adhere to official style guides for all languages to the best of your ability.
-  - Python style guide: http://www.python.org/dev/peps/pep-0008/http://www.python.org/dev/peps/pep-0008/
-
----
+  - Python style guide: [PEP 8 - Python Style Guide](http://www.python.org/dev/peps/pep-0008/http://www.python.org/dev/peps/pep-0008/)

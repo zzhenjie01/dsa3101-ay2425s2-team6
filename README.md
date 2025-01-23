@@ -1,14 +1,19 @@
 # automating-esg-data-extraction-and-performance-analysis
 
 ## Repository Description
-This repository contains the code, documentation, and resources for Group 6 of the NUS course DSA3101: Data Science in Practice for the AY24/45 Semester 2.
+
+This repository contains the code, documentation, and resources for Group 6 of the NUS course DSA3101: Data Science in Practice for the AY24/25 Semester 2.
 
 ## Project Description
+
 This project aims to design an automated ESG data extraction and performance evaluation system through the use of Natural Language Processing techniques.
 
 ## Contributing
+
 All contributions are to be merged to main via pull request.
+
 ### Branches
+
 - branches recommended to follow the following format: `<username>-<feature>-<subfeature>`
   - `<name>`: GitHub username or any name that is easy to identify the owner of the branch. Strictly no spaces and all letters in lowercase.
   - `<feature>`: The name of the feature that the code is meant for.
@@ -16,10 +21,13 @@ All contributions are to be merged to main via pull request.
 - For example: nghockleong-loginpage-userauthentication
 
 ### Commit Messages
+
 Be clear and concise with the intent of the commit.
 
 ### Coding guidelines
+
 Follows general software engineering practices. Some examples of good practices are as follows:
+
 - Clear documentation for code written
 - Meaningful function and variable names
 - Refactor overly complex code into smaller chunks of code

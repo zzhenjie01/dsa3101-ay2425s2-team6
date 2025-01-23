@@ -1,6 +1,7 @@
 # automating-esg-data-extraction-and-performance-analysis
 
 ---
+
 ## Repository Description
 This repository contains the code, documentation, and resources for Group 6 of the NUS course DSA3101: Data Science in Practice for the AY24/45 Semester 2.
 
@@ -8,6 +9,7 @@ This repository contains the code, documentation, and resources for Group 6 of t
 This project aims to design an automated ESG data extraction and performance evaluation system through the use of Natural Language Processing techniques.
 
 ---
+
 ## Contributing
 All contributions are to be merged to main via pull request.
 ### Branches

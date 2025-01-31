@@ -40,7 +40,7 @@ Follows general software engineering practices. Some examples of good practices 
 - Refactor overly complex code into smaller chunks of code
 - Code should avoid being interdependent (Changing 1 code chunk does not require huge changes across other code chunks and modules)
 - Adhere to official style guides for all languages to the best of your ability.
-  - Python style guide: [PEP 8 - Python Style Guide](http://www.python.org/dev/peps/pep-0008/http://www.python.org/dev/peps/pep-0008/)
+  - Python style guide: [PEP 8 - Python Style Guide](http://www.python.org/dev/peps/pep-0008)
 - Do not push your secrets such as API keys to GitHub; store them in a `.env` file instead.
 - Do not push model checkpoint or weights files (`.pth` or `.pt`) to GitHub as you most likely won't succeed due to the large file size.
 - Do not push datasets to GitHub as it may cuz the changes count to explode on GitHub.

@@ -1,0 +1,65 @@
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.1
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      - elastic
+  spark-master:
+    container_name: spark-master
+    image: my-spark-image
+    entrypoint: ['./entrypoint.sh', 'master']
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080" ]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+    volumes:
+      - ./book_data:/opt/spark/data
+      - ./spark_apps:/opt/spark/apps
+      - spark-logs:/opt/spark/spark-events
+    env_file:
+      - ./spark-docker/.env.spark
+    ports:
+      - '8080:8080'
+      - '7077:7077'
+
+  spark-history-server:
+    container_name: spark-history
+    image: my-spark-image
+    entrypoint: ['./entrypoint.sh', 'history']
+    depends_on:
+      - spark-master
+    env_file:
+      - ./spark-docker/.env.spark
+    volumes:
+      - spark-logs:/opt/spark/spark-events
+    ports:
+      - '18080:18080'
+  spark-worker:
+    image: my-spark-image
+    entrypoint: ['./entrypoint.sh', 'worker', '2', '4g']
+    depends_on:
+      - spark-master
+    env_file:
+      - ./spark-docker/.env.spark
+    volumes:
+      - ./book_data:/opt/spark/data
+      - ./spark_apps:/opt/spark/apps
+      - spark-logs:/opt/spark/spark-events
+
+volumes:
+  elasticsearch-data:
+  spark-logs:
+
+networks:
+  elastic:
+    driver: bridge
+  spark-net:
+    driver: bridge

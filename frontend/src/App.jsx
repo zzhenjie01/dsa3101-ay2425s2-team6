@@ -1,12 +1,9 @@
-import { useState } from 'react'
-import './App.css'
+import { Outlet } from "react-router";
 
-function App() {
-  return (
-    <div>
-      Hello World
-    </div>
-  )
+/*
+This folder provides the Outlet component for the react router.
+*/
+export default function App()
+{
+  return <div><Outlet/></div>
 }
-
-export default App

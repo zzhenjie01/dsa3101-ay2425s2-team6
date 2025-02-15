@@ -1,0 +1,1 @@
+# This folder contains pages to be placed into the web app

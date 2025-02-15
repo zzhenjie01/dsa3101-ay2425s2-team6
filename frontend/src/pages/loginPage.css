@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+@layer components {
+    input {
+        @apply border-2 border-gray-300 w-4/5;
+    }
+}

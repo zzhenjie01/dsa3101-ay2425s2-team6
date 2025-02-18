@@ -11,3 +11,4 @@ To run the scripts, you need the following:
 
 Once the pre-requisites are met,
 run `python esg_pdf_to_json.py`
+where command needs to be run within the folder containing esg_pdf_to_json.py

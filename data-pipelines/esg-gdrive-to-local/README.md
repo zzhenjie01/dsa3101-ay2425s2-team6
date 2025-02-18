@@ -11,3 +11,4 @@ To run the scripts, you need the following:
 
 Once the pre-requisites are met,
 run `python esg_gdrive_to_local.py`
+where command needs to be run within the folder containing esg_gdrive_to_local.py

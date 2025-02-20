@@ -1,28 +1,20 @@
 services:
-  # elasticsearch:
-  #   image: docker.elastic.co/elasticsearch/elasticsearch:8.17.1
-  #   container_name: elasticsearch
-  #   environment:
-  #     - discovery.type=single-node
-  #     - xpack.security.enabled=false
-  #   ports:
-  #     - "9200:9200"
-  #   volumes:
-  #     - elasticsearch-data:/usr/share/elasticsearch/data
-  #   networks:
-  #     - elastic
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.1
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      - elastic
   spark-master:
     container_name: spark-master
     image: my-spark-image
     entrypoint: ['./entrypoint.sh', 'master']
-    deploy:
-      resources:
-        limits:
-          cpus: "2.0"
-          memory: 4G
-        reservations:
-          cpus: "1.0"
-          memory: 2G
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8080" ]
       interval: 5s
@@ -52,15 +44,7 @@ services:
       - '18080:18080'
   spark-worker:
     image: my-spark-image
-    entrypoint: ['./entrypoint.sh', 'worker', 2, '4g']
-    deploy:
-      resources:
-        limits:
-          cpus: "2.0"
-          memory: 4G
-        reservations:
-          cpus: "1.0"
-          memory: 2G
+    entrypoint: ['./entrypoint.sh', 'worker', '2', '4g']
     depends_on:
       - spark-master
     env_file:

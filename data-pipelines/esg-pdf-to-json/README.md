@@ -7,7 +7,7 @@ in the future
 To run the scripts, you need the following:
 1) .env file containing ESG_REPORTS_FOLDER (path to the folder containing the esg reports in .pdf)
 2) Same .env file containing ESG_REPORTS_JSON_FOLDER (path to the folder containing the esg reports in .json)
-3) The necessary dependencies: run `pip install -r requirements.txt`
+3) The necessary dependencies: run `pip install -r requirements.txt` where requirements.txt is in data-pipelines/ folder
 
 Once the pre-requisites are met,
 run `python esg_pdf_to_json.py`

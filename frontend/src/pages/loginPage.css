@@ -1,7 +1,82 @@
 @import "tailwindcss";
 
-@layer components {
-    input {
-        @apply border-2 border-gray-300 w-4/5;
-    }
+/* Rectangle for everything */ 
+.login-container {
+    position: absolute;
+    top: 48%;
+    left: 10%;
+    transform: translateY(-50%);
+    width: 30%;
+    height: 55%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-size: cover;
+    background-position: center;
+    border: 2px solid rgba(0, 128, 0, 0.5);
+    border-top: 18px solid rgba(39, 170, 81, 0.8);
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    height: 100%;
+    border: 1px solid black;
+    background-color: rgba(255, 255, 255, 0.9); 
+    padding: 2rem;
+}
+
+.login-header {
+    font-size: 32px;
+    font-family: 'Century Gothic';
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.field-label {
+    display: block;
+    font-size: 18px;
+    font-family: 'Century Gothic';
+    display: block;
+    margin-bottom: 0.1rem;
+    text-align: left;
+    width: 100%;
+    flex: 1;
+}
+
+.input-field {
+    margin-bottom: 1.5rem;
+    border: 2px solid #808080;
+    flex: 2;
+}
+
+.form-button {
+    background-color: rgba(0, 128, 0, 0.3);
+    font-family: 'Century Gothic';
+}
+
+body.login-page {
+    background-image: url('../assets/loginbackground.jpg');
+    background-size: cover;
+}
+
+/* Align label and error message side by side */
+.input-container {
+    display: flex;
+    flex-direction: row; 
+    justify-content: space-between; 
+}
+
+.error-message {
+    color: red;
+    font-size: 12px;
+    margin-left: 1rem; 
+    visibility: hidden; 
+}
+
+/* When error occurs, display the error message */
+.input-field:invalid + .error-message {
+    visibility: visible;
 }

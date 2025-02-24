@@ -1,0 +1,32 @@
+.footer {
+  background-color: #a6f1e0;
+  padding: 10px;
+  text-align: center;
+  position: fixed; /* Optional: Use fixed for a sticky footer */
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000; /* Ensure it's on top of other elements */
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 800px; /* Optional: Limit the width */
+  margin: auto; /* Optional: Center horizontally */
+}
+
+.footer-content p {
+  margin-right: 20px; /* Add some space between elements */
+}
+
+.footer-content a {
+  text-decoration: none;
+  color: #007bff; /* Blue color for links */
+}
+
+.footer-content a:hover {
+  color: #0056b3; /* Darker blue on hover */
+}

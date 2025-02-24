@@ -1,3 +1,8 @@
-langchain_community
-langchain_text_splitters
-pyspark
+langchain-community==0.3.17
+pypdf==5.3.0
+python-dotenv==1.0.1
+google-api-python-client==2.157.0
+google-auth-httplib2==0.2.0
+google-auth-oauthlib==1.2.1
+pyspark==3.5.4
+ipykernel==6.29.4

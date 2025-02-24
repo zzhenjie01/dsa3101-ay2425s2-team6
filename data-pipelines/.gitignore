@@ -1,0 +1,5 @@
+**/.env
+data/
+esg-gdrive-to-local/dsa3101-ay2425-gsvc-acc.json
+spark-jobs-input/
+spark-jobs-output/

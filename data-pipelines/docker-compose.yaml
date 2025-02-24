@@ -21,13 +21,13 @@ services:
       timeout: 3s
       retries: 3
     volumes:
-      - ./book_data:/opt/spark/data
-      - ./spark_apps:/opt/spark/apps
+      - ./spark-jobs-input:/opt/spark/input-task
+      - ./spark-jobs-output:/opt/spark/output-task
       - spark-logs:/opt/spark/spark-events
     env_file:
       - ./spark-docker/.env.spark
     ports:
-      - '8080:8080'
+      - '9090:8080'
       - '7077:7077'
 
   spark-history-server:
@@ -50,9 +50,10 @@ services:
     env_file:
       - ./spark-docker/.env.spark
     volumes:
-      - ./book_data:/opt/spark/data
-      - ./spark_apps:/opt/spark/apps
+      - ./spark-jobs-input:/opt/spark/input-task
+      - ./spark-jobs-output:/opt/spark/output-task
       - spark-logs:/opt/spark/spark-events
+
 
 volumes:
   elasticsearch-data:
@@ -60,6 +61,4 @@ volumes:
 
 networks:
   elastic:
-    driver: bridge
-  spark-net:
     driver: bridge

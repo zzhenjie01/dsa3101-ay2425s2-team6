@@ -6,6 +6,7 @@ import Chatbot from "./pages/chatbotPage";
 import Dashboard from "./pages/dashboardPage";
 import Forecast from "./pages/forecastPage";
 import LoginPage from "./pages/loginPage";
+import RegisterPage from "./pages/registerPage";
 import "./Routes.css";
 
 export default function AppRoutes() {
@@ -18,6 +19,7 @@ export default function AppRoutes() {
       <Route path="/chatbot" element={<Chatbot />} />
       <Route path="/forecast" element={<Forecast />} />
       <Route path="/login-page" element={<LoginPage />} />
+      <Route path="/register-page" element={<RegisterPage /> } />
     </Routes>
 
     // </BrowserRouter>

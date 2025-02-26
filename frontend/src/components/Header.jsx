@@ -6,6 +6,7 @@ import NavBtn from "./NavBtn";
 import LoginBtn from "./LoginBtn";
 // import ChatbotDiv from "../components/ChatbotToggle";
 import { SidePanelContext } from "../context/contexts";
+import { useLocation } from "react-router-dom";
 
 const sidePanelButtonsLst = [
   {
@@ -42,7 +43,13 @@ export default function Header() {
   const sidePanelToggleObj = {
     sidePanelIsOpen,
     setSidePanelIsOpen,
-  };
+    };
+  const location = useLocation();
+    console.log(location.pathname)
+    if (location.pathname === "/login-page" || location.pathname === "/register-page") {
+        return null;
+    }
+  
 
   return (
     <header className="fixed top-0 left-0 right-0 h-20 bg-white shadow-md z-10">

@@ -20,7 +20,7 @@
     left: 10%;
     transform: translateY(-50%);
     width: min(30%,320px);
-    height: 55%;
+    height: max(60%,350px);
     display: flex;
     justify-content: center;
     align-items: center;

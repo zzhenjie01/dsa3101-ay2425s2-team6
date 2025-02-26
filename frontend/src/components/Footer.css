@@ -1,5 +1,5 @@
 .footer {
-  background-color: #a6f1e0;
+  background-color: rgb(240, 240, 240);
   padding: 10px;
   text-align: center;
   position: fixed; /* Optional: Use fixed for a sticky footer */

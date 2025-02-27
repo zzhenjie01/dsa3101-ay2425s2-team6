@@ -9,7 +9,7 @@ export function SidePanelOptions({ buttonLst }) {
   return (
     <div>
       {buttonLst.map((btn) => (
-        <LinkButton {...btn} />
+        <LinkButton key={btn.idx} {...btn} />
       ))}
     </div>
   );

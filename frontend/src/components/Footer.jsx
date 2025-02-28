@@ -4,7 +4,7 @@ export default function Footer() {
   return (
     <footer
       className="fixed bottom-0 left-0 right-0 p-2.5 text-center z-10"
-      style={{ backgroundColor: "#a6f1e0" }}
+      style={{ backgroundColor: "#f0f0f0" }}
     >
       <div className="flex justify-between items-center max-w-3xl mx-auto">
         <p className="mr-5">

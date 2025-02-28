@@ -1,4 +1,3 @@
-import "./NavBtn.css";
 import { useContext } from "react";
 import { SidePanelContext } from "../context/contexts";
 
@@ -10,9 +9,14 @@ export function SidePanelToggleButton() {
       className="
         flex flex-col justify-center items-center
         w-10 h-10
-        text-violet-700 hover:text-violet-900
+        bg-violet-700
+        text-white
+        hover:bg-violet-900
+        hover:cursor-pointer
         transition-colors duration-200
-        focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-opacity-50
+        focus:outline-none
+        rounded-lg shadow-md
+        transition duration-300 ease-in-out
       "
       aria-label="Toggle navigation menu"
     >

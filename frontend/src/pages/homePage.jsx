@@ -1,5 +1,3 @@
-import "./homePage.css";
-
 export default function HomePage() {
   return (
     <div className="flex-grow pt-20 text-center">

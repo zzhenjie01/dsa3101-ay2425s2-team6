@@ -1,4 +1,3 @@
-import "./ChatbotToggle.css";
 import { useContext, useState } from "react";
 import { ChatBotContext } from "../context/contexts";
 
@@ -7,9 +6,10 @@ function ChatbotToggleButton() {
   return (
     <button
       className="
-                absolute bottom-0 right-0
-                w-27/100
-                h-10
+                fixed bottom-0 right-0
+                w-27/100 h-10
+                mb-16 mr-4 z-10
+                hover:cursor-pointer
                 border-black border-2"
       onClick={() => setChatbotOpen(!chatbotOpen)}
     >
@@ -26,8 +26,9 @@ function ChatbotPopup() {
   return (
     <div
       className={`
-            absolute bottom-10 right-0
+            fixed bottom-10 right-0
             w-27/100 min-w-50 h-2/5
+            mb-16 mr-4 z-10
             border-gray border-2
             flex justify-center items-center
             ${chatbotOpen ? "visible" : "hidden"}`}

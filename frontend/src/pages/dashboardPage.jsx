@@ -1,9 +1,8 @@
-import "./dashboardPage.css";
 import { useState } from "react";
 import SidePanel from "../components/SidePanel";
 import NavBar from "../components/NavBtn";
-import ChatbotDiv from "../components/ChatbotToggle";
 import { SidePanelContext } from "../context/contexts";
+import Chart from "../components/Chart";
 
 const sidePanelButtonsLst = [
   { idx: 1, buttonName: "ESG Dashboard", onClickText: "ESG Dashboard View" },
@@ -36,8 +35,11 @@ export default function DashboardPage() {
   //   </>
   // );
   return (
-    <div>
-      <p> Welcome to the Dashboard page</p>
+    <div className="flex-grow pt-20 text-center">
+      <p>Dashboard</p>
+      <p className="h-48 w-96 object-cover flex">
+        <Chart className="justify-center" />
+      </p>
     </div>
   );
 }

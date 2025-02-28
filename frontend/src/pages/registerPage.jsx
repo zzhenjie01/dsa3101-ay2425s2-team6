@@ -1,41 +1,40 @@
 import { useForm } from "react-hook-form";
-import "./loginPage.css";
+import "./registerPage.css";
 import { Outlet } from "react-router";
 import { useNavigate } from "react-router-dom";
 
-/*
-Div centered on the login page
-*/
-export default function LoginCredentialsDiv() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-  const navigate = useNavigate();
 
+export default function RegistrationPage() {
 
-  // Placeholder check
-  const onSubmit = (data) => {
-    console.log(data);
-    if (data.email === "superadmin@nus") {
-      navigate("/home");
-    }
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm();
+    const navigate = useNavigate();
+
+    const onSubmit = (data) => {
+        console.log(data);
+        if (data.email === "superadmin@nus") {
+            navigate("/home");
+        }
     };
 
-    const handleGuestLogin = () => {
+
+    const handleBack = () => {
         // Example: Navigate to a guest-access page or set a guest user state
         console.log("Guest login triggered");
-        navigate("/dashboard"); // Use React Router's navigate function
+        navigate("/login-page"); // Use React Router's navigate function
     };
 
 
     return (
         <>
-        
             <div className="background"></div>
-            <div className="login-container">
-                <form className="login-form" onSubmit={handleSubmit(onSubmit)}>
+
+            <div className="register-container">
+
+                <form className="register-form" onSubmit={handleSubmit(onSubmit)}>
 
                     {/* Label + Error message */}
                     <div className="input-container">
@@ -67,24 +66,34 @@ export default function LoginCredentialsDiv() {
                         {...register("password", { required: true })}
                     />
 
-                    <input className="form-button" type={"submit"} value="Log In" />
-
-                    <button type="button" className="guest-button" onClick={handleGuestLogin}>Continue as Guest</button>
-
-                    <div className="register-link">
-                        <a href="/register-page">New? Register HERE</a>
+                    <div className="input-container">
+                        <label className="field-label" htmlFor="password">
+                            Retype Password
+                        </label>
+                        {errors.password && (
+                            <span style={{ color: "red" }}> *Password* is mandatory </span>
+                        )}
                     </div>
-                    
+                    <input
+                        className="input-field"
+                        type="password"
+                        {...register("password", { required: true })}
+                    />
+
+                    <input className="form-button-reg" type={"submit"} value="Create Account" />
+
+                    <button type="button" className="guest-button" onClick={handleBack}> Back to Login </button>
+
+
                 </form>
-                
+
                 <Outlet />
 
-                
+
             </div>
-        
-        </>
-        
-    
-    
-  );
+
+
+        </>    
+    )
+
 }

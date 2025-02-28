@@ -5,6 +5,7 @@ import Home from "./pages/homePage";
 import Dashboard from "./pages/dashboardPage";
 import Leaderboard from "./pages/leaderboardPage";
 import LoginPage from "./pages/loginPage";
+import RegisterPage from "./pages/registerPage";
 
 export default function AppRoutes() {
   return (
@@ -14,7 +15,7 @@ export default function AppRoutes() {
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/leaderboard" element={<Leaderboard />} />
       <Route path="/login-page" element={<LoginPage />} />
-      <Route path="/register" element={<LoginPage />} />
+      <Route path="/register-page" element={<RegisterPage />} />
     </Routes>
   );
 }

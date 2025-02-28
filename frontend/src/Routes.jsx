@@ -2,7 +2,6 @@ import React from "react";
 // import { Outlet } from "react-router";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/homePage";
-import Chatbot from "./pages/chatbotPage";
 import Dashboard from "./pages/dashboardPage";
 import Forecast from "./pages/forecastPage";
 import LoginPage from "./pages/loginPage";
@@ -15,7 +14,6 @@ export default function AppRoutes() {
       <Route path="/" element={<Navigate to="/home" />} />
       <Route path="/home" element={<Home />} />
       <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/chatbot" element={<Chatbot />} />
       <Route path="/forecast" element={<Forecast />} />
       <Route path="/login-page" element={<LoginPage />} />
     </Routes>

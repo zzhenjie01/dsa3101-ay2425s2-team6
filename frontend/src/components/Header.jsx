@@ -24,13 +24,6 @@ const sidePanelButtonsLst = [
 
   {
     idx: 3,
-    webUrl: "/chatbot",
-    imgUrl: "/assets/chatbot.png",
-    webName: "Chatbot",
-  },
-
-  {
-    idx: 4,
     webUrl: "/forecast",
     imgUrl: "/assets/forecast.png",
     webName: "Forecast",

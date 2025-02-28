@@ -6,6 +6,8 @@ import ChatbotDiv from "../components/ChatbotToggle";
 import { SidePanelContext } from "../context/contexts";
 import EnvironmentalCard from "../components/environmentalCard";
 
+import TestComponent from "@/components/testComponent";
+
 // const sidePanelButtonsLst = [
 //   { idx: 1, buttonName: "ESG Dashboard", onClickText: "ESG Dashboard View" },
 //   { idx: 2, buttonName: "Edit Weights", onClickText: "Edit Weights View" },
@@ -133,22 +135,25 @@ export default function DashboardPage() {
   console.log(currCompanyDetails);
 
   return (
-    <div className="flex-grow pt-30 text-center">
-      <h1>ESG Report Dashboard</h1>
-      <label>
-        Select a company:
-        <select name="selectedCompany" onChange={getCompanyDetails}>
-          <option></option>
-          {allCompanyDetails.map((company) => (
-            <option key={company.idx} value={company.companyName}>
-              {company.companyName}
-            </option>
-          ))}
-        </select>
-      </label>
-      {currCompanyDetails !== null && (
-        <EnvironmentalCard data={currCompanyDetails.data.environmental} />
-      )}
-    </div>
+    <>
+      <div className="flex-grow pt-30 text-center">
+        <h1>ESG Report Dashboard</h1>
+        <label>
+          Select a company:
+          <select name="selectedCompany" onChange={getCompanyDetails}>
+            <option></option>
+            {allCompanyDetails.map((company) => (
+              <option key={company.idx} value={company.companyName}>
+                {company.companyName}
+              </option>
+            ))}
+          </select>
+        </label>
+        {currCompanyDetails !== null && (
+          <EnvironmentalCard data={currCompanyDetails.data.environmental} />
+        )}
+      </div>
+      <div>{<TestComponent />}</div>
+    </>
   );
 }

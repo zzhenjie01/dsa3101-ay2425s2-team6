@@ -29,7 +29,7 @@ export default function RegistrationPage() {
   // For validating password and confirm password
   const validatePasswordMatch = (value) => {
     const password = watch("password");
-    return password === value || "Passwords do not match";
+    return password === value ? "" : "Passwords do not match";
   };
 
   return (

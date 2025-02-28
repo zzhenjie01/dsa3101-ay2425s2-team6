@@ -1,0 +1,78 @@
+[
+    {
+        "question" : "What is Australia's third largest source of carbon emissions?",
+        "ground_truth" : "Australia's third largest source of carbon emissions is transport."
+    },
+    {
+        "question" : "Explain more on ANZ Climate and Environment Strategy.",
+        "ground_truth" : "2024. It sets out our objective to be a trusted partner for our customers, supporting them to adapt and become more resilient to a changing environment and economy. In particular, we aim to be a leading bank in supporting an effective and orderly transition for our large business customers."
+    },
+    {
+        "question" : "What is Santander Co2 emission per employee in 2023?",
+        "ground_truth" : "1.4 tCO2e"
+    },
+    {
+        "question" : "What targets have been achieved based on Santander US's commitments for 2025?",
+        "ground_truth" : "Reduction in water consumption and Reduction in paper consumption"
+    },
+    {
+        "question" : "Describe the 2 new buildings built by Nu in 2023.",
+        "ground_truth" : " In 2023, we opened two new buildings: the Spark building in São Paulo (Brazil) and the Work Polanco building in Mexico City (Mexico). Both spaces were built with biophilic design techniques (integrating natural aspects into the design) and are energy-efficient projects, with 100% LED lighting, maximized use of natural lighting, low-consumption equipments."
+    },
+    {
+        "question" : "What are BOQ Group's targets for reducing emissions by 2030, and what are the baseline years for these targets?",
+        "ground_truth" : "BOQ Group has committed to reducing its organisational scope 1 and 2 emissions by 90% and its organisational supply chain scope 3 emissions by 40% by 2030, compared to the 2020 baseline."
+    },
+    {
+        "question" : "What are some human rights risk that is identified by Institutional Banking Clients according to DBS? ",
+        "ground_truth" : "Forced labour, Child labour, Workers' rights, Community rights"
+    },
+    {
+        "question" : "Explain the breakdown of progress for JPMorgan in 2023.",
+        "ground_truth" : "94.7% Affordable Housing (which include 8.2% investment in low income housing tax credits and preservation funds, 17.3% construction and rehabilitation and 69.2% affordable housing preservation), 3.3% philanthropy, 3.3% supplier diversity, 3.2 vital institutions, 2.3% home purchase, -2.2% home refinance and -4.6% small business."
+    },
+    {
+        "question" : "What is Good Finance For Next",
+        "ground_truth" : "ESG vision"
+    },
+    {
+        "question" : "Explain the ABC in OCBC sustainability highlights.",
+        "ground_truth" : "Accelerating the Transition  to a Net-Zero Future, Bringing Impact to Communities , Conducting Our Business Responsibly"
+    },
+    {
+        "question" : "What is Citigroup's commitment to sustainable finance by 2025?",
+        "ground_truth" : "Citigroup has committed to providing $1 trillion in sustainable finance by 2030, including funding for renewable energy projects, clean technologies, and other sustainable initiatives."
+    },
+    {
+        "question" : "What are core carbon market principles according to JPMorgan?",
+        "ground_truth" : "Real, Independently Verified, Measurable, Leakage Avoidance, Additional, Durability/Permanence, Unique & Traceable, Climate Equity"
+    },
+    {
+        "question" : "What are the UN SDGs for the savings program in Fiji and Vanuatu?",
+        "ground_truth" : "1,10,17"
+    },
+    {
+        "question" : "Did Woori join the UNEP FI Finance Leadership Group and if so, when was it?",
+        "ground_truth" : "Yes, Jan 2023"
+    },
+    {
+        "question" : "What is the difference in GHG emissions per FTE between North America and Latin America for Scope 1 emissions based on HSBC in 2023?",
+        "ground_truth" : "2.49"
+    },
+    {
+        "question" : "How is the absolute financed emissions per client attributable to our O&G sector calculated according to DBS? Give in formula.",
+        "ground_truth" : "Dividing our financing to the client by the client’s company value and then multiplying by the client’s emissions"
+    },
+    {
+        "question" : "State the 3 parts towards JPMorgan’s Environmental Sustainability Strategy.",
+        "ground_truth" : "SCALING GREEN SOLUTIONS, BALANCING ENVIRONMENTAL, SOCIAL AND ECONOMIC NEEDS MINIMIZING OUR OPERATIONAL IMPACT."
+    },
+    {
+        "question" : "What is the Career Comeback program, and what opportunities does it offer to participants?",
+        "ground_truth" : "The Career Comeback program is an opportunity in Commonwealth bank of Australia for people to return to the workforce after a break of two years or more. The 12-week program includes a comprehensive induction process, coaching, mentoring, and networking opportunities to support the transition back to work."
+    },
+    {
+        "question" : "List some examples of services on Thailand’s Open Digital Platform for each of the Bank’s main target groups.",
+        "ground_truth" : "For payment: National E-payment, Biznow, Pointpay, For mass transit: Krungthai payment gateway, For government agencies: SBM Wallet, Savings bonds through SBM Wallet, One Baht Bond, For educational institutions: Smart University Application"
+    }
+]

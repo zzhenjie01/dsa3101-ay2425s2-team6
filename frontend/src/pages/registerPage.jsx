@@ -7,8 +7,10 @@ export default function RegistrationPage() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm();
+
   const navigate = useNavigate();
 
   const onSubmit = (data) => {
@@ -24,54 +26,72 @@ export default function RegistrationPage() {
     navigate("/login-page"); // Use React Router's navigate function
   };
 
+  // For validating password and confirm password
+  const validatePasswordMatch = (value) => {
+    const password = watch("password");
+    return password === value || "Passwords do not match";
+  };
+
   return (
     <>
       <div className="background"></div>
 
       <div className="register-container">
         <form className="register-form" onSubmit={handleSubmit(onSubmit)}>
-          {/* Label + Error message */}
+          {/* Email text*/}
           <div className="input-container">
             <label className="field-label" htmlFor="email">
               Email
             </label>
             {errors.email && (
-              <span style={{ color: "red" }}> *Email* is mandatory </span>
+              <span style={{ color: "red" }}> {errors.email.message} </span>
             )}
           </div>
+
+          {/* Email input */}
           <input
             className="input-field"
             type="email"
-            {...register("email", { required: true })}
+            {...register("email", { required: "*Email* is required" })}
           />
 
-          {/* Label + (To do) Error message */}
+          {/* Password text */}
           <div className="input-container">
             <label className="field-label" htmlFor="password">
               Password
             </label>
             {errors.password && (
-              <span style={{ color: "red" }}> *Password* is mandatory </span>
+              <span style={{ color: "red" }}> {errors.password.message} </span>
             )}
           </div>
+
+          {/* Password input */}
           <input
+            id="password"
             className="input-field"
             type="password"
-            {...register("password", { required: true })}
+            {...register("password", { required: "*Password* is required" })}
           />
 
+          {/* Confirm Password text */}
           <div className="input-container">
-            <label className="field-label" htmlFor="password">
-              Retype Password
+            <label className="field-label" htmlFor="cpassword">
+              Confirm Password
             </label>
-            {errors.password && (
-              <span style={{ color: "red" }}> *Password* is mandatory </span>
+            {errors.cpassword && (
+              <span style={{ color: "red" }}>{errors.cpassword.message}</span>
             )}
           </div>
+
+          {/* Confirm Password input */}
           <input
+            id="cpassword"
             className="input-field"
             type="password"
-            {...register("password", { required: true })}
+            {...register("cpassword", {
+              required: "*Confirm Password* is required",
+              validate: validatePasswordMatch,
+            })}
           />
 
           <input

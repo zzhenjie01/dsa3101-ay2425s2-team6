@@ -1,6 +1,7 @@
 import Routes from "./Routes";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import ChatbotDiv from "./components/ChatbotToggle";
 import { BrowserRouter } from "react-router-dom";
 
 /*
@@ -12,6 +13,7 @@ export default function App() {
     <BrowserRouter>
       <Header />
       <Routes />
+      <ChatbotDiv />
       <Footer />
     </BrowserRouter>
   );

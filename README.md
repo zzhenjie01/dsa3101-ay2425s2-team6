@@ -78,14 +78,14 @@ In due course, it will be integrated into the the multi Docker container setup.
     Open up the repo in IDE (VSCode) and create a `.env` file at the repo's root. And set the following environment variables.
     An example is shown below.
   
-  - `SERVICE_ACCOUNT_FILE`: For automatic downloading of PDFs from Google Drive.
-  - `SERVICE_ACCOUNT_SCOPES`: For automatic downloading of PDFs from Google Drive.
-  - `DEST_FOLDER`: Path to store the PDFs automatically downloaded from Google Drive; need to end with `/`.
-  - `ESG_REPORTS_FOLDER`: Path where the downloaded ESG report PDFs are stored
-  - `ESG_REPORTS_JSON_FOLDER`: Path where the parsed data in JSON format from ESG Reports are stored.
-  - `ESG_REPORTS_CSV_FOLDER`: Path to store the CSVs produced from processing the JSON files using Spark NLP.
-  - `ES_INDEX_NAME`: Name of the index of Elasticsearch where we index our text chunks.
-  - `RAG_OUTPUT_FOLDER`: Output folder to store the LLM's response for each company for each ESG metric.
+    - `SERVICE_ACCOUNT_FILE`: For automatic downloading of PDFs from Google Drive.
+    - `SERVICE_ACCOUNT_SCOPES`: For automatic downloading of PDFs from Google Drive.
+    - `DEST_FOLDER`: Path to store the PDFs automatically downloaded from Google Drive; need to end with `/`.
+    - `ESG_REPORTS_FOLDER`: Path where the downloaded ESG report PDFs are stored
+    - `ESG_REPORTS_JSON_FOLDER`: Path where the parsed data in JSON format from ESG Reports are stored.
+    - `ESG_REPORTS_CSV_FOLDER`: Path to store the CSVs produced from processing the JSON files using Spark NLP.
+    - `ES_INDEX_NAME`: Name of the index of Elasticsearch where we index our text chunks.
+    - `RAG_OUTPUT_FOLDER`: Output folder to store the LLM's response for each company for each ESG metric.
   
     ```text
     ESG_REPORTS_FOLDER = "C:/Zhenjie/University/Y3S2/dsa3101-ay2425s2-team6/data-pipelines/data/esg-pdf/"
@@ -137,14 +137,14 @@ In due course, it will be integrated into the the multi Docker container setup.
     ```shell
     docker run -p 9200:9200 -e "discovery.type=single-node" -e "xpack.security.enabled=false" -e "xpack.security.http.ssl.enabled=false" docker.elastic.co/elasticsearch/elasticsearch:8.12.1
     ```
-  
-    >[!Note]
-    > If you are running this command for the first time, Docker will pull the official Elasticsearch image before starting the container.
-    > Once done, in the future, we can just start start the container from Docker Desktop.
-  
-    >[!WARNING]
-    > For production and real life deployment, this command is discouraged as it disable security features according to [documentation](https://python.langchain.com/docs/integrations/vectorstores/elasticsearch/).
-    > But for now, we will just disable it.
+
+  >[!Note]
+  > If you are running this command for the first time, Docker will pull the official Elasticsearch image before starting the container.
+  > Once done, in the future, we can just start start the container from Docker Desktop.
+
+  >[!WARNING]
+  > For production and real life deployment, this command is discouraged as it disable security features according to [documentation](https://python.langchain.com/docs/integrations/vectorstores/elasticsearch/).
+  > But for now, we will just disable it.
 
 7. **Convert PDFs to JSON**
 
@@ -154,11 +154,11 @@ In due course, it will be integrated into the the multi Docker container setup.
     ```shell
     python <REPO-ROOT>/data-pipelines/esg-pdf-to-json/esg_pdf_to_json.py
     ```
-  
-    >[!NOTE]
-    > The rationale for doing this step is because reading and parsing PDF is an expensive process.
-    > So we only want to to it once and store it.
-    > JSON is the choice of storage as it is highly scalable and flexible form of storage.
+
+  >[!NOTE]
+  > The rationale for doing this step is because reading and parsing PDF is an expensive process.
+  > So we only want to to it once and store it.
+  > JSON is the choice of storage as it is highly scalable and flexible form of storage.
 
 8. **Process JSON to CSVs**
 
@@ -168,12 +168,12 @@ In due course, it will be integrated into the the multi Docker container setup.
     ```shell
     python <REPO-ROOT>/data-pipelines/esg-json-to-csv/esg_json_to_csv.py
     ```
-  
-    >[!NOTE]
-    > This step uses Spark NLP to extract keywords from the text chunks in the JSON.
-    > This is necessary to improve the perfomance of retrieval from Elasticsearch (ES) later on.
-    > CSV is the choice of storage because later on we have to insert (index) data into ES
-    > and CSVs are easy to iterate over.
+
+  >[!NOTE]
+  > This step uses Spark NLP to extract keywords from the text chunks in the JSON.
+  > This is necessary to improve the perfomance of retrieval from Elasticsearch (ES) later on.
+  > CSV is the choice of storage because later on we have to insert (index) data into ES
+  > and CSVs are easy to iterate over.
 
 9. **Indexing into Elasticsearch**
 
@@ -183,14 +183,14 @@ In due course, it will be integrated into the the multi Docker container setup.
     ```shell
     python <REPO-ROOT>/data-pipelines/elasticsearch/elasticsearch_indexing.py
     ```
-  
-    >[!NOTE]
-    > Elasticsearch is the choice of data store for our text chunks and keywords as we can do complex filtering logic that other DBs could not offer.
-    > Furthermore, its performance is better than traditional vector DBs like ChromaDB since it offers Hybrid Search.
-  
-    >[!WARNING]
-    > Before running this step, make sure your Docker Desktop is running in the background
-    > and you have the Elasticsearch container running.
+
+  >[!NOTE]
+  > Elasticsearch is the choice of data store for our text chunks and keywords as we can do complex filtering logic that other DBs could not offer.
+  > Furthermore, its performance is better than traditional vector DBs like ChromaDB since it offers Hybrid Search.
+
+  >[!WARNING]
+  > Before running this step, make sure your Docker Desktop is running in the background
+  > and you have the Elasticsearch container running.
 
 10. **RAG Phase**
 
@@ -200,15 +200,15 @@ In due course, it will be integrated into the the multi Docker container setup.
     ```shell
     python <REPO-ROOT>/data-pipelines/rag-engine.py
     ```
-  
-    >[!NOTE]
-    > This set can be summarized as given an ESG metric, we want to retrieve an appropiate context (text chunk) from Elasticsearch
-    > then feed this retrieved context together with the ESG metric as a prompt into the LLM for it to evaluate the company
-    > based on the ESG metric. And we do this for all companies, for all ESG metrics.
-  
-    >[!WARNING]
-    > Before running this step, make sure your Docker Desktop is running in the background with Elasticsearch container running.
-    > Also, make sure Ollama is running in the background too.
+
+  >[!NOTE]
+  > This set can be summarized as given an ESG metric, we want to retrieve an appropiate context (text chunk) from Elasticsearch
+  > then feed this retrieved context together with the ESG metric as a prompt into the LLM for it to evaluate the company
+  > based on the ESG metric. And we do this for all companies, for all ESG metrics.
+
+  >[!WARNING]
+  > Before running this step, make sure your Docker Desktop is running in the background with Elasticsearch container running.
+  > Also, make sure Ollama is running in the background too.
 
 ## 🧊 Contributing
 

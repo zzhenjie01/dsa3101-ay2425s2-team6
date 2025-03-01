@@ -94,6 +94,8 @@ In due course, it will be integrated into the the multi Docker container setup.
     ES_INDEX_NAME = "esg_reports_demo"
     RAG_OUTPUT_FOLDER = "C:/Zhenjie/University/Y3S2/dsa3101-ay2425s2-team6/data-pipelines/data/rag-output/"
     ```
+  >[!IMPORTANT]
+  > Notice the paths above ends with `/`. This is important as the scripts may not work correctly if you leave it out.
 
 3. **Download PDFs**
 

@@ -17,16 +17,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
-export function LineChartMultiple(props) {
-  // const chartData = [
-  //   { month: "January", desktop: 186, mobile: 80 },
-  //   { month: "February", desktop: 305, mobile: 200 },
-  //   { month: "March", desktop: 237, mobile: 120 },
-  //   { month: "April", desktop: 73, mobile: 190 },
-  //   { month: "May", desktop: 209, mobile: 130 },
-  //   { month: "June", desktop: 214, mobile: 140 },
-  // ];
-
+export function OverallGHG(props) {
   const chartConfig = {
     company: {
       label: props.name === "Industry Average" ? "Average" : props.name,
@@ -38,9 +29,6 @@ export function LineChartMultiple(props) {
     },
   };
 
-  // const chartData = props.data;
-  // const avgData = props.avg;
-
   const combinedData = Object.keys(props.data)
     .map((year) => ({
       year: parseInt(year),
@@ -48,8 +36,6 @@ export function LineChartMultiple(props) {
       average: props.avg[year],
     }))
     .sort((a, b) => a.year - b.year);
-
-  console.log(combinedData);
 
   const { minYear, maxYear } = combinedData.reduce(
     (acc, item) => ({
@@ -94,7 +80,15 @@ export function LineChartMultiple(props) {
               tickMargin={8}
               interval={0}
             />
-            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent />}
+              wrapperStyle={{
+                backgroundColor: "white",
+                borderStyle: "ridge",
+                borderRadius: 10,
+              }}
+            />
             <Line
               dataKey="company"
               type="monotone"
@@ -129,7 +123,6 @@ export function LineChartMultiple(props) {
           </div>
         </div>
       </CardFooter>
-      {/* <p>{props.name}</p> */}
     </Card>
   );
 }

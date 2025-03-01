@@ -47,8 +47,8 @@ export default function DashboardPage() {
         environmental: {
           ghg: {
             2021: { scope1: 10, scope2: 30, scope3: 500 },
-            2022: { scope1: 20, scope2: 60, scope3: 400 },
             2023: { scope1: 50, scope2: 100, scope3: 800 },
+            2022: { scope1: 20, scope2: 60, scope3: 400 },
           },
           energy: {
             2021: { total_energy: 15000, electricity: 8500 },
@@ -80,7 +80,7 @@ export default function DashboardPage() {
           ghg: {
             2021: { scope1: 10, scope2: 20, scope3: 40 },
             2022: { scope1: 20, scope2: 30, scope3: 40 },
-            2023: { scope1: 50, scope2: 60, scope3: 80 },
+            2023: { scope1: 10, scope2: 10, scope3: 20 },
           },
           energy: {
             2021: { total_energy: 5000, electricity: 3500 },
@@ -104,9 +104,40 @@ export default function DashboardPage() {
         },
       },
     },
-  ];
 
-  const [company, setCompany] = useState(null);
+    {
+      idx: 3,
+      companyName: "Industry Average",
+      data: {
+        environmental: {
+          ghg: {
+            2021: { scope1: 30, scope2: 40, scope3: 40 },
+            2022: { scope1: 50, scope2: 39, scope3: 100 },
+            2023: { scope1: 57, scope2: 60, scope3: 85 },
+          },
+          energy: {
+            2021: { total_energy: 5800, electricity: 1500 },
+            2022: { total_energy: 4500, electricity: 4900 },
+            2023: { total_energy: 6900, electricity: 3000 },
+          },
+          water: { 2023: 5600 },
+        },
+        social: {
+          turnover: { 2023: { total: 1890 } },
+          gender_pay_gap: { 2023: true },
+          avg_training_hrs: {
+            2021: { total: 500000, male: 300000, female: 200000 },
+            2022: { total: 160000, male: 100000, female: 60000 },
+            2023: { total: 180000, male: 90000, female: 90000 },
+          },
+        },
+        governance: {
+          board_gender: { 2023: { male: 40, female: 60 } },
+          no_corruption_cases: { 2023: 1 },
+        },
+      },
+    },
+  ];
 
   const [allCompanyDetails, setAllCompanyDetails] = useState([]);
 
@@ -122,17 +153,17 @@ export default function DashboardPage() {
     setAllCompanyDetails(companyLst);
   }, []);
 
-  function getCompanyDetails(event) {
-    setCompany(event.target.value);
+  const avgDetails = allCompanyDetails.find(
+    (comp) => comp.companyName === "Industry Average"
+  );
 
-    const companyInfo = allCompanyDetails.find(
-      (company) => company.companyName === event.target.value
-    );
-
-    setCurrCompanyDetails(companyInfo || null);
+  function getCurrCompanyDetails(event) {
+    if (!event.target.value) {
+      setCurrCompanyDetails(null);
+    } else {
+      setCurrCompanyDetails(JSON.parse(event.target.value));
+    }
   }
-
-  console.log(currCompanyDetails);
 
   return (
     <>
@@ -140,20 +171,23 @@ export default function DashboardPage() {
         <h1>ESG Report Dashboard</h1>
         <label>
           Select a company:
-          <select name="selectedCompany" onChange={getCompanyDetails}>
+          <select name="selectedCompany" onChange={getCurrCompanyDetails}>
             <option></option>
-            {allCompanyDetails.map((company) => (
-              <option key={company.idx} value={company.companyName}>
-                {company.companyName}
+            {allCompanyDetails.map((comp) => (
+              <option key={comp.idx} value={JSON.stringify(comp)}>
+                {comp.companyName}
               </option>
             ))}
           </select>
         </label>
-        {currCompanyDetails !== null && (
-          <EnvironmentalCard data={currCompanyDetails.data.environmental} />
+        {currCompanyDetails && (
+          <EnvironmentalCard
+            data={currCompanyDetails.data.environmental}
+            name={currCompanyDetails.companyName}
+            avgdata={avgDetails.data.environmental}
+          />
         )}
       </div>
-      <div>{<TestComponent />}</div>
     </>
   );
 }

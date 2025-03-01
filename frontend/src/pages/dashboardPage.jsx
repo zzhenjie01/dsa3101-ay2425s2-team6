@@ -6,8 +6,6 @@ import ChatbotDiv from "../components/ChatbotToggle";
 import { SidePanelContext } from "../context/contexts";
 import EnvironmentalCard from "../components/environmentalCard";
 
-import TestComponent from "@/components/testComponent";
-
 // const sidePanelButtonsLst = [
 //   { idx: 1, buttonName: "ESG Dashboard", onClickText: "ESG Dashboard View" },
 //   { idx: 2, buttonName: "Edit Weights", onClickText: "Edit Weights View" },
@@ -51,11 +49,11 @@ export default function DashboardPage() {
             2022: { scope1: 20, scope2: 60, scope3: 400 },
           },
           energy: {
-            2021: { total_energy: 15000, electricity: 8500 },
-            2022: { total_energy: 16000, electricity: 9000 },
-            2023: { total_energy: 16500, electricity: 9000 },
+            2021: 15000,
+            2022: 16000,
+            2023: 16500,
           },
-          water: { 2023: 50000 },
+          water: { 2023: 20000 },
         },
         social: {
           turnover: { 2023: { rate: 11.3 } },
@@ -83,11 +81,11 @@ export default function DashboardPage() {
             2023: { scope1: 10, scope2: 10, scope3: 20 },
           },
           energy: {
-            2021: { total_energy: 5000, electricity: 3500 },
-            2022: { total_energy: 6000, electricity: 4000 },
-            2023: { total_energy: 6500, electricity: 4000 },
+            2021: 5000,
+            2022: 6000,
+            2023: 4500,
           },
-          water: { 2023: 10000 },
+          water: { 2023: 70000 },
         },
         social: {
           turnover: { 2023: { total: 1250 } },
@@ -116,11 +114,11 @@ export default function DashboardPage() {
             2023: { scope1: 57, scope2: 60, scope3: 85 },
           },
           energy: {
-            2021: { total_energy: 5800, electricity: 1500 },
-            2022: { total_energy: 4500, electricity: 4900 },
-            2023: { total_energy: 6900, electricity: 3000 },
+            2021: 5800,
+            2022: 4500,
+            2023: 6900,
           },
-          water: { 2023: 5600 },
+          water: { 2023: 56000 },
         },
         social: {
           turnover: { 2023: { total: 1890 } },
@@ -168,10 +166,14 @@ export default function DashboardPage() {
   return (
     <>
       <div className="flex-grow pt-30 text-center">
-        <h1>ESG Report Dashboard</h1>
-        <label>
-          Select a company:
-          <select name="selectedCompany" onChange={getCurrCompanyDetails}>
+        <h1 className="text-3xl pt-8 pb-16">ESG Report Dashboard</h1>
+        <label className="text-lg">
+          Select a company:{" "}
+          <select
+            name="selectedCompany"
+            className="border border-solid align-bottom"
+            onChange={getCurrCompanyDetails}
+          >
             <option></option>
             {allCompanyDetails.map((comp) => (
               <option key={comp.idx} value={JSON.stringify(comp)}>

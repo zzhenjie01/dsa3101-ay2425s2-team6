@@ -1,7 +1,7 @@
 "use client";
 
-import { TrendingUp, TrendingDown } from "lucide-react";
-import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+import { Lightning } from "./icons/lightning";
 
 import {
   Card,
@@ -17,10 +17,12 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
-export function OverallGHG(props) {
+export function Energy(props) {
+  const chartData = props.data.sort((a, b) => a.year - b.year);
+
   const chartConfig = {
     company: {
-      label: props.name === "Industry Average" ? "Average" : props.name,
+      label: `${props.name}`,
       color: "#2563eb",
     },
     average: {
@@ -29,23 +31,15 @@ export function OverallGHG(props) {
     },
   };
 
-  const combinedData = Object.keys(props.data)
-    .map((year) => ({
-      year: parseInt(year),
-      company: props.data[year],
-      average: props.avg[year],
-    }))
-    .sort((a, b) => a.year - b.year);
-
-  const { minYear, maxYear } = combinedData.reduce(
+  const { minYear, maxYear } = chartData.reduce(
     (acc, item) => ({
       minYear: Math.min(acc.minYear, item.year),
       maxYear: Math.max(acc.maxYear, item.year),
     }),
     { minYear: Infinity, maxYear: -Infinity }
   );
-  const lastYearData = combinedData[combinedData.length - 1]; // Most recent year
-  const secondLastYearData = combinedData[combinedData.length - 2]; // Second most recent year
+  const lastYearData = chartData[chartData.length - 1]; // Most recent year
+  const secondLastYearData = chartData[chartData.length - 2]; // Second most recent year
   const percentageDifference =
     Math.round(
       ((lastYearData.company - secondLastYearData.company) /
@@ -57,71 +51,47 @@ export function OverallGHG(props) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>"Overall GHG Emissions"</CardTitle>
+        <CardTitle>Energy Consumption</CardTitle>
         <CardDescription>
           {minYear} - {maxYear}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <LineChart
-            accessibilityLayer
-            data={combinedData}
-            margin={{
-              left: 12,
-              right: 12,
-            }}
-          >
+          <BarChart accessibilityLayer data={chartData}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="year"
               tickLine={false}
+              tickMargin={10}
               axisLine={false}
-              tickMargin={8}
-              interval={0}
             />
             <ChartTooltip
               cursor={false}
-              content={<ChartTooltipContent />}
+              content={<ChartTooltipContent indicator="dashed" />}
               wrapperStyle={{
                 backgroundColor: "white",
                 borderStyle: "ridge",
                 borderRadius: 10,
               }}
             />
-            <Line
-              dataKey="company"
-              type="monotone"
-              stroke="var(--color-company)"
-              strokeWidth={2}
-              dot={false}
-            />
             {props.name !== "Industry Average" && (
-              <Line
-                dataKey="average"
-                type="monotone"
-                stroke="var(--color-average)"
-                strokeWidth={2}
-                dot={false}
-              />
+              <Bar dataKey="company" fill="var(--color-company)" radius={4} />
             )}
-          </LineChart>
+            <Bar dataKey="average" fill="var(--color-average)" radius={4} />
+          </BarChart>
         </ChartContainer>
       </CardContent>
       <CardFooter>
         <div className="flex w-full items-start gap-2 text-sm">
           <div className="grid gap-2">
             <div className="flex items-center gap-2 font-medium leading-none">
-              Trending {percentageDifference >= 0 ? "up" : "down"} by{" "}
+              {percentageDifference >= 0 ? "Increase" : "Decrease"} of{" "}
               {Math.abs(percentageDifference)}% this year{" "}
-              {percentageDifference >= 0 ? (
-                <TrendingUp className="h-4 w-4" />
-              ) : (
-                <TrendingDown className="h-4 w-4" />
-              )}
+              <Lightning className="h-4 w-4" />
             </div>
             <div className="flex items-center gap-2 leading-none text-muted-foreground">
-              Showing total GHG emissions for the last {maxYear - minYear + 1}{" "}
+              Showing total energy (in kWh) for the last {maxYear - minYear + 1}{" "}
               years
             </div>
           </div>

@@ -4,6 +4,7 @@ import { ChatBotContext } from "../context/contexts";
 import { OverallGHG } from "./overallGhg";
 import { ScopeGHG } from "./scopeGhg";
 import { Water } from "./water";
+import { Energy } from "./energy";
 
 export default function EnvironmentalCard(props) {
   const sumGHGByYear = (ghgData) => {
@@ -23,29 +24,62 @@ export default function EnvironmentalCard(props) {
     return data[lastYear]; // Return the GHG data for the latest year
   };
 
+  const getWaterData = (compdata, avgdata) => {
+    const lastYear = getLastYear(compdata);
+    return {
+      company: props.name,
+      water: compdata[lastYear],
+      average: avgdata[lastYear] || 0,
+    };
+  };
+
+  const getEnergyData = (compdata, avgdata) => {
+    return Object.keys(compdata).map((year) => ({
+      year: Number(year),
+      company: compdata[year],
+      average: avgdata[year] || 0,
+    }));
+  };
+
   return (
-    <section className="py-24 ">
+    <section className="py-16 ">
       <div className="mx-auto max-w-fit items-center gap-x-4 rounded-xl bg-white p-6 shadow-lg outline outline-black/5 dark:bg-slate-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10">
-        <h3>Environmental</h3>
-        <div>
-          {
-            <OverallGHG
-              data={sumGHGByYear(props.data.ghg)}
-              name={props.name}
-              avg={sumGHGByYear(props.avgdata.ghg)}
-              title="Overall GHG Emissions"
-            />
-          }
+        <div className="grid grid-cols-2 gap-4">
+          <h3 className="col-span-2 text-xl font-semibold">Environmental</h3>
+          <div>
+            {
+              <OverallGHG
+                data={sumGHGByYear(props.data.ghg)}
+                name={props.name}
+                avg={sumGHGByYear(props.avgdata.ghg)}
+              />
+            }
+          </div>
+          <div>
+            {
+              <ScopeGHG
+                data={getLastYearData(props.data.ghg)}
+                year={getLastYear(props.data.ghg)}
+              />
+            }
+          </div>
+          <div>
+            {
+              <Water
+                data={getWaterData(props.data.water, props.avgdata.water)}
+                year={getLastYear(props.data.water)}
+              />
+            }
+          </div>
+          <div>
+            {
+              <Energy
+                data={getEnergyData(props.data.energy, props.avgdata.energy)}
+                name={props.name}
+              />
+            }
+          </div>
         </div>
-        <div>
-          {
-            <ScopeGHG
-              data={getLastYearData(props.data.ghg)}
-              year={getLastYear(props.data.ghg)}
-            />
-          }
-        </div>
-        <div>{<Water />}</div>
       </div>
     </section>
   );

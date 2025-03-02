@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import "./registerPage.css";
 import { Outlet } from "react-router";
 import { useNavigate } from "react-router-dom";
+import { doRegister } from "../auth/authService.js"; // Import the register service
 
 export default function RegistrationPage() {
   const {
@@ -13,16 +14,50 @@ export default function RegistrationPage() {
 
   const navigate = useNavigate();
 
-  const onSubmit = (data) => {
+  // const onSubmit = (data) => {
+  //   console.log(data);
+  //   if (data.email === "superadmin@nus") {
+  //     navigate("/home");
+  //   }
+  // };
+
+  // const onSubmit = async (data, e) => {
+  //   // e.preventDefault();
+  //   try {
+  //     console.log(data);
+  //     await axios.post("http://localhost:5000/api/register", data);
+  //     alert("User registered successfully");
+  //     navigate("/login-page");
+  //   } catch (error) {
+  //     console.error("Registration error:", error.response); // Log the error response
+  //     alert(
+  //       `Error registering user: ${
+  //         error.response?.data?.details || "Unknown error"
+  //       }`
+  //     ); // Show specific error
+  //   }
+  // };
+
+  const onSubmit = async (data, e) => {
     console.log(data);
-    if (data.email === "superadmin@nus") {
-      navigate("/home");
+    try {
+      const result = await doRegister(data.email, data.password); // Call the register service
+      if (result.success) {
+        alert("User registered successfully");
+        navigate("/login-page");
+      } else {
+        console.error("Registration error:", result);
+        alert(`Error registering user: ${result.details || result.message}`);
+      }
+    } catch (error) {
+      console.error("Frontend registration error:", error);
+      alert("An unexpected error occurred");
     }
   };
 
   const handleBack = () => {
     // Example: Navigate to a guest-access page or set a guest user state
-    console.log("Guest login triggered");
+    console.log("Back to Login triggered");
     navigate("/login-page"); // Use React Router's navigate function
   };
 
@@ -34,10 +69,16 @@ export default function RegistrationPage() {
 
   return (
     <>
-      <div className="background"></div>
+      <div className="background" />
 
       <div className="register-container">
-        <form className="register-form" onSubmit={handleSubmit(onSubmit)}>
+        <form
+          className="register-form"
+          onSubmit={(e) => {
+            console.log("handleSubmit called");
+            handleSubmit(onSubmit)(e);
+          }}
+        >
           {/* Email text*/}
           <div className="input-container">
             <label className="field-label" htmlFor="email">
@@ -94,11 +135,16 @@ export default function RegistrationPage() {
             })}
           />
 
+          {/*Submit button*/}
           <input
             className="form-button-reg"
             type={"submit"}
             value="Create Account"
           />
+          {/* <button type="submit" className="form-button-reg">
+            {" "}
+            Create Account{" "}
+          </button> */}
 
           <button type="button" className="guest-button" onClick={handleBack}>
             {" "}

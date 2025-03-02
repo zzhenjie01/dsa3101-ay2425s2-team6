@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import "./loginPage.css";
 import { Outlet } from "react-router";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 /*
 Div centered on the login page
@@ -15,12 +16,26 @@ export default function LoginCredentialsDiv() {
   const navigate = useNavigate();
 
   // Placeholder check
-  const onSubmit = (data) => {
-    console.log(data);
-    if (data.email === "superadmin@nus") {
-      navigate("/home");
-    }
-  };
+  //   const onSubmit = (data) => {
+  //     console.log(data);
+  //     if (data.email === "superadmin@nus") {
+  //       navigate("/home");
+  //     }
+  //   };
+
+  // const onSubmit = async (data) => {
+  //   try {
+  //     const response = await axios.post(
+  //       "http://localhost:5000/api/login",
+  //       data
+  //     );
+
+  //     alert("Logged in successfully");
+  //     navigate("/home");
+  //   } catch (error) {
+  //     alert("Error logging in");
+  //   }
+  // };
 
   const handleGuestLogin = () => {
     // Example: Navigate to a guest-access page or set a guest user state

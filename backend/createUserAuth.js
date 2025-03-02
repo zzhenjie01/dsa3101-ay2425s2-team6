@@ -10,7 +10,7 @@ import User from "./createUserCredentialsCollection.js";
 const app = express();
 app.use(
   cors({
-    origin: "http://localhost:5174", // React App port
+    origin: "http://localhost:5173", // React App port
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   })
 );

@@ -31,6 +31,7 @@ export function Energy(props) {
     },
   };
 
+  // Extract min and max year of data to display
   const { minYear, maxYear } = chartData.reduce(
     (acc, item) => ({
       minYear: Math.min(acc.minYear, item.year),
@@ -38,6 +39,8 @@ export function Energy(props) {
     }),
     { minYear: Infinity, maxYear: -Infinity }
   );
+
+  // Extract last 2 years' data to compare percentage difference
   const lastYearData = chartData[chartData.length - 1]; // Most recent year
   const secondLastYearData = chartData[chartData.length - 2]; // Second most recent year
   const percentageDifference =

@@ -34,6 +34,7 @@ export function Water(props) {
 
   const chartData = [{ ...props.data, fill: "var(--color-water)" }];
 
+  //Get company's water consumption as a percentage of the average
   const getPercWater = (data) => {
     return Math.round((data[0].water / data[0].average) * 100, 1);
   };

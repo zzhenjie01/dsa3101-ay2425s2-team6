@@ -5,8 +5,16 @@ import { OverallGHG } from "./overallGhg";
 import { ScopeGHG } from "./scopeGhg";
 import { Water } from "./water";
 import { Energy } from "./energy";
+import { getLastYear, getLastYearData } from "./helpers/getLastYear";
 
 export default function EnvironmentalCard(props) {
+  // Get total GHG emissions per year in the format
+  // ghg: {
+  //   2021: ???,
+  //   2022: ???,
+  //   2023: ???
+  // }
+
   const sumGHGByYear = (ghgData) => {
     return Object.keys(ghgData).reduce((acc, year) => {
       const { scope1 = 0, scope2 = 0, scope3 = 0 } = ghgData[year]; // Default values to 0 if missing
@@ -15,29 +23,26 @@ export default function EnvironmentalCard(props) {
     }, {});
   };
 
-  const getLastYear = (data) => {
-    return Math.max(...Object.keys(data).map(Number));
-  };
-
-  const getLastYearData = (data) => {
-    const lastYear = getLastYear(data); // Get the latest year
-    return data[lastYear]; // Return the GHG data for the latest year
-  };
+  // Re-format water data to
+  // {year:???, water: ???, average: ???}
 
   const getWaterData = (compdata, avgdata) => {
     const lastYear = getLastYear(compdata);
     return {
       company: props.name,
       water: compdata[lastYear],
-      average: avgdata[lastYear] || 0,
+      average: avgdata[lastYear] || 0, //if avgdata for that year is unavailable, set average to 0
     };
   };
+
+  // Re-format energy data to
+  // {year:???, company: ???, average: ???}
 
   const getEnergyData = (compdata, avgdata) => {
     return Object.keys(compdata).map((year) => ({
       year: Number(year),
       company: compdata[year],
-      average: avgdata[year] || 0,
+      average: avgdata[year] || 0, //if avgdata for that year is unavailable, set average to 0
     }));
   };
 

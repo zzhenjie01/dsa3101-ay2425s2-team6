@@ -35,6 +35,12 @@ const chartConfig = {
 };
 
 export function ScopeGHG(props) {
+  //Format scope GHG data to
+  // {
+  //   scope: 1/2/3.
+  //   emissions: ???,
+  //   fill: ???
+  // }
   const convertGHGData = (data) => {
     return Object.keys(data).map((key) => ({
       scope: key,

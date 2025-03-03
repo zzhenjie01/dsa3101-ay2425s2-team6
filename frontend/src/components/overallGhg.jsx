@@ -29,6 +29,12 @@ export function OverallGHG(props) {
     },
   };
 
+  //Combine company and average data in the format:
+  // {
+  //   year: ???,
+  //   company: ???,
+  //   average: ???
+  // }
   const combinedData = Object.keys(props.data)
     .map((year) => ({
       year: parseInt(year),
@@ -37,6 +43,7 @@ export function OverallGHG(props) {
     }))
     .sort((a, b) => a.year - b.year);
 
+  //Extract min and max year to display
   const { minYear, maxYear } = combinedData.reduce(
     (acc, item) => ({
       minYear: Math.min(acc.minYear, item.year),
@@ -44,6 +51,8 @@ export function OverallGHG(props) {
     }),
     { minYear: Infinity, maxYear: -Infinity }
   );
+
+  //Extract last 2 years' data to compare percentage difference
   const lastYearData = combinedData[combinedData.length - 1]; // Most recent year
   const secondLastYearData = combinedData[combinedData.length - 2]; // Second most recent year
   const percentageDifference =

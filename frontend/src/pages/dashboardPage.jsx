@@ -5,6 +5,8 @@ import NavBar from "../components/NavBtn";
 import ChatbotDiv from "../components/ChatbotToggle";
 import { SidePanelContext } from "../context/contexts";
 import EnvironmentalCard from "../components/environmentalCard";
+import SocialCard from "../components/socialCard";
+import GovernanceCard from "../components/governanceCard";
 
 // const sidePanelButtonsLst = [
 //   { idx: 1, buttonName: "ESG Dashboard", onClickText: "ESG Dashboard View" },
@@ -37,6 +39,7 @@ export default function DashboardPage() {
   //   </>
   // );
 
+  //Sample data for testing
   const companyLst = [
     {
       idx: 1,
@@ -65,7 +68,7 @@ export default function DashboardPage() {
           },
         },
         governance: {
-          board_gender: { 2023: { male: 60, female: 40 } },
+          board_gender: { 2023: { male: 90, female: 20 } },
           no_corruption_cases: { 2023: 2 },
         },
       },
@@ -130,18 +133,20 @@ export default function DashboardPage() {
           },
         },
         governance: {
-          board_gender: { 2023: { male: 40, female: 60 } },
+          board_gender: { 2023: { male: 70, female: 30 } },
           no_corruption_cases: { 2023: 1 },
         },
       },
     },
   ];
 
+  // State for all companies details
   const [allCompanyDetails, setAllCompanyDetails] = useState([]);
 
+  // State for the company details currently selected
   const [currCompanyDetails, setCurrCompanyDetails] = useState(null);
 
-  /*Fetch all company data from API*/
+  // Fetch all company data from API
   //   useEffect(() => {
   //     fetch("???")
   //         .then(res => res.json())
@@ -155,6 +160,7 @@ export default function DashboardPage() {
     (comp) => comp.companyName === "Industry Average"
   );
 
+  // Get current company details in json format, if empty value is selected set it to null
   function getCurrCompanyDetails(event) {
     if (!event.target.value) {
       setCurrCompanyDetails(null);
@@ -182,13 +188,33 @@ export default function DashboardPage() {
             ))}
           </select>
         </label>
-        {currCompanyDetails && (
-          <EnvironmentalCard
-            data={currCompanyDetails.data.environmental}
-            name={currCompanyDetails.companyName}
-            avgdata={avgDetails.data.environmental}
-          />
-        )}
+        <>
+          {currCompanyDetails && (
+            <EnvironmentalCard
+              data={currCompanyDetails.data.environmental}
+              name={currCompanyDetails.companyName}
+              avgdata={avgDetails.data.environmental}
+            />
+          )}
+        </>
+        <>
+          {currCompanyDetails && (
+            <SocialCard
+              data={currCompanyDetails.data.social}
+              name={currCompanyDetails.companyName}
+              avgdata={avgDetails.data.social}
+            />
+          )}
+        </>
+        <>
+          {currCompanyDetails && (
+            <GovernanceCard
+              data={currCompanyDetails.data.governance}
+              name={currCompanyDetails.companyName}
+              avgdata={avgDetails.data.governance}
+            />
+          )}
+        </>
       </div>
     </>
   );

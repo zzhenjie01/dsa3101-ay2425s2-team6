@@ -19,7 +19,7 @@ API_KEY = os.getenv('NEWSAPI_KEY')
 newsapi = NewsApiClient(api_key=API_KEY)
 
 ### SCRAPING FUNCTION
-def scrape_newsapi(start_date, end_date, query="esg"):
+def scrape_newsapi(start_date, end_date, csv_file):
     all_URLs = []
     all_titles = []
     all_sources = []
@@ -27,29 +27,92 @@ def scrape_newsapi(start_date, end_date, query="esg"):
 
     print("🔍 Scraping URLs from NewsAPI...")
 
+    # loop through each week to scrape URLs and titles
     for i in tqdm(range(len(date_ranges) - 1)):
         from_date = date_ranges[i].strftime("%Y-%m-%d")
         to_date = date_ranges[i + 1].strftime("%Y-%m-%d")
 
         try:
-            data = newsapi.get_everything(q=query,
+            data = newsapi.get_everything(q='esg',
                                           from_param=from_date,
                                           to=to_date,
                                           language='en', # needs to be english articles
-                                          page_size=100)
+                                          page_size=100) # number of results to return per page
 
             articles = data.get("articles", [])
             for article in articles:
                 if article["url"] not in all_URLs:
                     all_URLs.append(article["url"])
                     all_titles.append(article["title"])
-                    all_sources.append(article["source"]["name"])
+                    all_sources.append(article["source"])
 
             sleep(random.uniform(3, 8))  # human-like behavior 
 
         except Exception as e:
             print(f"API failed from {from_date} to {to_date}: {e}")
-            sleep(10)
+            sleep(10) # sleep before retrying
 
     print(f"✅ Total URLs Scraped: {len(all_URLs)}")
-    return all_titles, all_sources, all_URLs
+    
+    print("\n🔍 Scraping Full News Content...")
+
+    # get full text content from scraped news articles URL
+    text = []
+    for url in tqdm(all_URLs):
+        try:
+            response = requests.get(url)  
+            if response.status_code != 200: # req unsuccessful
+                text.append("Unable to scrape text")  # fill missing text
+                continue
+
+            soup = BeautifulSoup(response.text, "html.parser")
+
+            # try different HTML patterns
+            content = soup.find("div", {"id": re.compile("^content-body-[0-9]+")})
+            if not content:
+                content = soup.find("article")
+            if not content:
+                content = soup.find("div", {"class": re.compile(".*content.*")})
+            if not content:
+                content = soup.find("p")  # fallback to paragraphs
+
+            if content:
+                text.append(content.get_text(strip=True))
+            else:
+                text.append("Content Not Found")  # HTML patterns failed
+
+            sleep(random.uniform(2, 5))  # sleep to avoid detection
+
+        except Exception as e:
+            text.append("Failed to Scrape")  # for any unknown exception
+            continue
+
+    # ensure that all 4 lists have same length before saving to csv
+    print(len(all_URLs))
+    print(len(all_titles))
+    print(len(all_sources))
+    print(len(text))
+
+    # create df with scraped data
+    scraped_text_df = pd.DataFrame({
+        "Title": all_titles,
+        "Source": all_sources,
+        "URL": all_URLs,
+        "Content": text,
+    })
+
+    # if the CSV file exists, append new data
+    if os.path.exists(csv_file):
+        print("✅ Existing CSV Found. Appending Data...")
+        existing_df = pd.read_csv(csv_file)
+        scraped_text_df = pd.concat([existing_df, scraped_text_df], ignore_index=True)
+        scraped_text_df = scraped_text_df.drop_duplicates(subset="URL", keep="first")
+        print(f"{len(scraped_text_df) - len(existing_df)} New Articles Appended")
+    else:
+        print("🚨 No Existing CSV Found... Creating New CSV")
+
+    # save scraped data into the CSV file
+    scraped_text_df.to_csv(csv_file, index=False, encoding="utf-8-sig")
+    print(f"✅ Data Saved to {csv_file}") 
+    return scraped_text_df
+    

@@ -1,65 +1,73 @@
-### HANDLES INDEXING OF CLEANED DATA TO ELASTICSEARCH
-
 from elasticsearch import Elasticsearch, helpers
 from sentence_transformers import SentenceTransformer
-from dotenv import load_dotenv
-import pandas as pd
-import os
+from elasticsearch.helpers import bulk
 
-# load env variables
-load_dotenv()
-ES_HOST = os.getenv("ES_HOST")
-index_name = os.getenv("ES_INDEX_NAME")
+ES_HOST = "http://localhost:9200"
+index_name = "esg_articles"
 
-INDEX_MAPPING = {
-    "properties": {
-        "title": {"type": "text", "analyzer": "standard"},
-        "source": {"type": "keyword"},
-        "url": {"type": "keyword"},
-        "content": {"type": "text", "analyzer": "standard"},
-        "embeddings": {
-            "type":"dense_vector",
-            "dims": 384,
-            "similarity": "cosine"
-        },
+# initialize local es
+try:
+    es = Elasticsearch([ES_HOST])
+except Exception as e:
+    raise Exception(
+        status_code=500, detail=f"Failed to connect to Elasticsearch: {str(e)}"
+    )
+
+# initialize sentence transformer for embeddings
+embedding_model = SentenceTransformer('all-MiniLM-L6-v2')  # same model as ESG reports
+
+def create_index():
+    """Create an Elasticsearch index for storing ESG articles."""
+    
+    # ensure index in elasticsearch is create w correct mapping - stored as dense_vector
+    index_mapping = {
+        "properties": {
+            "title": {"type": "text", "analyzer": "standard"},
+            "source": {"type": "keyword"},
+            "url": {"type": "keyword"},
+            "content": {"type": "text", "analyzer": "standard"},
+            "embeddings": {
+                "type": "dense_vector",
+                "dims": 384,  # The dimension of your embeddings, make sure this matches
+                "similarity" : "cosine"
+            },
+        }
     }
-}
 
-# load SentenceTransformer model for embeddings
-embedding_model = SentenceTransformer('all-MiniLM-L6-v2') 
-
-def get_embeddings(text):
-    """Get sentence embeddings"""
     try:
-        return embedding_model.encode(text).tolist() # convert to list for elasticsearch
-    except Exception as e:
-        print(f"Error fetching embeddings for text: {text}. Error: {str(e)}")
-        return None
-
-def create_index(es):
-    """Create an index in Elasticsearch."""
-    try:
+       # Delete index if it already exists
         if es.indices.exists(index=index_name):
-            es.indices.delete(index=index_name)  # delete the index if it exists
-        es.indices.create(index=index_name, mappings=INDEX_MAPPING)
+            es.indices.delete(index=index_name)
+        # Create index with mapping
+        es.indices.create(index=index_name, mappings=index_mapping)
         print(f"Index '{index_name}' created successfully!")
     except Exception as e:
-        print(f"Error creating index '{index_name}': {str(e)}")
+        print(f"Error creating index '{index_name}': {str(e)}") 
 
-def index_data_to_elasticsearch(df, es):
-    """Index the scraped and cleaned data into Elasticsearch."""
-    actions = [
-        {
+def generate_documents_with_embeddings(all_splits):
+    """Index the processed article chunks into Elasticsearch with embeddings."""
+    for doc in all_splits:
+        action = {
             "_index": index_name,
-            "id": row['URL'],  # use URL as the unique identifier
             "_source": {
-                "title": row['Title'],
-                "source": row['Source'],
-                "url": row['URL'],
-                "content": row['Content'],
+                "title": doc.metadata['title'],
+                "source": doc.metadata['source'],
+                "url": doc.metadata['url'],
+                "content": doc.page_content,
+                "embeddings": embedding_model.encode(doc.page_content).tolist()
             }
         }
-        for _, row in df.iterrows()
-    ]
-    helpers.bulk(es, actions)
-    print(f"Data indexed successfully for {len(df)} articles!")
+        yield action  
+
+def index_documents(all_splits):
+    success, failed = bulk(es, generate_documents_with_embeddings(all_splits))
+    print(f"Successfully indexed {success} documents. Failed to index {failed} documents.")
+
+def get_embeddings(text):
+    try:
+        # Create embeddings and convert to list from as needed by Elasticsearch
+        return embedding_model.encode(text).tolist()
+    except Exception as e:
+        print(f"Error fetching embeddings for text: {text}. Error: {str(e)}")
+        return None 
+

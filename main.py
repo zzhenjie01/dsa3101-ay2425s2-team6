@@ -35,6 +35,7 @@ def split(scraped_text_df):
 
 
 ##### STEP 3: Generate Embeddings and Store in Elasticsearch
+### please ensure that docker container is running
 def store_in_elastic(all_splits):
     create_index() # ensure index created first
     index_documents(all_splits) # index documents with embeddings

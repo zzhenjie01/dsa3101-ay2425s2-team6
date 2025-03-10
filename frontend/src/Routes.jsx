@@ -5,6 +5,7 @@ import Home from "./pages/homePage";
 import Dashboard from "./pages/dashboardPage";
 import Forecast from "./pages/forecastPage";
 import LoginPage from "./pages/loginPage";
+import Leaderboard from "./pages/leaderboardPage";
 import "./Routes.css";
 
 export default function AppRoutes() {
@@ -15,6 +16,7 @@ export default function AppRoutes() {
       <Route path="/home" element={<Home />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/forecast" element={<Forecast />} />
+      <Route path="/leaderboard" element={<Leaderboard />} />
       <Route path="/login-page" element={<LoginPage />} />
     </Routes>
 

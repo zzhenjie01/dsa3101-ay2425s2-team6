@@ -28,6 +28,13 @@ const sidePanelButtonsLst = [
     imgUrl: "/assets/forecast.png",
     webName: "Forecast",
   },
+
+  {
+    idx: 4,
+    webUrl: "/leaderboard",
+    imgUrl: "/assets/leaderboard.png",
+    webName: "Leaderboard",
+  },
 ];
 
 export default function Header() {

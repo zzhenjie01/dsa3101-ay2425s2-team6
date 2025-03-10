@@ -1,8 +1,10 @@
 import { useForm } from "react-hook-form";
+import { useState } from "react";
 import "./registerPage.css";
 import { Outlet } from "react-router";
 import { useNavigate } from "react-router-dom";
-import { doRegister } from "../auth/authService.js"; // Import the register service
+import axios from "axios";
+import { toast } from "react-hot-toast";
 
 export default function RegistrationPage() {
   const {
@@ -11,6 +13,12 @@ export default function RegistrationPage() {
     watch,
     formState: { errors },
   } = useForm();
+
+  const [data, setData] = useState({
+    email: "",
+    password: "",
+    cpassword: "",
+  });
 
   const navigate = useNavigate();
 
@@ -21,37 +29,26 @@ export default function RegistrationPage() {
   //   }
   // };
 
-  // const onSubmit = async (data, e) => {
-  //   // e.preventDefault();
-  //   try {
-  //     console.log(data);
-  //     await axios.post("http://localhost:5000/api/register", data);
-  //     alert("User registered successfully");
-  //     navigate("/login-page");
-  //   } catch (error) {
-  //     console.error("Registration error:", error.response); // Log the error response
-  //     alert(
-  //       `Error registering user: ${
-  //         error.response?.data?.details || "Unknown error"
-  //       }`
-  //     ); // Show specific error
-  //   }
-  // };
-
-  const onSubmit = async (data, e) => {
-    console.log(data);
+  const onSubmit = async (e) => {
+    console.log("RegisterSubmit called");
+    e.preventDefault();
+    const { email, password, cpassword } = data;
     try {
-      const result = await doRegister(data.email, data.password); // Call the register service
-      if (result.success) {
-        alert("User registered successfully");
-        navigate("/login-page");
+      const { data } = await axios.post("/auth/register", {
+        email,
+        password,
+        cpassword,
+      });
+      if (data.error) {
+        toast.error(data.error);
       } else {
-        console.error("Registration error:", result);
-        alert(`Error registering user: ${result.details || result.message}`);
+        toast.success("User Registered Successfully!");
+        toast.success("Redirecting to Login Page");
+        navigate("/login-page");
       }
     } catch (error) {
-      console.error("Frontend registration error:", error);
-      alert("An unexpected error occurred");
+      console.log(error);
+      toast.error("Unknown Error Occurred. Please try again.");
     }
   };
 
@@ -62,23 +59,17 @@ export default function RegistrationPage() {
   };
 
   // For validating password and confirm password
-  const validatePasswordMatch = (value) => {
-    const password = watch("password");
-    return password === value ? "" : "Passwords do not match";
-  };
+  // const validatePasswordMatch = (value) => {
+  //   const password = watch("password");
+  //   return password === value ? "" : "Passwords do not match";
+  // };
 
   return (
     <>
       <div className="background" />
 
       <div className="register-container">
-        <form
-          className="register-form"
-          onSubmit={(e) => {
-            console.log("handleSubmit called");
-            handleSubmit(onSubmit)(e);
-          }}
-        >
+        <form className="register-form" onSubmit={onSubmit}>
           {/* Email text*/}
           <div className="input-container">
             <label className="field-label" htmlFor="email">
@@ -92,8 +83,12 @@ export default function RegistrationPage() {
           {/* Email input */}
           <input
             className="input-field"
+            placeholder="Enter Email"
             type="email"
-            {...register("email", { required: "*Email* is required" })}
+            autoComplete="off"
+            value={data.email}
+            // {...register("data.email", { required: "*Email* is required" })}
+            onChange={(e) => setData({ ...data, email: e.target.value })}
           />
 
           {/* Password text */}
@@ -110,8 +105,14 @@ export default function RegistrationPage() {
           <input
             id="password"
             className="input-field"
+            placeholder="Enter Password"
             type="password"
-            {...register("password", { required: "*Password* is required" })}
+            autoComplete="off"
+            value={data.password}
+            // {...register("data.password", {
+            //   required: "*Password* is required",
+            // })}
+            onChange={(e) => setData({ ...data, password: e.target.value })}
           />
 
           {/* Confirm Password text */}
@@ -128,11 +129,15 @@ export default function RegistrationPage() {
           <input
             id="cpassword"
             className="input-field"
+            placeholder="Re-enter Password"
             type="password"
-            {...register("cpassword", {
-              required: "*Confirm Password* is required",
-              validate: validatePasswordMatch,
-            })}
+            autoComplete="off"
+            data={data.cpassword}
+            onChange={(e) => setData({ ...data, cpassword: e.target.value })}
+            // {...register("cpassword", {
+            //   required: "*Confirm Password* is required",
+            //   validate: validatePasswordMatch,
+            // })}
           />
 
           {/*Submit button*/}

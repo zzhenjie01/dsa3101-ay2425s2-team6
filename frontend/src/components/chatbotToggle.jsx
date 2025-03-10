@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { ChatBotContext } from "../context/contexts";
+import { ChatBotContext } from "../context/context.js";
 
 function ChatbotToggleButton() {
   const { chatbotOpen, setChatbotOpen } = useContext(ChatBotContext);

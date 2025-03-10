@@ -1,4 +1,4 @@
-import User from "./createUserCredentialsCollection.js";
+import User from "./auth/createUserCredentialsCollection.js";
 
 const n = 10;
 const createTestUser = async (num) => {

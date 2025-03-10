@@ -22,6 +22,8 @@ To launch the application, you will need to do the following steps:
 4. After setting up the backend services, you can now go to the frontend folder by running either `cd ../frontend` in the current directory or opening a new terminal and running `cd frontend` at the main folder directory.
 5. Install the necessary packages by doing `npm install`.
 6. Once installed, you may proceed to launch the webapp by running `npm run dev`. You should be able to access the webapp at `http://localhost:5173`.
+7. Once you are done with the webapp, you should run `npm run end` at the backend folder directory to stop the MongoDB server.
+   1. This will run docker compose down to stop the current MongoDB and will save the user data for future use.
 
 ## 🌀 Run Models
 

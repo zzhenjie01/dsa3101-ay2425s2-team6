@@ -1,7 +1,7 @@
 import { useState } from "react";
 import SidePanel from "../components/SidePanel";
 import NavBar from "../components/NavBtn";
-import { SidePanelContext } from "../context/contexts";
+// import { SidePanelContext } from "../context/contexts";
 import Chart from "../components/Chart";
 
 const sidePanelButtonsLst = [

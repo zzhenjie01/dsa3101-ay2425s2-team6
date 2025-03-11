@@ -37,7 +37,7 @@ All contributions are to be merged to main via pull request.
   - `<name>`: GitHub username or any name that is easy to identify the owner of the branch. Strictly no spaces and all letters in lowercase.
   - `<feature>`: The name of the feature that the code is meant for.
   - `<subfeature>`: Optional input. Depends on whether the main feature is being broken down into subfeatures due to its complexity.
-- For example: nghockleong-loginpage-userauthentication
+- For example: `nghockleong-loginpage-userauthentication`
 
 ### Commit Messages
 

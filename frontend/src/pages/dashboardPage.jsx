@@ -1,9 +1,8 @@
-import "./dashboardPage.css";
 import { useState, useEffect } from "react";
-import SidePanel from "../components/SidePanel";
-import NavBar from "../components/NavBtn";
-import ChatbotDiv from "../components/ChatbotToggle";
-import { SidePanelContext } from "../context/contexts";
+// import SidePanel from "../components/SidePanel";
+// import NavBar from "../components/NavBtn";
+// import ChatbotDiv from "../components/ChatbotToggle";
+// import { SidePanelContext } from "../context/contexts";
 import EnvironmentalCard from "../components/environmentalCard";
 import SocialCard from "../components/socialCard";
 import GovernanceCard from "../components/governanceCard";

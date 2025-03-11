@@ -1,10 +1,11 @@
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import "./loginPage.css";
 import { Outlet } from "react-router";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-hot-toast";
+import { UserContext } from "@/context/context.js";
 
 /*
 Div centered on the login page
@@ -21,15 +22,9 @@ export default function LoginCredentialsDiv() {
     password: "",
   });
 
-  const navigate = useNavigate();
+  const { setUser } = useContext(UserContext);
 
-  // Placeholder check
-  //   const onSubmit = (data) => {
-  //     console.log(data);
-  //     if (data.email === "superadmin@nus") {
-  //       navigate("/home");
-  //     }
-  //   };
+  const navigate = useNavigate();
 
   const onSubmit = async (e) => {
     console.log("LoginSubmit called");
@@ -44,9 +39,11 @@ export default function LoginCredentialsDiv() {
       if (data.error) {
         toast.error(data.error);
       } else {
-        setData({});
         toast.success("Successfully logged in! Welcome!");
+        setUser(data);
+        setData({});
         navigate("/home");
+        // window.location.reload();
       }
     } catch (error) {
       console.log(error);

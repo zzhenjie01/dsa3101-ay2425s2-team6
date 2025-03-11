@@ -1,6 +1,5 @@
-import "./ChatbotToggle.css";
 import { useContext, useState, useEffect, useRef } from "react";
-import { ChatBotContext } from "../context/contexts";
+import { ChatBotContext } from "../context/context";
 import { X, MessageCircle, Send } from "lucide-react";
 import axios from "axios";
 

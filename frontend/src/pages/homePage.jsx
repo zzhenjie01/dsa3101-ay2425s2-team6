@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { UserContext } from "@/context/context";
+import { UserContext } from "@/context/context.js";
 
 export default function HomePage() {
   const { user } = useContext(UserContext);

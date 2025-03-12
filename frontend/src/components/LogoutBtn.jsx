@@ -2,14 +2,20 @@ import { useContext } from "react";
 import { UserContext } from "@/context/context.js";
 import { toast } from "react-hot-toast";
 import guestProfile from "../../../backend/auth/guestProfile.js";
+import axios from "axios";
 
 export default function LogoutBtn() {
   const { setUser } = useContext(UserContext);
 
-  function handleLogout() {
-    setUser(guestProfile);
-    toast.success("User successfully logged out!");
-  }
+  const handleLogout = async () => {
+    try {
+      const response = await axios.post("/auth/logout");
+      setUser(guestProfile);
+      toast.success("User Logged out successfully!");
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
 
   return (
     <button

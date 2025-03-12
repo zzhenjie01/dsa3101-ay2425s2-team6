@@ -7,11 +7,11 @@ export default function WelcomeMsg() {
   return (
     <p
       className="absolute top-6
-      right-[calc(8rem+8px)] 
+      right-[calc(16rem+8px)] 
       text-gray-800 
       font-medium"
     >
-      Welcome, {user ? user.name : "Guest"}
+      Hello, {user.name}
     </p>
   );
 }

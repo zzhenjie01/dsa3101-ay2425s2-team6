@@ -1,4 +1,5 @@
 import { useContext, useState, useEffect, useRef } from "react";
+import { useLocation } from "react-router";
 import { ChatBotContext } from "../context/context";
 import { X, MessageCircle, Send } from "lucide-react";
 import axios from "axios";
@@ -128,6 +129,17 @@ export default function ChatbotDiv() {
     chatbotOpen,
     setChatbotOpen,
   };
+
+  // Do not show chatbot at the login/register pages
+  const location = useLocation();
+  console.log(location.pathname);
+  if (
+    location.pathname === "/login-page" ||
+    location.pathname === "/register-page"
+  ) {
+    return null;
+  }
+
   return (
     <ChatBotContext.Provider value={chatbotOpenObj}>
       <ChatbotToggleButton />

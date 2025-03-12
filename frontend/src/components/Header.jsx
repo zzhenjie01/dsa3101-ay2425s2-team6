@@ -6,6 +6,7 @@ import NavBtn from "./NavBtn";
 import LoginBtn from "./LoginBtn";
 import LogoutBtn from "./LogoutBtn";
 import WelcomeMsg from "./welcomeMsg.jsx";
+// import WeightsButton from "./WeightsButton.jsx";
 // import ChatbotDiv from "../components/ChatbotToggle";
 import { SidePanelContext } from "../context/context.js";
 import { useLocation } from "react-router-dom";
@@ -61,6 +62,7 @@ export default function Header() {
         <SidePanel buttonLst={sidePanelButtonsLst} />
         <div className="relative">
           <WelcomeMsg />
+          {/* <WeightsButton /> */}
           {!user || user.name === "Guest" ? <LoginBtn /> : <LogoutBtn />}
         </div>
       </SidePanelContext.Provider>

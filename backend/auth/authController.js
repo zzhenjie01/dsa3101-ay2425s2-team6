@@ -120,6 +120,23 @@ export const loginUser = async (req, res) => {
   }
 };
 
+export const logoutUser = (req, res) => {
+  try {
+    // Clear the token cookie
+    res.clearCookie("token");
+
+    // Return a success message
+    res.json({
+      message: "User logged out successfully.",
+    });
+  } catch (error) {
+    console.error("Error logging out user:", error);
+    res.status(500).json({
+      error: "An error occurred while logging out.",
+    });
+  }
+};
+
 export const getProfile = (req, res) => {
   const { token } = req.cookies;
   if (token) {
@@ -148,5 +165,6 @@ export const getProfile = (req, res) => {
 export default {
   registerUser,
   loginUser,
+  logoutUser,
   getProfile,
 };

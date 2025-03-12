@@ -9,6 +9,10 @@ need to move on .env file
 
 // define userSchema
 const userSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
   email: {
     type: String,
     required: true,
@@ -17,6 +21,27 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
+  },
+  environmentalRating: {
+    type: Number,
+    required: true,
+    min: 0,
+    max: 100,
+    default: 50,
+  },
+  socialRating: {
+    type: Number,
+    required: true,
+    min: 0,
+    max: 100,
+    default: 50,
+  },
+  governanceRating: {
+    type: Number,
+    required: true,
+    min: 0,
+    max: 100,
+    default: 50,
   },
 });
 

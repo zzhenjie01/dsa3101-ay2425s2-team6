@@ -39,7 +39,7 @@ export default function LoginCredentialsDiv() {
       if (data.error) {
         toast.error(data.error);
       } else {
-        toast.success("Successfully logged in! Welcome!");
+        toast.success(`Successfully logged in. Welcome ${data.name}!`);
         setUser(data);
         setData({});
         navigate("/home");

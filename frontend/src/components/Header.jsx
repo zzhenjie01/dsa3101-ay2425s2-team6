@@ -1,8 +1,11 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { UserContext } from "../context/context.js";
 import SidePanel from "./SidePanel";
 import NavBtn from "./NavBtn";
 import LoginBtn from "./LoginBtn";
+import LogoutBtn from "./LogoutBtn";
+import WelcomeMsg from "./welcomeMsg.jsx";
 // import ChatbotDiv from "../components/ChatbotToggle";
 import { SidePanelContext } from "../context/context.js";
 import { useLocation } from "react-router-dom";
@@ -31,11 +34,14 @@ const sidePanelButtonsLst = [
 ];
 
 export default function Header() {
+  const { user } = useContext(UserContext);
   const [sidePanelIsOpen, setSidePanelIsOpen] = useState(false);
   const sidePanelToggleObj = {
     sidePanelIsOpen,
     setSidePanelIsOpen,
   };
+
+  // Do not show header if at login-page/register-page
   const location = useLocation();
   console.log(location.pathname);
   if (
@@ -53,7 +59,10 @@ export default function Header() {
       >
         <NavBtn />
         <SidePanel buttonLst={sidePanelButtonsLst} />
-        <LoginBtn />
+        <div className="relative">
+          <WelcomeMsg />
+          {!user || user.name === "Guest" ? <LoginBtn /> : <LogoutBtn />}
+        </div>
       </SidePanelContext.Provider>
     </header>
   );

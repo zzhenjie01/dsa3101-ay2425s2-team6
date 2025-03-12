@@ -22,21 +22,21 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  environmentalRating: {
+  environmentalWeight: {
     type: Number,
     required: true,
     min: 0,
     max: 100,
     default: 50,
   },
-  socialRating: {
+  socialWeight: {
     type: Number,
     required: true,
     min: 0,
     max: 100,
     default: 50,
   },
-  governanceRating: {
+  governanceWeight: {
     type: Number,
     required: true,
     min: 0,

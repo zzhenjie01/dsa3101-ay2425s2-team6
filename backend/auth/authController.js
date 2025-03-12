@@ -1,13 +1,27 @@
-import User from "./createUserCredentialsCollection.js";
+import User from "./userModel.js";
 import { hashPassword, comparePassword } from "./authHelper.js";
 import jwt from "jsonwebtoken";
+import { guestProfile } from "./guestProfile.js";
 
 // JWT Secret
 const JWT_SECRET = process.env.JWT_KEY;
 
 export const registerUser = async (req, res) => {
   try {
-    const { email, password, cpassword } = req.body;
+    const { name, email, password, cpassword } = req.body;
+
+    // Check if name is present
+    if (!name) {
+      return res.json({
+        error: "Name is required.",
+      });
+    }
+
+    if (name.length > 20) {
+      return res.json({
+        error: "Name must be less than 20 characters.",
+      });
+    }
 
     // Check if email is present
     if (!email) {
@@ -43,6 +57,7 @@ export const registerUser = async (req, res) => {
 
     // Create user in database
     const user = await User.create({
+      name,
       email,
       password: hashedPassword,
     });
@@ -56,6 +71,20 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
+
+    // Check if email is present
+    if (!email) {
+      res.json({
+        error: "Email is required.",
+      });
+    }
+
+    // Check if password is present
+    if (!password) {
+      res.json({
+        error: "Password is required.",
+      });
+    }
 
     // Check if user exists in database
     const user = await User.findOne({ email });
@@ -71,7 +100,7 @@ export const loginUser = async (req, res) => {
       jwt.sign(
         { email: user.email, id: user._id },
         JWT_SECRET,
-        {},
+        { expiresIn: "1h" },
         (err, token) => {
           if (err) {
             throw err;
@@ -96,12 +125,23 @@ export const getProfile = (req, res) => {
   if (token) {
     jwt.verify(token, JWT_SECRET, {}, (err, user) => {
       if (err) {
-        throw err;
+        if (err.name === "TokenExpiredError") {
+          // Clear the expired token cookie
+          res.clearCookie("token");
+          res.status(401).json({
+            error: "Session expired. Please log in again.",
+          });
+        } else {
+          // Handle other JWT errors (e.g., invalid token)
+          res.status(400).json({ error: "Invalid token" });
+        }
+      } else {
+        res.json(user);
       }
-      res.json(user);
     });
   } else {
-    res.json("Request Cookie not found");
+    // Return the guest profile if no token is found
+    res.json(guestProfile);
   }
 };
 

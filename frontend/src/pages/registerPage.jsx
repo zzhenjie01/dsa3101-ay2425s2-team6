@@ -15,6 +15,7 @@ export default function RegistrationPage() {
   } = useForm();
 
   const [data, setData] = useState({
+    name: "",
     email: "",
     password: "",
     cpassword: "",
@@ -22,19 +23,13 @@ export default function RegistrationPage() {
 
   const navigate = useNavigate();
 
-  // const onSubmit = (data) => {
-  //   console.log(data);
-  //   if (data.email === "superadmin@nus") {
-  //     navigate("/home");
-  //   }
-  // };
-
   const onSubmit = async (e) => {
     console.log("RegisterSubmit called");
     e.preventDefault();
-    const { email, password, cpassword } = data;
+    const { name, email, password, cpassword } = data;
     try {
       const { data } = await axios.post("/auth/register", {
+        name,
         email,
         password,
         cpassword,
@@ -70,6 +65,27 @@ export default function RegistrationPage() {
 
       <div className="register-container">
         <form className="register-form" onSubmit={onSubmit}>
+          {/* Name text*/}
+          <div className="input-container">
+            <label className="field-label" htmlFor="name">
+              Name
+            </label>
+            {errors.name && (
+              <span style={{ color: "red" }}> {errors.name.message} </span>
+            )}
+          </div>
+
+          {/* Name input */}
+          <input
+            className="input-field"
+            placeholder="Enter Name"
+            type="name"
+            autoComplete="off"
+            value={data.name}
+            // {...register("data.name", { required: "*Name* is required" })}
+            onChange={(e) => setData({ ...data, name: e.target.value })}
+          />
+
           {/* Email text*/}
           <div className="input-container">
             <label className="field-label" htmlFor="email">

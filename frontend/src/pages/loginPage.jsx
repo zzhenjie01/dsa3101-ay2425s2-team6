@@ -54,7 +54,7 @@ export default function LoginCredentialsDiv() {
   const handleGuestLogin = () => {
     // Example: Navigate to a guest-access page or set a guest user state
     console.log("Guest login triggered");
-    navigate("/dashboard"); // Use React Router's navigate function
+    navigate("/home"); // Use React Router's navigate function
   };
 
   return (

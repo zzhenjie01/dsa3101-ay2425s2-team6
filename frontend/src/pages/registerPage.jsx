@@ -5,6 +5,7 @@ import { Outlet } from "react-router";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-hot-toast";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function RegistrationPage() {
   const {
@@ -21,7 +22,18 @@ export default function RegistrationPage() {
     cpassword: "",
   });
 
+  const [showPassword, setShowPassword] = useState(false);
+
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const navigate = useNavigate();
+
+  const onChange = (e) => {
+    setData({
+      ...data,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const onSubmit = async (e) => {
     console.log("RegisterSubmit called");
@@ -74,18 +86,17 @@ export default function RegistrationPage() {
               <span style={{ color: "red" }}> {errors.name.message} </span>
             )}
           </div>
-
           {/* Name input */}
           <input
             className="input-field"
             placeholder="Enter Name"
             type="name"
+            name="name"
             autoComplete="off"
             value={data.name}
             // {...register("data.name", { required: "*Name* is required" })}
-            onChange={(e) => setData({ ...data, name: e.target.value })}
+            onChange={onChange}
           />
-
           {/* Email text*/}
           <div className="input-container">
             <label className="field-label" htmlFor="email">
@@ -95,16 +106,16 @@ export default function RegistrationPage() {
               <span style={{ color: "red" }}> {errors.email.message} </span>
             )}
           </div>
-
           {/* Email input */}
           <input
             className="input-field"
             placeholder="Enter Email"
             type="email"
+            name="email"
             autoComplete="off"
             value={data.email}
             // {...register("data.email", { required: "*Email* is required" })}
-            onChange={(e) => setData({ ...data, email: e.target.value })}
+            onChange={onChange}
           />
 
           {/* Password text */}
@@ -118,18 +129,30 @@ export default function RegistrationPage() {
           </div>
 
           {/* Password input */}
-          <input
-            id="password"
-            className="input-field"
-            placeholder="Enter Password"
-            type="password"
-            autoComplete="off"
-            value={data.password}
-            // {...register("data.password", {
-            //   required: "*Password* is required",
-            // })}
-            onChange={(e) => setData({ ...data, password: e.target.value })}
-          />
+          <div className="input-field">
+            <input
+              id="password"
+              className="input-field-text"
+              placeholder="Enter Password"
+              type={showPassword ? "text" : "password"}
+              name="password"
+              autoComplete="off"
+              value={data.password}
+              // {...register("data.password", {
+              //   required: "*Password* is required",
+              // })}
+              onChange={onChange}
+            />
+            <button
+              type="button"
+              className="input-field-password-toggle"
+              onClick={() => {
+                setShowPassword(!showPassword);
+              }}
+            >
+              {showPassword ? <FaEye /> : <FaEyeSlash />}
+            </button>
+          </div>
 
           {/* Confirm Password text */}
           <div className="input-container">
@@ -140,21 +163,32 @@ export default function RegistrationPage() {
               <span style={{ color: "red" }}>{errors.cpassword.message}</span>
             )}
           </div>
-
           {/* Confirm Password input */}
-          <input
-            id="cpassword"
-            className="input-field"
-            placeholder="Re-enter Password"
-            type="password"
-            autoComplete="off"
-            data={data.cpassword}
-            onChange={(e) => setData({ ...data, cpassword: e.target.value })}
-            // {...register("cpassword", {
-            //   required: "*Confirm Password* is required",
-            //   validate: validatePasswordMatch,
-            // })}
-          />
+          <div className="input-field">
+            <input
+              id="cpassword"
+              className="input-field-text"
+              placeholder="Re-enter Password"
+              type={showConfirmPassword ? "text" : "password"}
+              name="cpassword"
+              autoComplete="off"
+              data={data.cpassword}
+              onChange={onChange}
+              // {...register("cpassword", {
+              //   required: "*Confirm Password* is required",
+              //   validate: validatePasswordMatch,
+              // })}
+            />
+            <button
+              type="button"
+              className="input-field-password-toggle"
+              onClick={() => {
+                setShowConfirmPassword(!showConfirmPassword);
+              }}
+            >
+              {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
+            </button>
+          </div>
 
           {/*Submit button*/}
           <input
@@ -166,7 +200,6 @@ export default function RegistrationPage() {
             {" "}
             Create Account{" "}
           </button> */}
-
           <button type="button" className="guest-button" onClick={handleBack}>
             {" "}
             Back to Login{" "}

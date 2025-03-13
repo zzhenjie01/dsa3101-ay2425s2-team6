@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { UserContext } from "@/context/context.js";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 /*
 Div centered on the login page
@@ -22,9 +23,18 @@ export default function LoginCredentialsDiv() {
     password: "",
   });
 
+  const [showPassword, setShowPassword] = useState(false);
+
   const { setUser } = useContext(UserContext);
 
   const navigate = useNavigate();
+
+  const onChange = (e) => {
+    setData({
+      ...data,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const onSubmit = async (e) => {
     console.log("LoginSubmit called");
@@ -78,9 +88,10 @@ export default function LoginCredentialsDiv() {
             placeholder="Enter Email"
             type="email"
             autoComplete="off"
+            name="email"
             value={data.email}
             // {...register("data.email", { required: "*Email* is required" })}
-            onChange={(e) => setData({ ...data, email: e.target.value })}
+            onChange={onChange}
           />
 
           {/* Password text */}
@@ -93,19 +104,31 @@ export default function LoginCredentialsDiv() {
             )}
           </div>
 
-          {/* {Password input} */}
-          <input
-            id="password"
-            className="input-field"
-            placeholder="Enter Password"
-            type="password"
-            autoComplete="off"
-            value={data.password}
-            // {...register("data.password", {
-            //   required: "*Password* is required",
-            // })}
-            onChange={(e) => setData({ ...data, password: e.target.value })}
-          />
+          {/* Password input */}
+          <div className="input-field">
+            <input
+              id="password"
+              className="input-field-text"
+              placeholder="Enter Password"
+              type={showPassword ? "text" : "password"}
+              name="password"
+              autoComplete="off"
+              value={data.password}
+              // {...register("data.password", {
+              //   required: "*Password* is required",
+              // })}
+              onChange={onChange}
+            />
+            <button
+              type="button"
+              className="input-field-password-toggle"
+              onClick={() => {
+                setShowPassword(!showPassword);
+              }}
+            >
+              {showPassword ? <FaEye /> : <FaEyeSlash />}
+            </button>
+          </div>
 
           <input className="form-button" type={"submit"} value="Log In" />
 

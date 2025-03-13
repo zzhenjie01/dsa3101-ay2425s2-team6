@@ -78,15 +78,6 @@
   position: relative;
 }
 
-.password-toggle-button {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-}
-
 .error-message {
   color: red;
   font-size: 12px;
@@ -102,19 +93,22 @@
   flex: 2;
   border-radius: 4px;
   padding: 3px;
+  outline: 0;
 }
 
 .input-field-text {
   width: 90%;
   height: 100%;
+  outline: 0;
 }
 
 .input-field-password-toggle {
+  position: relative;
   width: 10%;
-  top: 50%;
+  right: 0px;
+  top: 0%;
   cursor: pointer;
   background: none;
-  border: none;
 }
 
 /* When error occurs, display the error message */

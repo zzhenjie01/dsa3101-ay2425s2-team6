@@ -93,14 +93,17 @@
   flex: 2;
   border-radius: 4px;
   padding: 3px;
+  outline: 0;
 }
 
 .input-field-text {
   width: 90%;
   height: 100%;
+  outline: 0;
 }
 
 .input-field-password-toggle {
+  position: relative;
   width: 10%;
   top: 50%;
   cursor: pointer;

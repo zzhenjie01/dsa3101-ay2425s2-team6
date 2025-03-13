@@ -8,7 +8,7 @@ export default function Footer() {
     >
       <div className="flex justify-between items-center max-w-3xl mx-auto">
         <p className="mr-5">
-          &copy; AY2024/25 DSA3101 Data Science in Practice Group 6
+          &copy; AY2024/25 Semester 2 DSA3101: Data Science in Practice Group 6
         </p>
         <a
           href="https://github.com/zzhenjie01/dsa3101-ay2425s2-team6"

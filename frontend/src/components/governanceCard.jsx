@@ -1,6 +1,6 @@
-import "./governanceCard.css";
+// import "./governanceCard.css";
 import { useContext, useState } from "react";
-import { ChatBotContext } from "../context/contexts";
+// import { ChatBotContext } from "../context/contexts";
 import { getLastYear, getLastYearData } from "./helpers/getLastYear";
 import { BoardGender } from "./boardGender";
 

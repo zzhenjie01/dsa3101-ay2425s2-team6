@@ -1,6 +1,6 @@
-import "./environmentalCard.css";
+// import "./environmentalCard.css";
 import { useContext, useState } from "react";
-import { ChatBotContext } from "../context/contexts";
+// import { ChatBotContext } from "../context/context";
 import { OverallGHG } from "./overallGhg";
 import { ScopeGHG } from "./scopeGhg";
 import { Water } from "./water";

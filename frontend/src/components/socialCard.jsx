@@ -1,6 +1,6 @@
-import "./socialCard.css";
+// import "./socialCard.css";
 import { useContext, useState } from "react";
-import { ChatBotContext } from "../context/contexts";
+// import { ChatBotContext } from "../context/contexts";
 import { getLastYear, getLastYearData } from "./helpers/getLastYear";
 
 export default function SocialCard(props) {

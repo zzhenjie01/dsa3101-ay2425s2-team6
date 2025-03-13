@@ -38,28 +38,49 @@ export default function LeaderboardPage() {
   ];
 
   const [data, setData] = useState([]);
+
   useEffect(() => {
-    setData(leaderboardData);
+    setData(updateData(leaderboardData));
   }, []);
 
   const { e_weight, s_weight, g_weight } = 1;
 
+  function updateData(data) {
+    const newData = data
+      .map((row) => ({
+        ...row,
+        total: row.e_score + row.s_score + row.g_score,
+      }))
+      .sort(function (a, b) {
+        return b.total - a.total;
+      });
+    return newData;
+  }
+
+  console.log(data);
+
   return (
     <div className="flex-grow pt-20 text-center">
       <h1 className="text-3xl pt-8 pb-16">Leaderboard</h1>
-      <div className="flex justify-between items-center bg-white border border-gray-300 rounded-lg p-3 md:p-5 my-3 mx-auto w-4/5 shadow-md text-lg font-semibold">
-        <span>Company</span>
-        <span>Environmental</span>
-        <span>Social</span>
-        <span>Governance</span>
-        <span>Total Score</span>
+      <div className="flex justify-center items-baseline h-screen">
+        <table className="table-fixed">
+          <thead className="bg-gray-200 text-gray-700 uppercase text-sm font-semibold">
+            <tr>
+              <th className="px-6 py-3">Company</th>
+              <th className="px-6 py-3">Environmental</th>
+              <th className="px-6 py-3">Social</th>
+              <th className="px-6 py-3">Governance</th>
+              <th className="px-6 py-3">Total Score</th>
+            </tr>
+          </thead>
+
+          <tbody className="divide-y divide-gray-300">
+            {data.map((row) => (
+              <LeaderboardRow key={row._id} data={row} />
+            ))}
+          </tbody>
+        </table>
       </div>
-      {data.map((row) => (
-        <LeaderboardRow
-          key={row._id}
-          data={{ ...row, total: row.e_score + row.s_score + row.g_score }}
-        />
-      ))}
     </div>
   );
 }

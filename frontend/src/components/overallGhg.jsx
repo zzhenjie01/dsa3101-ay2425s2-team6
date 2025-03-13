@@ -64,7 +64,7 @@ export function OverallGHG(props) {
     ) / 10;
 
   return (
-    <Card>
+    <Card className="h-full">
       <CardHeader>
         <CardTitle>"Overall GHG Emissions"</CardTitle>
         <CardDescription>

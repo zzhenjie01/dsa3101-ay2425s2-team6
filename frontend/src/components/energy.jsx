@@ -52,7 +52,7 @@ export function Energy(props) {
     ) / 10;
 
   return (
-    <Card>
+    <Card className="h-full">
       <CardHeader>
         <CardTitle>Energy Consumption</CardTitle>
         <CardDescription>

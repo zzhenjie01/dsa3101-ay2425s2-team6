@@ -10,13 +10,11 @@ import {
   DialogDescription,
   DialogTitle,
   DialogFooter,
-  DialogClose,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { X } from "lucide-react"; // Import X icon
 import toast from "react-hot-toast";
 import axios from "axios";
 
@@ -60,13 +58,18 @@ export default function WeightsButton() {
       socialWeight: sliderValues.socialWeight,
       governanceWeight: sliderValues.governanceWeight,
     };
-    const response = await axios.put("/auth/updateProfile", userSettings);
-    console.log(response);
+    toast.promise(axios.put("/auth/updateProfile", userSettings), {
+      loading: "Saving...",
+      success: "Weights successfully saved!",
+      error: "Weights could not be saved. Please try again.",
+    });
+    // const response = await axios.put("/auth/updateProfile", userSettings);
+    // console.log(response);
 
     // Update user settings in context
     setUser(userSettings);
     setOpen(false);
-    toast.success("Weights successfully saved!");
+    // toast.success("Weights successfully saved!");
   };
 
   // Reset slider values when dialog is closed
@@ -108,10 +111,6 @@ export default function WeightsButton() {
           <DialogHeader>
             <DialogTitle>Adjust ESG Weights</DialogTitle>
             <DialogDescription>Click Save when you are done!</DialogDescription>
-            <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-              <X className="h-4 w-4" />
-              <span className="sr-only">Close</span>
-            </DialogClose>
           </DialogHeader>
 
           <div className="grid gap-6 py-4">
@@ -123,7 +122,6 @@ export default function WeightsButton() {
                 {/* Slider */}
                 <div className="flex-1">
                   <Slider
-                    className="bg-black/25"
                     id="environmentalWeight"
                     min={0}
                     max={100}
@@ -137,7 +135,7 @@ export default function WeightsButton() {
                 {/* Input */}
                 <div className="w-16">
                   <Input
-                    type="number"
+                    type="string"
                     name="environmentalWeight"
                     value={sliderValues.environmentalWeight}
                     onChange={handleInputChange}
@@ -156,7 +154,6 @@ export default function WeightsButton() {
                 {/* Slider */}
                 <div className="flex-1">
                   <Slider
-                    className="bg-black/25"
                     id="socialWeight"
                     min={0}
                     max={100}
@@ -170,7 +167,7 @@ export default function WeightsButton() {
                 {/* Input */}
                 <div className="w-16">
                   <Input
-                    type="number"
+                    type="string"
                     name="socialWeight"
                     value={sliderValues.socialWeight}
                     onChange={handleInputChange}
@@ -188,7 +185,6 @@ export default function WeightsButton() {
                 {/* Slider */}
                 <div className="flex-1">
                   <Slider
-                    className="bg-black/25"
                     id="governanceWeight"
                     min={0}
                     max={100}
@@ -202,7 +198,7 @@ export default function WeightsButton() {
                 {/* Input */}
                 <div className="w-16">
                   <Input
-                    type="number"
+                    type="string"
                     name="governanceWeight"
                     value={sliderValues.governanceWeight}
                     onChange={handleInputChange}
@@ -218,7 +214,7 @@ export default function WeightsButton() {
           <DialogFooter>
             <Button
               variant="outline"
-              className="cursor-pointer"
+              className="cursor-pointer hover:bg-black hover:text-white"
               onClick={saveSettings}
             >
               Save Changes

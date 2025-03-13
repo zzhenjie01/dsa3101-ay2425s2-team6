@@ -162,9 +162,28 @@ export const getProfile = (req, res) => {
   }
 };
 
+export const updateProfile = async (req, res) => {
+  try {
+    const user = req.body;
+    const userExists = await User.findOne({ email: user.email });
+    if (userExists) {
+      await User.replaceOne({ email: user.email }, user);
+      res.json("User Successfully Updated.");
+    } else {
+      res.json("Guest User Detected.");
+    }
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while updating the profile." });
+  }
+};
+
 export default {
   registerUser,
   loginUser,
   logoutUser,
   getProfile,
+  updateProfile,
 };

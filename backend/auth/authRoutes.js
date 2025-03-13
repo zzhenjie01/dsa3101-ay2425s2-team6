@@ -5,6 +5,7 @@ import {
   loginUser,
   logoutUser,
   getProfile,
+  updateProfile,
 } from "./authController.js";
 
 export const router = express.Router();
@@ -20,5 +21,6 @@ router.post("/auth/register", registerUser);
 router.post("/auth/login", loginUser);
 router.post("/auth/logout", logoutUser);
 router.get("/auth/profile", getProfile);
+router.put("/auth/updateProfile", updateProfile);
 
 export default router;

@@ -12,3 +12,5 @@ spark-nlp==5.5.3
 ipykernel==6.29.4
 sentence-transformers==3.4.1
 pandas==2.2.3
+fastapi==0.115.11
+uvicorn==0.34.0

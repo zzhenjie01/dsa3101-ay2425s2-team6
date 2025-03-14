@@ -1,5 +1,7 @@
 import "./leaderboardPage.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { UserContext } from "../context/context.js";
+import axios from "axios";
 import LeaderboardRow from "@/components/leaderboardRow";
 
 export default function LeaderboardPage() {
@@ -37,27 +39,33 @@ export default function LeaderboardPage() {
     },
   ];
 
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(leaderboardData);
 
+  const { user } = useContext(UserContext);
+
+  const { environmentalWeight, socialWeight, governanceWeight } = user;
+
+  // Effect to update data whenever weights change
   useEffect(() => {
-    setData(updateData(leaderboardData));
-  }, []);
+    // Only recalculate when weights change, not when data changes
+    const totalWeight = environmentalWeight + socialWeight + governanceWeight;
 
-  const { e_weight, s_weight, g_weight } = 1;
+    if (totalWeight === 0) return;
 
-  function updateData(data) {
+    //Update total to reflect the latest weights and sort by descending total score
     const newData = data
       .map((row) => ({
         ...row,
-        total: row.e_score + row.s_score + row.g_score,
+        total: Math.round(
+          row.e_score * (environmentalWeight / totalWeight) +
+            row.s_score * (socialWeight / totalWeight) +
+            row.g_score * (governanceWeight / totalWeight)
+        ),
       }))
-      .sort(function (a, b) {
-        return b.total - a.total;
-      });
-    return newData;
-  }
+      .sort((a, b) => b.total - a.total);
 
-  console.log(data);
+    setData(newData);
+  }, [environmentalWeight, socialWeight, governanceWeight]); // Only depend on weights
 
   return (
     <div className="flex-grow pt-20 text-center">

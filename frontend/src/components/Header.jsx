@@ -33,12 +33,12 @@ const sidePanelButtonsLst = [
     webName: "Dashboard",
   },
 
-  {
-    idx: 4,
-    webUrl: "/leaderboard",
-    imgUrl: "/assets/leaderboard.png",
-    webName: "Leaderboard",
-  },
+  // {
+  //   idx: 4,
+  //   webUrl: "/leaderboard",
+  //   imgUrl: "/assets/leaderboard.png",
+  //   webName: "Leaderboard",
+  // },
 ];
 
 export default function Header() {
@@ -51,7 +51,7 @@ export default function Header() {
 
   // Do not show header if at login-page/register-page
   const location = useLocation();
-  console.log(location.pathname);
+  // console.log(location.pathname);
   if (
     location.pathname === "/login-page" ||
     location.pathname === "/register-page"

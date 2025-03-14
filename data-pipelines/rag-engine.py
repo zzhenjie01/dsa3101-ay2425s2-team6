@@ -306,7 +306,7 @@ def main():
             for esg_metric in esg_metrics:
                 # Perform a hybrid search in ES to retrieve relvant context for the ESG metric
                 search_query = f"What is {company_name}'s {esg_metric} in {report_year}?"
-                search_results = hybrid_search(search_query, lexical_top_k, semantic_top_k)
+                search_results = hybrid_search(search_query, lexical_top_k, semantic_top_k, company_name)
 
                 # Get the top retrieved context from the search
                 retrieved_chunk = search_results[0]

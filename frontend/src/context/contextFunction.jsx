@@ -7,10 +7,13 @@ export default function UserContextProvider({ children }) {
   const [user, setUser] = useState(guestProfile);
 
   useEffect(() => {
+    const abortController = new AbortController();
     const fetchUserProfile = async () => {
       try {
-        const response = await axios.get("/auth/profile");
-        // console.log(response.data);
+        const response = await axios.get("/auth/profile", {
+          signal: abortController.signal,
+        });
+
         if (response.data === "Request Cookie not found") {
           // Handle the case where no token is found
           setUser(guestProfile);
@@ -19,18 +22,18 @@ export default function UserContextProvider({ children }) {
         }
       } catch (error) {
         console.error("Error fetching user profile:", error);
+        setUser(guestProfile);
         // If an error occurs, keep the user as the guest profile
       }
     };
 
     fetchUserProfile();
 
-    // if (!user) {
-    //   axios.get("/auth/profile").then(({ data }) => {
-    //     setUser(data);
-    //   });
-    // }
+    return () => {
+      abortController.abort();
+    };
   }, []);
+
   return (
     <UserContext.Provider value={{ user, setUser }}>
       {children}

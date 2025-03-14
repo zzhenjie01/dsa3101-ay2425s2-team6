@@ -1,4 +1,3 @@
-import "./LoginBtn.css";
 import { Link } from "react-router-dom";
 
 export default function LoginBtn() {
@@ -15,6 +14,7 @@ export default function LoginBtn() {
         transition duration-300 ease-in-out
         transform hover:scale-105
         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50
+        cursor-pointer
       "
     >
       Login

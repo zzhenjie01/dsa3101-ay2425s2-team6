@@ -1,23 +1,21 @@
 import React from "react";
 // import { Outlet } from "react-router";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/homePage";
 import Dashboard from "./pages/dashboardPage";
-import Forecast from "./pages/forecastPage";
+import Leaderboard from "./pages/leaderboardPage";
 import LoginPage from "./pages/loginPage";
-import "./Routes.css";
+import RegisterPage from "./pages/registerPage";
 
 export default function AppRoutes() {
   return (
-    // <BrowserRouter>
     <Routes className="flex flex-col min-h-screen">
       <Route path="/" element={<Navigate to="/home" />} />
       <Route path="/home" element={<Home />} />
       <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/forecast" element={<Forecast />} />
+      <Route path="/leaderboard" element={<Leaderboard />} />
       <Route path="/login-page" element={<LoginPage />} />
+      <Route path="/register-page" element={<RegisterPage />} />
     </Routes>
-
-    // </BrowserRouter>
   );
 }

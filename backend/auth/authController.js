@@ -39,7 +39,7 @@ export const registerUser = async (req, res) => {
       errors.push("Passwords do not match.");
     }
 
-    if (errors) {
+    if (errors.length !== 0) {
       return res.json({
         error: errors,
       });
@@ -73,25 +73,29 @@ export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    const errors = [];
+
     // Check if email is present
     if (!email) {
-      res.json({
-        error: "Email is required.",
-      });
+      errors.push("Email is required.");
     }
 
     // Check if password is present
     if (!password) {
-      res.json({
-        error: "Password is required.",
+      errors.push("Password is required.");
+    }
+
+    if (errors.length !== 0) {
+      return res.json({
+        error: errors,
       });
     }
 
     // Check if user exists in database
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email: email });
     if (!user) {
       return res.json({
-        error: "User not found. Please try again",
+        error: ["User not found. Please try again"],
       });
     }
 
@@ -113,7 +117,7 @@ export const loginUser = async (req, res) => {
 
     if (!match) {
       return res.json({
-        error: "Password is incorrect. Please try again.",
+        error: ["Password is incorrect. Please try again."],
       });
     }
   } catch (error) {

@@ -10,11 +10,15 @@ export const registerUser = async (req, res) => {
   try {
     const { name, email, password, cpassword } = req.body;
 
+    const errors = {
+      error: [],
+    };
     // Check if name is present
     if (!name) {
-      return res.json({
-        error: "Name is required.",
-      });
+      // return res.json({
+      //   error: "Name is required.",
+      // });
+      errors[error].add("Name is required.");
     }
 
     if (name.length > 20) {
@@ -140,7 +144,7 @@ export const logoutUser = (req, res) => {
 export const getProfile = (req, res) => {
   const { token } = req.cookies;
   if (token) {
-    jwt.verify(token, JWT_SECRET, {}, (err, user) => {
+    jwt.verify(token, JWT_SECRET, {}, async (err, user) => {
       if (err) {
         if (err.name === "TokenExpiredError") {
           // Clear the expired token cookie
@@ -153,7 +157,12 @@ export const getProfile = (req, res) => {
           res.status(400).json({ error: "Invalid token" });
         }
       } else {
-        res.json(user);
+        const fetchedUser = await User.findOne({ email: user.email });
+        if (fetchedUser) {
+          res.json(fetchedUser);
+        } else {
+          res.json(guestProfile);
+        }
       }
     });
   } else {

@@ -14,6 +14,7 @@ function ChatbotToggleButton() {
                 w-27/100
                 h-10
                 border-black border-2
+                bg-white
                 hover:cursor-pointer"
         onClick={() => setChatbotOpen(!chatbotOpen)}
       >

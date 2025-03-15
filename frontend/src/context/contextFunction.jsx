@@ -10,7 +10,7 @@ export default function UserContextProvider({ children }) {
     const abortController = new AbortController();
     const fetchUserProfile = async () => {
       try {
-        const response = await axios.get("/auth/profile", {
+        const response = await axios.get("/auth/getProfile", {
           signal: abortController.signal,
         });
 

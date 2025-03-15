@@ -66,18 +66,22 @@ export default function WeightsButton() {
         socialWeight: sliderValues.socialWeight,
         governanceWeight: sliderValues.governanceWeight,
       };
-      toast.promise(axios.put("/auth/updateProfile", userSettings), {
-        loading: "Saving...",
-        success: "Weights successfully saved!",
-        error: "Weights could not be saved. Please try again.",
-      });
-      // const response = await axios.put("/auth/updateProfile", userSettings);
-      // console.log(response);
+
+      // update user profile in MongoDB
+      const updateProfile = await axios.put(
+        "/auth/updateProfile",
+        userSettings
+      );
+      console.log(updateProfile);
+
+      // record update transaction in MongoDB
+      const saveWeights = await axios.post("/auth/insertWeights", userSettings);
+      console.log(saveWeights);
 
       // Update user settings in context
       setUser(userSettings);
       setOpen(false);
-      // toast.success("Weights successfully saved!");
+      toast.success("Weights successfully saved!");
     }
   };
 

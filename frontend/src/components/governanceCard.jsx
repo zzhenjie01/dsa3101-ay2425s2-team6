@@ -3,12 +3,9 @@ import { useContext, useState } from "react";
 // import { ChatBotContext } from "../context/contexts";
 import { getLastYear, getLastYearData } from "./helpers/getLastYear";
 import { BoardGender } from "./boardGender";
+import { convertPercentage } from "./helpers/percentage";
 
 export default function GovernanceCard(props) {
-  //Board gender data will have:
-  // company, name,
-  // data array of size 2, male and female, which comprises of gender, number (normalised to 100),
-  // company ratio, average ratio (no. of female / no. of male)
   const getBoardGenderData = (compdata, avgdata) => {
     const lastYear = getLastYear(compdata);
     return {
@@ -17,26 +14,18 @@ export default function GovernanceCard(props) {
       data: [
         {
           gender: "male",
-          number:
-            Math.round(
-              (compdata[lastYear]?.male * 100) /
-                (compdata[lastYear]?.male + compdata[lastYear]?.female)
-            ) || 0,
+          number: convertPercentage(compdata[lastYear]) || 0,
         },
         {
           gender: "female",
-          number:
-            Math.round(
-              (compdata[lastYear]?.female * 100) /
-                (compdata[lastYear]?.male + compdata[lastYear]?.female)
-            ) || 0,
+          number: 100 - convertPercentage(compdata[lastYear]) || 0,
         },
       ],
-      company_ratio: compdata[lastYear].female / compdata[lastYear].male || 0,
-      average_ratio: avgdata[lastYear].female / avgdata[lastYear].male || 0,
+      company_ratio: convertPercentage(compdata[lastYear]) || 0,
+      average_ratio: convertPercentage(avgdata[lastYear]) || 0,
     };
   };
-
+  // console.log(props.data["Board of Director gender ratio"]);
   return (
     <section className="py-16 ">
       <div className="mx-auto max-w-fit items-center gap-x-4 rounded-xl bg-white p-6 shadow-lg outline outline-black/5 dark:bg-slate-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10">
@@ -46,8 +35,8 @@ export default function GovernanceCard(props) {
             {
               <BoardGender
                 data={getBoardGenderData(
-                  props.data.board_gender,
-                  props.avgdata.board_gender
+                  props.data["Board of Director gender ratio"],
+                  props.avgdata["Board of Director gender ratio"]
                 )}
               />
             }

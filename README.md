@@ -8,7 +8,6 @@ This repository contains the code, documentation, and resources for Group 6 of t
 
 This project aims to design an automated ESG data extraction and performance evaluation system through the use of Natural Language Processing techniques.
 
-
 ## Project Overview
 
 ## 🚀 Getting Started
@@ -211,6 +210,23 @@ In due course, it will be integrated into the the multi Docker container setup.
   >[!WARNING]
   > Before running this step, make sure your Docker Desktop is running in the background with Elasticsearch container running.
   > Also, make sure Ollama is running in the background too.
+
+## Launching of Web Application
+
+To launch the application, you will need to do the following steps:
+
+1. At the main folder directory, change your directory into backend folder by running `cd backend`.
+2. Install the necessary packages by doing `npm install`.
+3. Once installed, you may proceed to run the backend server by doing `npm run start`.
+   1. This will run docker compose up to set up the MongoDB for storing user credentials, and start the express server to handle API requests.
+   2. If you receive a `unable to get image 'mongo:latest': error during connect:` error, please ensure that your Docker Desktop is running in the background and try again.
+4. After setting up the backend services, you can now go to the frontend folder by running either `cd ../frontend` in the current directory or opening a new terminal and running `cd frontend` at the main folder directory.
+5. Install the necessary packages by doing `npm install`.
+6. Once installed, you may proceed to launch the webapp by running `npm run dev`. You should be able to access the webapp at `http://localhost:5173`.
+7. Once you are done with the webapp, you should run `npm run end` at the backend folder directory to stop the MongoDB server.
+   1. This will run docker compose down to stop the current MongoDB and will save the user data for future use.
+
+The above steps may change depending on the future setup of our containers.
 
 ## 🧊 Contributing
 

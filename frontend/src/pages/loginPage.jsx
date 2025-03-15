@@ -1,30 +1,152 @@
 import { useForm } from "react-hook-form";
+import { useState, useContext } from "react";
 import "./loginPage.css";
 import { Outlet } from "react-router";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-hot-toast";
+import { UserContext } from "@/context/context.js";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 /*
 Div centered on the login page
 */
-export default function LoginCredentialsDiv()
-{
-    const { register, handleSubmit, formState: { errors } } = useForm();
-    const onSubmit = data    => console.log(data);
-    return (
-        <div className="
-            absolute top-1/2 left-1/2 -translate-1/2
-            border-gray-200 border-2
-            h-2/5 w-3/10
-            flex justify-center items-center">
-            <form className="flex flex-col justify-evenly items-center
-                            w-full h-full border-2 border-black"
-                            onSubmit={handleSubmit(onSubmit)}>
-                <input type="email" {...register("email", { required: true })} />
-                {errors.email && <span style={{ color: "red" }}>
-                    *Email* is mandatory </span>}
-                <input type="password" {...register("password")} />
-                <input type={"submit"} style={{ backgroundColor: "#a1eafb" }} />
-            </form>
-            <Outlet/ >
-        </div>
-    )
-};
+export default function LoginCredentialsDiv() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const [data, setData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const { setUser } = useContext(UserContext);
+
+  const navigate = useNavigate();
+
+  const onChange = (e) => {
+    setData({
+      ...data,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const onSubmit = async (e) => {
+    console.log("LoginSubmit called");
+    e.preventDefault();
+    const { email, password } = data;
+    try {
+      const { data } = await axios.post("/auth/login", {
+        email,
+        password,
+      });
+
+      if (data.error) {
+        toast.error(data.error);
+      } else {
+        toast.success(`Successfully logged in. Welcome ${data.name}!`);
+        setUser(data);
+        setData({});
+        navigate("/home");
+        // window.location.reload();
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Unknown Error Occurred. Please try again.");
+    }
+  };
+
+  const handleGuestLogin = () => {
+    // Example: Navigate to a guest-access page or set a guest user state
+    console.log("Guest login triggered");
+    navigate("/home"); // Use React Router's navigate function
+  };
+
+  return (
+    <>
+      <div className="background"></div>
+      <div className="login-container">
+        <form className="login-form" onSubmit={onSubmit}>
+          {/* Email text */}
+          <div className="input-container">
+            <label className="field-label" htmlFor="email">
+              Email
+            </label>
+            {errors.email && (
+              <span style={{ color: "red" }}> *Email* is mandatory </span>
+            )}
+          </div>
+
+          {/* Email input */}
+          <input
+            className="input-field"
+            placeholder="Enter Email"
+            type="email"
+            autoComplete="off"
+            name="email"
+            value={data.email}
+            // {...register("data.email", { required: "*Email* is required" })}
+            onChange={onChange}
+          />
+
+          {/* Password text */}
+          <div className="input-container">
+            <label className="field-label" htmlFor="password">
+              Password
+            </label>
+            {errors.password && (
+              <span style={{ color: "red" }}> *Password* is mandatory </span>
+            )}
+          </div>
+
+          {/* Password input */}
+          <div className="input-field">
+            <input
+              id="password"
+              className="input-field-text"
+              placeholder="Enter Password"
+              type={showPassword ? "text" : "password"}
+              name="password"
+              autoComplete="off"
+              value={data.password}
+              // {...register("data.password", {
+              //   required: "*Password* is required",
+              // })}
+              onChange={onChange}
+            />
+            <button
+              type="button"
+              className="input-field-password-toggle"
+              onClick={() => {
+                setShowPassword(!showPassword);
+              }}
+            >
+              {showPassword ? <FaEye /> : <FaEyeSlash />}
+            </button>
+          </div>
+
+          <input className="form-button" type={"submit"} value="Log In" />
+
+          <button
+            type="button"
+            className="guest-button"
+            onClick={handleGuestLogin}
+          >
+            Continue as Guest
+          </button>
+
+          <div className="register-link">
+            <a href="/register-page">New? Register HERE</a>
+          </div>
+        </form>
+
+        <Outlet />
+      </div>
+    </>
+  );
+}

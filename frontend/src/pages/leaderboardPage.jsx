@@ -1,6 +1,6 @@
 import "./leaderboardPage.css";
 import { useState, useEffect, useContext } from "react";
-import { UserContext } from "../context/context.js";
+import { UserContext } from "@/context/context";
 import axios from "axios";
 import LeaderboardRow from "@/components/leaderboardRow";
 
@@ -41,7 +41,10 @@ export default function LeaderboardPage() {
 
   const { user } = useContext(UserContext);
 
-  const { environmentalWeight, socialWeight, governanceWeight } = user;
+  const { environmentalWeight, socialWeight, governanceWeight } = axios.post(
+    "/auth/getAvgWeights",
+    user
+  );
 
   const [data, setData] = useState(leaderboardData);
 

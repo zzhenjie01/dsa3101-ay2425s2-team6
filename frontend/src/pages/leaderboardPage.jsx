@@ -39,11 +39,11 @@ export default function LeaderboardPage() {
     },
   ];
 
-  const [data, setData] = useState(leaderboardData);
-
   const { user } = useContext(UserContext);
 
   const { environmentalWeight, socialWeight, governanceWeight } = user;
+
+  const [data, setData] = useState(leaderboardData);
 
   // Effect to update data whenever weights change
   useEffect(() => {
@@ -53,7 +53,7 @@ export default function LeaderboardPage() {
     if (totalWeight === 0) return;
 
     //Update total to reflect the latest weights and sort by descending total score
-    const newData = data
+    const newData = leaderboardData
       .map((row) => ({
         ...row,
         total: Math.round(
@@ -66,6 +66,8 @@ export default function LeaderboardPage() {
 
     setData(newData);
   }, [environmentalWeight, socialWeight, governanceWeight]); // Only depend on weights
+
+  // console.log(data);
 
   return (
     <div className="flex-grow pt-20 text-center">

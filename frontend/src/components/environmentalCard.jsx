@@ -2,27 +2,11 @@
 import { useContext, useState } from "react";
 // import { ChatBotContext } from "../context/context";
 import { OverallGHG } from "./overallGhg";
-import { ScopeGHG } from "./scopeGhg";
 import { Water } from "./water";
 import { Energy } from "./energy";
 import { getLastYear, getLastYearData } from "./helpers/getLastYear";
 
 export default function EnvironmentalCard(props) {
-  // Get total GHG emissions per year in the format
-  // ghg: {
-  //   2021: ???,
-  //   2022: ???,
-  //   2023: ???
-  // }
-
-  const sumGHGByYear = (ghgData) => {
-    return Object.keys(ghgData).reduce((acc, year) => {
-      const { scope1 = 0, scope2 = 0, scope3 = 0 } = ghgData[year]; // Default values to 0 if missing
-      acc[year] = scope1 + scope2 + scope3;
-      return acc;
-    }, {});
-  };
-
   // Re-format water data to
   // {year:???, water: ???, average: ???}
 
@@ -54,32 +38,30 @@ export default function EnvironmentalCard(props) {
           <div>
             {
               <OverallGHG
-                data={sumGHGByYear(props.data.ghg)}
+                data={props.data["GHG emissions"]}
                 name={props.name}
-                avg={sumGHGByYear(props.avgdata.ghg)}
-              />
-            }
-          </div>
-          <div>
-            {
-              <ScopeGHG
-                data={getLastYearData(props.data.ghg)}
-                year={getLastYear(props.data.ghg)}
+                avg={props.avgdata["GHG emissions"]}
               />
             }
           </div>
           <div>
             {
               <Water
-                data={getWaterData(props.data.water, props.avgdata.water)}
-                year={getLastYear(props.data.water)}
+                data={getWaterData(
+                  props.data["Water consumption"],
+                  props.avgdata["Water consumption"]
+                )}
+                year={getLastYear(props.data["Water consumption"])}
               />
             }
           </div>
           <div>
             {
               <Energy
-                data={getEnergyData(props.data.energy, props.avgdata.energy)}
+                data={getEnergyData(
+                  props.data["Electricity consumption"],
+                  props.avgdata["Electricity consumption"]
+                )}
                 name={props.name}
               />
             }

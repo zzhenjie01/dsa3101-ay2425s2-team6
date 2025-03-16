@@ -1,6 +1,6 @@
 // "use client";
 
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "@/context/context";
 import { Button } from "@/components/ui/button";
 import {
@@ -30,6 +30,15 @@ export default function WeightsButton() {
     socialWeight: user.socialWeight,
     governanceWeight: user.governanceWeight,
   });
+
+  // To change slider values whenever the user changes - fix the error of slidervalues set to guest after refreshing the webpage
+  useEffect(() => {
+    setSliderValues({
+      environmentalWeight: user.environmentalWeight,
+      socialWeight: user.socialWeight,
+      governanceWeight: user.governanceWeight,
+    });
+  }, [user]);
 
   // Update slider value from slider component
   const handleSliderChange = (name, value) => {
@@ -74,7 +83,7 @@ export default function WeightsButton() {
       );
       console.log(updateProfile);
 
-      // record update transaction in MongoDB
+      // record update transaction in postgres
       const saveWeights = await axios.post("/auth/insertWeights", userSettings);
       console.log(saveWeights);
 

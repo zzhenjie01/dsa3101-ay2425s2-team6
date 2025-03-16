@@ -88,75 +88,31 @@ Before running the project, make sure you have the following installed and confi
    Elasticsearch will be run in a Docker container to handle indexing and searching of ESG-related articles. To set it up:
 
    Creating a Docker network for communication between containers
-  
-    
+
+   ```shell 
     docker network create elastic
+   ```
+
+   Pull the Elasticsearch Docker image
+
+   ```shell
+   docker pull docker.elastic.co/elasticsearch/elasticsearch:8.17.2
+   ```
+
+5. **Run Elasticsearch Container**
+   Make sure you have Docker Desktop running in the background. Then, open up terminal and run the following command which starts Elasticsearch locally.
+   
+   ```shell
+   docker run --name elasticsearch `
+   --net elastic `
+   -e "discovery.type=single-node" `
+   -e "xpack.security.enabled=false" `
+   -e "network.host=0.0.0.0" `
+   -e "ES_JAVA_OPTS=-Xms512m -Xmx512m" `
+   -p 9200:9200 `
+   -it docker.elastic.co/elasticsearch/elasticsearch:8.17.2
+   ```
     
-  
-    Pull the Elasticsearch Docker image
-  
-    
-    docker pull docker.elastic.co/elasticsearch/elasticsearch:8.17.2
-
-
-   Run the Elasticsearch container with the appropriate settings
-  
-    
-    docker run --name elasticsearch `
-    --net elastic `
-    -e "discovery.type=single-node" `
-    -e "xpack.security.enabled=false" `
-    -e "network.host=0.0.0.0" `
-    -e "ES_JAVA_OPTS=-Xms512m -Xmx512m" `
-    -p 9200:9200 `
-    -it docker.elastic.co/elasticsearch/elasticsearch:8.17.2
-    
-
-### Workflow
-
-3. **Download PDFs**
-
-    Can either download manually from [Google Drive](https://drive.google.com/drive/folders/1NXaHl4MyrZNW14tCktLxSYUmrs52NATD)
-    and place them at `<REPO-ROOT>/data-pipelines/data/esg-pdf`. Or could run the following command in the terminal.
-    Note the `<REPO-ROOT>` is just a placeholder; need to replace it with your actual path to the repo's root.
-  
-    ```shell
-    cd <REPO-ROOT>/data-pipelines/esg-gdrive-to-local
-    ```
-  
-    ```shell
-    python esg_gdrive_to_local.py
-    ```
-
-4. **Install Python Packages**
-
-    Open up terminal and run the following:
-  
-    ```shell
-    cd <REPO-ROOT>/data-pipelines
-    ```
-  
-    ```shell
-    pip install -r requirements.txt
-    ```
-
-5. **Download LLM**
-  
-    Make sure Ollama is running in the background and open up terminal and run the following command
-    which downloads Meta's Llama 3.2 3B model to your local machine.
-  
-    ```shell
-    ollama pull llama3.2
-    ```
-
-6. **Run Elasticsearch Container**
-
-    Make sure you have Docker Desktop running in the background. Then, open up terminal and run the following command which starts Elasticsearch locally.
-  
-    ```shell
-    docker run -p 9200:9200 -e "discovery.type=single-node" -e "xpack.security.enabled=false" -e "xpack.security.http.ssl.enabled=false" docker.elastic.co/elasticsearch/elasticsearch:8.12.1
-    ```
-
   >[!Note]
   > If you are running this command for the first time, Docker will pull the official Elasticsearch image before starting the container.
   > Once done, in the future, we can just start start the container from Docker Desktop.

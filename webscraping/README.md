@@ -35,8 +35,9 @@ Before running the project, make sure you have the following installed and confi
 >- The installation of Docker Desktop should be straightforward just by clicking the link and following the official Download instructions.
 
 
-### Files and Modules
-1.**`main.py`**
+## 🚀 Files and Modules
+
+### 1.**`main.py`**
 Main execution of the entire pipeline for this project. 
 Coordinates the scraping, text splitting, embedding generation, and fact-checking steps. 
 It allows selective execution of different parts of the pipelines via command-line arguments.
@@ -47,7 +48,7 @@ Key Functions:
 - `store_in_elastic(all_splits)`: Creates the Elasticsearch index and indexes the document chunks
 - `retrieve_and_fact_check(query)`: Queries Elasticsearch for relevant documents and performs a fact-checking task using LLMs
 
-2. **`scrape.py`**
+### 2. **`scrape.py`**
 Handles the scraping of ESG-related articles from NewsAPI.
 It collects articles based on specific bank names, the keyword 'esg' and a specified date range, scraping the article title, source, URL and content.
 
@@ -56,13 +57,13 @@ Key Functions:
 - Uses the `requests` and `BeautifulSoup` libraries to fetch full-text content from articles URLs
 - Save scraped data to a CSV file
   
-3. **`split.py`**
+### 3. **`split.py`**
 Splits large articles into smaller chunks for easier processing and indexing.
 
 Key Functions:
 - `split_text(scraped_text_df)`: Splits the text of scraped articles into smaller, manageable chunks for indexing
 
-4. **`elastic.py`**
+### 4. **`elastic.py`**
 Responsible for interacting with Elasticsearch. Initalizes Elasticsearch, indexing articles, and performing searches on the indexed content.
 
 Key Functions:
@@ -71,7 +72,7 @@ Key Functions:
 - `index_documents(all_splits)`: Uses the `bulk` helper to index the documents into Elasticsearch
 - `get_embeddings(text)`: Fetches embeddings for a given text using the SentenceTransformer model
 
-5. **`query.py`**
+### 5. **`query.py`**
 Handles retrieval and fact-checking of queries using Elasticsearch and an LLM (Ollama 3.2).
 Includes functions to search for similar documents in Elasticsearch using k-nearest neighbors (KNN) search and fact-checking using an LLM.
 

@@ -35,7 +35,7 @@ Before running the project, make sure you have the following installed and confi
 >- The installation of Docker Desktop should be straightforward just by clicking the link and following the official Download instructions.
 
 
-## 🚀 Files and Modules
+## 📁 Files and Modules
 
 ### 1.**`main.py`**
 Main execution of the entire pipeline for this project. 
@@ -82,9 +82,9 @@ Key Functions:
 - `combine_content(rewponse)`: Combines the content of the most relevant documents into a single text
 - `fact_check(query, combined_text, confidence = False): Performs fact-checking on the query based on the combined context using an LLM
 
-### Workflow
+## 👉 Workflow
 
-1. **Clone the Repository**
+### 1. **Clone the Repository**
 
    Open terminal or Command Prompt and `cd` into your desired local directory.
   
@@ -98,7 +98,7 @@ Key Functions:
     git clone https://github.com/zzhenjie01/dsa3101-ay2425s2-team6.git
     ```
     
-2. **Set Up Repo Environment Variables**
+### 2. **Set Up Repo Environment Variables**
    
    Open up the repo in IDE (VSCode) and create a `.env` file at the repo's root.
    Then, set the following environment variables.
@@ -118,7 +118,7 @@ Key Functions:
   > Notice the paths above ends with `/`. This is important as the scripts may not work correctly if you leave it out.
 
 
-3. **Install required dependencies**
+### 3. **Install required dependencies**
    
    Install the required dependencies by running the following in your terminal:
    
@@ -132,7 +132,7 @@ Key Functions:
     pip install -r requirements.txt
     ``` 
 
-4. **Docker Setup for Local Development**
+### 4. **Docker Setup for Local Development**
    Elasticsearch will be run in a Docker container to handle indexing and searching of ESG-related articles. To set it up:
 
    Creating a Docker network for communication between containers
@@ -147,7 +147,7 @@ Key Functions:
    docker pull docker.elastic.co/elasticsearch/elasticsearch:8.17.2
    ```
 
-5. **Run Elasticsearch Container**
+### 5. **Run Elasticsearch Container**
    Make sure you have Docker Desktop running in the background. Then, open up terminal and run the following command which starts Elasticsearch locally.
    
    ```shell
@@ -169,7 +169,7 @@ Key Functions:
   > For production and real life deployment, this command is discouraged as it disable security features according to [documentation](https://python.langchain.com/docs/integrations/vectorstores/elasticsearch/).
   > But for now, we will just disable it.
 
-6. **Download LLM**
+### 6. **Download LLM**
   
     Make sure Ollama is running in the background and open up terminal and run the following command
     which downloads Meta's Llama 3.2 3B model to your local machine.

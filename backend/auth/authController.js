@@ -157,10 +157,10 @@ export const insertWeights = async (req, res) => {
           social_weight, 
           governance_weight)
         VALUES
-          (_$1, NOW(), $2, $3, $4)
+          ($1, NOW(), $2, $3, $4)
         `,
         [
-          user._id.toString(), // value cannot start with a digit
+          `_${user._id.toString()}`, // value cannot start with a digit
           user.environmentalWeight,
           user.socialWeight,
           user.governanceWeight,

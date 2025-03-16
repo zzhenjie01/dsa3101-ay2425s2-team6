@@ -24,7 +24,7 @@ Before running the project, make sure you have the following installed and confi
     docker -- version
     ```
 - [Ollama](https://ollama.com/)
-  - An API to run LLMs like llamma 3.1 which we are using for this project.
+  - An API to run LLMs like llamma 3.2 which we are using for this project.
 - [NewsAPI](https://newsapi.org/)
   - An API to gather news articles related to ESG topics for analysis and fact-checking which we are using for this project.
   - Sign up for NewsAPI and obtain an API key to access news articles. You will need to add your API key to the `.env` file.
@@ -33,6 +33,53 @@ Before running the project, make sure you have the following installed and confi
 >[!NOTE]
 >
 >- The installation of Docker Desktop should be straightforward just by clicking the link and following the official Download instructions.
+
+
+### Files and Modules
+1.**`main.py`**
+Main execution of the entire pipeline for this project. 
+Coordinates the scraping, text splitting, embedding generation, and fact-checking steps. 
+It allows selective execution of different parts of the pipelines via command-line arguments.
+
+Key Functions:
+- `scrape()`: Uses NewsAPI to scrape latest ESG-related articles for a list of targeted banks
+- `split(scraped_text_df)`: Splits the scraped text into smaller, manageable chunks for indexing
+- `store_in_elastic(all_splits)`: Creates the Elasticsearch index and indexes the document chunks
+- `retrieve_and_fact_check(query)`: Queries Elasticsearch for relevant documents and performs a fact-checking task using LLMs
+
+2. **`scrape.py`**
+Handles the scraping of ESG-related articles from NewsAPI.
+It collects articles based on specific bank names, the keyword 'esg' and a specified date range, scraping the article title, source, URL and content.
+
+Key Functions:
+- `scrape_newsapi(start_date, end_date, csv_file, bank_names)`: Scrapes news articles for specific bank names and the keyword 'ESG', given a defined date range from NewsAPI. 
+- Uses the `requests` and `BeautifulSoup` libraries to fetch full-text content from articles URLs
+- Save scraped data to a CSV file
+  
+3. **`split.py`**
+Splits large articles into smaller chunks for easier processing and indexing.
+
+Key Functions:
+- `split_text(scraped_text_df)`: Splits the text of scraped articles into smaller, manageable chunks for indexing
+
+4. **`elastic.py`**
+Responsible for interacting with Elasticsearch. Initalizes Elasticsearch, indexing articles, and performing searches on the indexed content.
+
+Key Functions:
+- `create_index()`: Creates the Elasticsearch index with the correct mappings
+- `generate_documents_with_embeddings(all_splits)`: Generates the Elasticsearch actions for each documents with embeddings
+- `index_documents(all_splits)`: Uses the `bulk` helper to index the documents into Elasticsearch
+- `get_embeddings(text)`: Fetches embeddings for a given text using the SentenceTransformer model
+
+5. **`query.py`**
+Handles retrieval and fact-checking of queries using Elasticsearch and an LLM (Ollama 3.2).
+Includes functions to search for similar documents in Elasticsearch using k-nearest neighbors (KNN) search and fact-checking using an LLM.
+
+Key Functions:
+- `generate_query_embedding(query)`: Generates embeddings for the query text
+- `knn_search(query, index_name, k=5)`: Performs a KNN search to find the top-k most relevant documents for the query
+- `combine_content(rewponse)`: Combines the content of the most relevant documents into a single text
+- `fact_check(query, combined_text, confidence = False): Performs fact-checking on the query based on the combined context using an LLM
 
 ### Workflow
 
@@ -77,7 +124,7 @@ Before running the project, make sure you have the following installed and confi
    Open up terminal and run the following:
   
     ```shell
-    cd <REPO-ROOT>/web-scraping
+    cd <REPO-ROOT>/webscraping
     ```
   
     ```shell
@@ -121,5 +168,11 @@ Before running the project, make sure you have the following installed and confi
   > For production and real life deployment, this command is discouraged as it disable security features according to [documentation](https://python.langchain.com/docs/integrations/vectorstores/elasticsearch/).
   > But for now, we will just disable it.
 
-   
-    
+6. **Download LLM**
+  
+    Make sure Ollama is running in the background and open up terminal and run the following command
+    which downloads Meta's Llama 3.2 3B model to your local machine.
+  
+    ```shell
+    ollama pull llama3.2
+    ```

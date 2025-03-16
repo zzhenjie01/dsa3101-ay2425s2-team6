@@ -170,10 +170,8 @@ Key Functions:
   > But for now, we will just disable it.
 
 ### 6. **Download LLM**
-  
-    Make sure Ollama is running in the background and open up terminal and run the following command
-    which downloads Meta's Llama 3.2 3B model to your local machine.
-  
-    ```shell
+   Make sure Ollama is running in the background, then open up terminal and run the following command which downloads Meta's llama 3.2 3B model to your local machine
+    
+   ```shell
     ollama pull llama3.2
-    ```
+   ```

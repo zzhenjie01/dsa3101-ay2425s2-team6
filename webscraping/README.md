@@ -175,3 +175,33 @@ Key Functions:
    ```shell
     ollama pull llama3.2
    ```
+
+### 7(a). **Scrape ESG-related URLs from NewsAPI**
+  We can run the Python script directly inside VSCode or from the terminal using:
+  
+  ```shell
+  python <REPO-ROOT>/webscraping/main.py --scrape 
+  ```
+
+  >[!NOTE]
+  > This step is useful when you only want to scrape ESG-related articles without performing fact-checking.
+
+### 7(b). **Scrap ESG-related URLs and Perform Facting Checking**
+  To scrape the latest ESG-related articles and immediately query for fact-checking.
+  We can run the Python script directly inside VSCode or from the terminal using:
+
+  ```shell
+  python <REPO-ROOT>/webscraping/main.py --scrape --query "Write Your Query Here"
+  ```
+
+  >[!NOTE]
+  > This approach ensures that the fact-checking process uses the most up-to-date ESG-related articles. 
+
+### 7(c). **Query for Fact-Checking Without Scraping**
+  If you only need to perform fact-checking without scraping new articles, use:
+
+  ```shell
+  python <REPO-ROOT>/webscraping/main.py --query "Your Query Here"
+  ```
+  >[!NOTE]
+  > This is useful when you want to fact-check a query based on previously scraped data, saving time by skipping the scraping step. 

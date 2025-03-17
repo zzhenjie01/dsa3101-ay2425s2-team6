@@ -3,7 +3,11 @@ import cors from "cors";
 
 const app = express();
 app.use(express.json()); // Parse incoming JSON data
-app.use(cors()); // Allow frontend to communicate with backend
+app.use(cors({
+  origin: "http://localhost:5173", // Only allow this frontend
+  methods: ["GET", "POST", "PUT", "DELETE"], // Allowed methods
+  credentials: true // ✅ Allows cookies and auth headers
+})); // Allow frontend to communicate with backend
 
 // Log all API requests (for debugging)
 app.use((req, res, next) => {

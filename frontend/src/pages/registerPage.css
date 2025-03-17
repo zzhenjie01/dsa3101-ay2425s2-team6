@@ -1,129 +1,144 @@
 @import "tailwindcss";
 
 .background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: calc(100vh - 40px);
-    width: 100vw;
-    background-image: url("../assets/loginbackground.jpg");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    z-index: -1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: calc(100vh - 40px);
+  width: 100vw;
+  background-image: url("../assets/loginbackground.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index: -1;
 }
 
-
 .register-container {
-    position: absolute;
-    top: 48%;
-    left: 10%;
-    transform: translateY(-50%);
-    width: min(30%,320px);
-    height: max(60%,350px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-size: cover;
-    background-position: center;
-    border: 2px solid rgba(105, 29, 4, 0.5);
-    border-top: 20px solid rgba(105, 29, 4, 0.8);
+  position: absolute;
+  top: 48%;
+  left: 10%;
+  transform: translateY(-50%);
+  width: min(30%, 320px);
+  height: max(60%, 350px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-size: cover;
+  background-position: center;
+  border: 2px solid rgba(105, 29, 4, 0.5);
+  border-top: 20px solid rgba(105, 29, 4, 0.8);
 }
 
 .register-form {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    width: 100%;
-    height: 100%;
-    border: 1px solid black;
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 2rem;
-    padding-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  height: 100%;
+  border: 1px solid black;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 2rem;
+  padding-top: 1rem;
 }
 
 .field-label {
-    display: block;
-    font-size: 17px;
-    font-family: 'Century Gothic';
-    color: rgba(0,0,0,0.7);
-    display: block;
-    margin-bottom: 0.01rem;
-    text-align: left;
-    width: 100%;
-    flex: 1;
-}
-
-.input-field {
-    background-color: rgb(128, 128, 128, 0.2);
-    margin-bottom: 5%;
-    width: 100%;
-    max-height: 10%;
-    flex: 2;
-    border-radius: 4px;
-    padding: 3px;
+  display: block;
+  font-size: 17px;
+  font-family: "Century Gothic";
+  color: rgba(0, 0, 0, 0.7);
+  display: block;
+  margin-bottom: 0.01rem;
+  text-align: left;
+  width: 100%;
+  flex: 1;
 }
 
 .form-button-reg {
-    background-color: rgba(105, 29, 4, 0.3);
-    height: 15%;
-    font-family: 'Century Gothic';
-    font-size: 20px;
-    font-weight: 600;
-    color: rgba(0,0,0,0.6);
-    border-radius: 4px;
-    margin-bottom: 5%;
-    margin-top: 5%;
-    cursor: pointer;
+  background-color: rgba(105, 29, 4, 0.3);
+  height: 15%;
+  font-family: "Century Gothic";
+  font-size: 20px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.6);
+  border-radius: 4px;
+  margin-bottom: 5%;
+  margin-top: 5%;
+  cursor: pointer;
 }
 
-    .form-button-reg:hover {
-        background-color: rgba(105, 29, 4, 0.4);
-    }
-
+.form-button-reg:hover {
+  background-color: rgba(105, 29, 4, 0.4);
+}
 
 /* Align label and error message side by side */
 .input-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  position: relative;
 }
 
 .error-message {
-    color: red;
-    font-size: 12px;
-    margin-left: 1rem;
-    visibility: hidden;
+  color: red;
+  font-size: 12px;
+  margin-left: 1rem;
+  visibility: hidden;
+}
+
+.input-field {
+  background-color: rgb(128, 128, 128, 0.2);
+  margin-bottom: 5%;
+  width: 100%;
+  max-height: 10%;
+  flex: 2;
+  border-radius: 4px;
+  padding: 3px;
+  outline: 0;
+}
+
+.input-field-text {
+  width: 90%;
+  height: 100%;
+  outline: 0;
+}
+
+.input-field-password-toggle {
+  position: relative;
+  width: 10%;
+  right: 0px;
+  top: 0%;
+  cursor: pointer;
+  background: none;
 }
 
 /* When error occurs, display the error message */
 .input-field:invalid + .error-message {
-    visibility: visible;
+  visibility: visible;
 }
 
 .guest-button {
-    background-color: rgba(256,256,256, 0.6);
-    border-color: rgba(0,0,0,1);
-    border: 1.5px solid rgba(0,0,0,0.3);
-    border-radius: 4px;
-    color: rgb(0, 0, 0, 0.5);
-    cursor: pointer;
+  background-color: rgba(256, 256, 256, 0.6);
+  border-color: rgba(0, 0, 0, 1);
+  border: 1.5px solid rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  color: rgb(0, 0, 0, 0.5);
+  cursor: pointer;
 }
 
-    .guest-button:hover {
-        border: 1.5px solid rgba(0,0,0,0.6);
-        color: rgb(0, 0, 0, 0.8);
-    }
+.guest-button:hover {
+  border: 1.5px solid rgba(0, 0, 0, 0.6);
+  color: rgb(0, 0, 0, 0.8);
+}
 
 .register-link {
-    margin-top: auto;
+  margin-top: auto;
 }
 
-    .register-link a {
-        color: rgb(128, 128, 128, 1);
-    }
+.register-link a {
+  color: rgb(128, 128, 128, 1);
+}
 
-        .register-link a:hover {
-            color: black;
-            text-decoration: underline;
-        }
+.register-link a:hover {
+  color: black;
+  text-decoration: underline;
+}

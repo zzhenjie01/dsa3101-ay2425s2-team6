@@ -1,12 +1,12 @@
 import { useContext, useEffect, useRef } from "react";
 import LinkButton from "./LinkButton";
-import { SidePanelContext } from "../context/contexts";
+import { SidePanelContext } from "../context/context.js";
 
 export function SidePanelOptions({ buttonLst }) {
   return (
     <div>
       {buttonLst.map((btn) => (
-        <LinkButton {...btn} />
+        <LinkButton key={btn.idx} {...btn} />
       ))}
     </div>
   );

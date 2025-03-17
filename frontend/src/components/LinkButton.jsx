@@ -1,22 +1,27 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { GoHome, GoGraph, GoTrophy } from "react-icons/go";
+import { IconContext } from "react-icons";
 
 function LinkButton(props) {
+  const { idx, webUrl, logo, webName, ...otherProps } = props;
   return (
     <Link
-      key={props.idx}
-      to={props.webUrl}
+      key={idx}
+      to={webUrl}
       className="
       block
       p-6
-      h-20 w-full
+      h-full w-full
       font-sans font-semibold font-size
       text-left align-middle text-white
       hover:bg-emerald-500
       cursor-pointer
       "
+      {...otherProps}
     >
-      {props.webName}
+      <IconContext.Provider value={{ size: 35 }}>{logo}</IconContext.Provider>
+      {webName}
     </Link>
   );
 }

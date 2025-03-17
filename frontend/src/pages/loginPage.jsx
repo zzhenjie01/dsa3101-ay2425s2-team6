@@ -1,7 +1,12 @@
 import { useForm } from "react-hook-form";
+import { useState, useContext } from "react";
 import "./loginPage.css";
 import { Outlet } from "react-router";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-hot-toast";
+import { UserContext } from "@/context/context.js";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 /*
 Div centered on the login page
@@ -12,28 +17,64 @@ export default function LoginCredentialsDiv() {
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  const [data, setData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const { setUser } = useContext(UserContext);
+
   const navigate = useNavigate();
 
-  // Placeholder check
-  const onSubmit = (data) => {
-    console.log(data);
-    if (data.email === "superadmin@nus") {
-      navigate("/home");
+  const onChange = (e) => {
+    setData({
+      ...data,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const onSubmit = async (e) => {
+    console.log("LoginSubmit called");
+    e.preventDefault();
+    const { email, password } = data;
+    try {
+      const { data } = await axios.post("/auth/login", {
+        email,
+        password,
+      });
+
+      if (data.error) {
+        for (e in data.error) {
+          toast.error(data.error[e]);
+        }
+      } else {
+        toast.success(`Successfully logged in. Welcome ${data.name}!`);
+        setUser(data);
+        setData({});
+        navigate("/home");
+        // window.location.reload();
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Unknown Error Occurred. Please try again.");
     }
   };
 
   const handleGuestLogin = () => {
     // Example: Navigate to a guest-access page or set a guest user state
     console.log("Guest login triggered");
-    navigate("/dashboard"); // Use React Router's navigate function
+    navigate("/home"); // Use React Router's navigate function
   };
 
   return (
     <>
       <div className="background"></div>
       <div className="login-container">
-        <form className="login-form" onSubmit={handleSubmit(onSubmit)}>
-          {/* Label + Error message */}
+        <form className="login-form" onSubmit={onSubmit}>
+          {/* Email text */}
           <div className="input-container">
             <label className="field-label" htmlFor="email">
               Email
@@ -42,13 +83,20 @@ export default function LoginCredentialsDiv() {
               <span style={{ color: "red" }}> *Email* is mandatory </span>
             )}
           </div>
+
+          {/* Email input */}
           <input
             className="input-field"
+            placeholder="Enter Email"
             type="email"
-            {...register("email", { required: true })}
+            autoComplete="off"
+            name="email"
+            value={data.email}
+            // {...register("data.email", { required: "*Email* is required" })}
+            onChange={onChange}
           />
 
-          {/* Label + (To do) Error message */}
+          {/* Password text */}
           <div className="input-container">
             <label className="field-label" htmlFor="password">
               Password
@@ -57,11 +105,32 @@ export default function LoginCredentialsDiv() {
               <span style={{ color: "red" }}> *Password* is mandatory </span>
             )}
           </div>
-          <input
-            className="input-field"
-            type="password"
-            {...register("password", { required: true })}
-          />
+
+          {/* Password input */}
+          <div className="input-field">
+            <input
+              id="password"
+              className="input-field-text"
+              placeholder="Enter Password"
+              type={showPassword ? "text" : "password"}
+              name="password"
+              autoComplete="off"
+              value={data.password}
+              // {...register("data.password", {
+              //   required: "*Password* is required",
+              // })}
+              onChange={onChange}
+            />
+            <button
+              type="button"
+              className="input-field-password-toggle"
+              onClick={() => {
+                setShowPassword(!showPassword);
+              }}
+            >
+              {showPassword ? <FaEye /> : <FaEyeSlash />}
+            </button>
+          </div>
 
           <input className="form-button" type={"submit"} value="Log In" />
 

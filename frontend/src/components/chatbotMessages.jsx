@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState, useContext, useRef, useEffect } from "react";
 import { ChatBotContext } from "../context/context";
+import { loadMessages,saveMessages } from "../services/chatbotStorage";
 
 export default function ChatbotMessages({sendMessage}) {
     const { chatbotOpen, setChatbotOpen } = useContext(ChatBotContext);
@@ -15,37 +16,48 @@ export default function ChatbotMessages({sendMessage}) {
     const chatEndRef = useRef(null);
 
     useEffect(() => {
+        saveMessages(messages);
+    }, [messages]);
+
+    useEffect(() => {
         chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
 
     const sendMessageInternal = async (input) => {
         if (input.trim() === "") return;
 
-        const userMessage = { text: input, sender: "user" };
+        const userMessage = { text: input, sender: "user", timestamp: new Date().toISOString()};
         setMessages((prev) => [...prev, userMessage]); // Update chat history
 
         try {
             // Send API request to backend
             const response = await axios.post("http://localhost:5001/chat", {
                 message: input,
+                history: messages
             });
+
+            const botMessage = {
+                text: response.data.reply,
+                sender: "bot",
+                timestamp: new Date().toISOString()
+            };
 
             // Add bot response to chat
             setMessages((prev) => [
                 ...prev,
-                { text: response.data.reply, sender: "bot" },
+                botMessage,
             ]);
         } catch (error) {
             console.error("Error fetching response:", error);
             setMessages((prev) => [
                 ...prev,
-                { text: "Sorry, something went wrong.", sender: "bot" },
+                { text: "Sorry, something went wrong.", sender: "bot", timestamp: new Date().toISOString()},
             ]);
          }
     };
 
     if (sendMessage) sendMessage.current = sendMessageInternal;
-    
+
     return(
         <div className="flex-1 overflow-y-auto p-2 space-y-2">
         {messages.map(
@@ -61,7 +73,8 @@ export default function ChatbotMessages({sendMessage}) {
                   : "bg-gray-400 self-start"
               }`}
             >
-              {msg.text}
+              <p>{msg.text}</p>
+              <span className="text-xs opacity-75">{new Date(msg.timestamp).toLocaleTimeString()}</span>
             </div>
           )
         )}

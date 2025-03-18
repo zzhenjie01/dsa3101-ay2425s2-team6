@@ -33,8 +33,11 @@ export default function RegistrationPage() {
       ...data,
       [e.target.name]: e.target.value,
     });
-  };
+    };
 
+  const [nameError, setNameError] = useState(false);
+  const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
   const onSubmit = async (e) => {
     console.log("RegisterSubmit called");
     e.preventDefault();
@@ -47,8 +50,14 @@ export default function RegistrationPage() {
         cpassword,
       });
       if (data.error) {
+          setNameError(false);
+          setEmailError(false);
+          setPasswordError(false);
         for (e in data.error) {
           toast.error(data.error[e]);
+          if (data.error[e].includes("Name"))  setNameError(true) ;
+          if (data.error[e].includes("Email")) setEmailError(true);
+          if (data.error[e].includes("Password")) setPasswordError(true);
         }
       } else {
         toast.success("User Registered Successfully!");
@@ -73,10 +82,14 @@ export default function RegistrationPage() {
   //   return password === value ? "" : "Passwords do not match";
   // };
 
-  // Tailwind declarations
-    const inputFieldClass = "bg-[rgba(210,210,210,0.6)] mb-2 w-full max-h-12 min-h-10 flex-2 rounded px-1 outline-none";
-    const labelClass = "block text-[17px] font-[\'Century Gothic\'] text-[rgba(0,0,0,0.7)] mb-0.5 w-full flex-1";
 
+
+
+
+    // Tailwind declarations
+    const inputFieldClass = "bg-[rgba(210,210,210,0.6)] mb-2 w-full max-h-12 min-h-10 flex-2 rounded px-1";
+    const labelClass = "block text-[17px] font-[\'Century Gothic\'] text-[rgba(0,0,0,0.7)] mb-0.5 w-full flex-1";
+    const errorClass = "bg-[rgba(220,120,120,0.4)] mb-2 w-full max-h-12 min-h-10 flex-2 rounded px-1";
 
   return (
       <>
@@ -98,7 +111,7 @@ export default function RegistrationPage() {
                       </label>
                       {errors.name && <span className="text-red-500 text-xs">{errors.name.message}</span>}
                   </div>
-                  <input className={inputFieldClass} placeholder="Enter Name" type="name" name="name" autoComplete="off" value={data.name} onChange={onChange} />
+                  <input className={`${nameError ? errorClass : inputFieldClass}`} placeholder="Enter Name" type="name" name="name" autoComplete="off" value={data.name} onChange={onChange} />
 
                   <div className="flex justify-between relative">
                       <label className={labelClass} htmlFor="email">
@@ -106,7 +119,7 @@ export default function RegistrationPage() {
                       </label>
                       {errors.email && <span className="text-red-500 text-xs">{errors.email.message}</span>}
                   </div>
-                  <input className={inputFieldClass} placeholder="Enter Email" type="email" name="email" autoComplete="off" value={data.email} onChange={onChange} />
+                  <input className={`${emailError ? errorClass : inputFieldClass}`} placeholder="Enter Email" type="email" name="email" autoComplete="off" value={data.email} onChange={onChange} />
 
                   <div className="flex justify-between relative">
                       <label className={labelClass} htmlFor="password">
@@ -115,7 +128,7 @@ export default function RegistrationPage() {
                       {errors.password && <span className="text-red-500 text-xs">{errors.password.message}</span>}
                   </div>
                   <div className="relative w-full flex items-center">
-                      <input className={inputFieldClass} placeholder="Enter Password" type={showPassword ? "text" : "password"} name="password" autoComplete="off" value={data.password} onChange={onChange} />
+                      <input className={`${passwordError ? errorClass : inputFieldClass}`} placeholder="Enter Password" type={showPassword ? "text" : "password"} name="password" autoComplete="off" value={data.password} onChange={onChange} />
                       <button type="button" className="absolute right-2" onClick={() => setShowPassword(!showPassword)}>
                           {showPassword ? <FaEye /> : <FaEyeSlash />}
                       </button>
@@ -128,7 +141,7 @@ export default function RegistrationPage() {
                       {errors.cpassword && <span className="text-red-500 text-xs">{errors.cpassword.message}</span>}
                   </div>
                   <div className="relative w-full flex items-center">
-                      <input className={inputFieldClass} placeholder="Re-enter Password" type={showConfirmPassword ? "text" : "password"} name="cpassword" autoComplete="off" value={data.cpassword} onChange={onChange} />
+                      <input className={`${passwordError ? errorClass : inputFieldClass}`} placeholder="Re-enter Password" type={showConfirmPassword ? "text" : "password"} name="cpassword" autoComplete="off" value={data.cpassword} onChange={onChange} />
                       <button type="button" className="absolute right-2" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
                           {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
                       </button>

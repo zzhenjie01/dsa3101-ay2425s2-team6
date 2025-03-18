@@ -87,9 +87,9 @@ export default function RegistrationPage() {
 
 
     // Tailwind declarations
-    const inputFieldClass = "bg-[rgba(210,210,210,0.6)] mb-2 w-full max-h-12 min-h-10 flex-2 rounded px-1";
+    const inputFieldClass = "bg-[rgba(210,210,210,0.6)] mb-2 w-full max-h-12 min-h-10 flex-2 rounded px-1 text-[16px]";
     const labelClass = "block text-[17px] font-[\'Century Gothic\'] text-[rgba(0,0,0,0.7)] mb-0.5 w-full flex-1";
-    const errorClass = "bg-[rgba(220,120,120,0.4)] mb-2 w-full max-h-12 min-h-10 flex-2 rounded px-1";
+    const errorClass = "bg-[rgba(220,120,120,0.4)] mb-2 w-full max-h-12 min-h-10 flex-2 rounded px-1 text-[16px]";
 
   return (
       <>

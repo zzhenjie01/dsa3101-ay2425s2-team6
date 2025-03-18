@@ -42,9 +42,11 @@ export default function LeaderboardPage() {
   const { user } = useContext(UserContext);
 
   const { environmentalWeight, socialWeight, governanceWeight } = axios.post(
-    "/auth/getAvgWeights",
+    "/weights/getUserAvgWeights",
     user
   );
+
+  const testing = axios.get("/weights/getAllAvgWeights");
 
   const [data, setData] = useState(leaderboardData);
 

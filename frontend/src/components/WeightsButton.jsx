@@ -84,7 +84,10 @@ export default function WeightsButton() {
       console.log(updateProfile);
 
       // record update transaction in postgres
-      const saveWeights = await axios.post("/auth/insertWeights", userSettings);
+      const saveWeights = await axios.post(
+        "/weights/insertWeights",
+        userSettings
+      );
       console.log(saveWeights);
 
       // Update user settings in context

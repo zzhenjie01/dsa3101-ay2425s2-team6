@@ -1,7 +1,7 @@
 import { UserContext } from "./context.js";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import guestProfile from "../../../backend/auth/guestProfile.js";
+import guestProfile from "../../../backend/src/api/models/guestProfile.js";
 import { LoadingSpinner } from "@/components/ui/loading-spinner.jsx";
 
 export default function UserContextProvider({ children }) {

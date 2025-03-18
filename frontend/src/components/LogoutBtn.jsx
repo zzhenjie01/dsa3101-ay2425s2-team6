@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { UserContext } from "@/context/context.js";
 import { toast } from "react-hot-toast";
-import guestProfile from "../../../backend/auth/guestProfile.js";
+import guestProfile from "../../../backend/src/api/models/guestProfile.js";
 import axios from "axios";
 
 export default function LogoutBtn() {

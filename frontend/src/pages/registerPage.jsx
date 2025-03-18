@@ -73,143 +73,82 @@ export default function RegistrationPage() {
   //   return password === value ? "" : "Passwords do not match";
   // };
 
+  // Tailwind declarations
+    const inputFieldClass = "bg-[rgba(210,210,210,0.6)] mb-2 w-full max-h-12 min-h-10 flex-2 rounded px-1 outline-none";
+    const labelClass = "block text-[17px] font-[\'Century Gothic\'] text-[rgba(0,0,0,0.7)] mb-0.5 w-full flex-1";
+
+
   return (
-    <>
-      <div className="background" />
+      <>
+          <div className="absolute top-0 left-0 h-[calc(100vh-40px)] 
+                            w-screen bg-[url(../assets/loginbackground.jpg)]
+                            bg-cover bg-center bg-no-repeat z-[-1]"/>
 
-      <div className="register-container">
-        <form className="register-form" onSubmit={onSubmit}>
-          {/* Name text*/}
-          <div className="input-container">
-            <label className="field-label" htmlFor="name">
-              Name
-            </label>
-            {errors.name && (
-              <span style={{ color: "red" }}> {errors.name.message} </span>
-            )}
-          </div>
-          {/* Name input */}
-          <input
-            className="input-field"
-            placeholder="Enter Name"
-            type="name"
-            name="name"
-            autoComplete="off"
-            value={data.name}
-            // {...register("data.name", { required: "*Name* is required" })}
-            onChange={onChange}
-          />
-          {/* Email text*/}
-          <div className="input-container">
-            <label className="field-label" htmlFor="email">
-              Email
-            </label>
-            {errors.email && (
-              <span style={{ color: "red" }}> {errors.email.message} </span>
-            )}
-          </div>
-          {/* Email input */}
-          <input
-            className="input-field"
-            placeholder="Enter Email"
-            type="email"
-            name="email"
-            autoComplete="off"
-            value={data.email}
-            // {...register("data.email", { required: "*Email* is required" })}
-            onChange={onChange}
-          />
+          <div className="absolute top-1/2 left-25 
+                            transform -translate-y-1/2 w-[min(30%,320px)]
+                            h-[max(60%,350px)] flex justify-center items-center
+                            bg-cover bg-center border-2 border-[rgba(105,29,4,0.5)]
+                            border-t-[20px] border-t-[rgba(105,29,4,0.5)]">
+              <form className="flex flex-col items-stretch w-full h-full 
+                                bg-[rgba(256,256,256,0.8)] p-8 pt-4"
+                  onSubmit={onSubmit}>
+                  <div className="flex justify-between relative">
+                      <label className={labelClass} htmlFor="name">
+                          Name
+                      </label>
+                      {errors.name && <span className="text-red-500 text-xs">{errors.name.message}</span>}
+                  </div>
+                  <input className={inputFieldClass} placeholder="Enter Name" type="name" name="name" autoComplete="off" value={data.name} onChange={onChange} />
 
-          {/* Password text */}
-          <div className="input-container">
-            <label className="field-label" htmlFor="password">
-              Password
-            </label>
-            {errors.password && (
-              <span style={{ color: "red" }}> {errors.password.message} </span>
-            )}
-          </div>
+                  <div className="flex justify-between relative">
+                      <label className={labelClass} htmlFor="email">
+                          Email
+                      </label>
+                      {errors.email && <span className="text-red-500 text-xs">{errors.email.message}</span>}
+                  </div>
+                  <input className={inputFieldClass} placeholder="Enter Email" type="email" name="email" autoComplete="off" value={data.email} onChange={onChange} />
 
-          {/* Password input */}
-          <div className="input-field">
-            <input
-              id="password"
-              className="input-field-text"
-              placeholder="Enter Password"
-              type={showPassword ? "text" : "password"}
-              name="password"
-              autoComplete="off"
-              value={data.password}
-              // {...register("data.password", {
-              //   required: "*Password* is required",
-              // })}
-              onChange={onChange}
-            />
-            <button
-              type="button"
-              className="input-field-password-toggle"
-              onClick={() => {
-                setShowPassword(!showPassword);
-              }}
-            >
-              {showPassword ? <FaEye /> : <FaEyeSlash />}
-            </button>
-          </div>
+                  <div className="flex justify-between relative">
+                      <label className={labelClass} htmlFor="password">
+                          Password
+                      </label>
+                      {errors.password && <span className="text-red-500 text-xs">{errors.password.message}</span>}
+                  </div>
+                  <div className="relative w-full flex items-center">
+                      <input className={inputFieldClass} placeholder="Enter Password" type={showPassword ? "text" : "password"} name="password" autoComplete="off" value={data.password} onChange={onChange} />
+                      <button type="button" className="absolute right-2" onClick={() => setShowPassword(!showPassword)}>
+                          {showPassword ? <FaEye /> : <FaEyeSlash />}
+                      </button>
+                  </div>
 
-          {/* Confirm Password text */}
-          <div className="input-container">
-            <label className="field-label" htmlFor="cpassword">
-              Confirm Password
-            </label>
-            {errors.cpassword && (
-              <span style={{ color: "red" }}>{errors.cpassword.message}</span>
-            )}
-          </div>
-          {/* Confirm Password input */}
-          <div className="input-field">
-            <input
-              id="cpassword"
-              className="input-field-text"
-              placeholder="Re-enter Password"
-              type={showConfirmPassword ? "text" : "password"}
-              name="cpassword"
-              autoComplete="off"
-              data={data.cpassword}
-              onChange={onChange}
-              // {...register("cpassword", {
-              //   required: "*Confirm Password* is required",
-              //   validate: validatePasswordMatch,
-              // })}
-            />
-            <button
-              type="button"
-              className="input-field-password-toggle"
-              onClick={() => {
-                setShowConfirmPassword(!showConfirmPassword);
-              }}
-            >
-              {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
-            </button>
-          </div>
+                  <div className="flex justify-between relative">
+                      <label className={labelClass} htmlFor="cpassword">
+                          Confirm Password
+                      </label>
+                      {errors.cpassword && <span className="text-red-500 text-xs">{errors.cpassword.message}</span>}
+                  </div>
+                  <div className="relative w-full flex items-center">
+                      <input className={inputFieldClass} placeholder="Re-enter Password" type={showConfirmPassword ? "text" : "password"} name="cpassword" autoComplete="off" value={data.cpassword} onChange={onChange} />
+                      <button type="button" className="absolute right-2" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                          {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
+                      </button>
+                  </div>
 
-          {/*Submit button*/}
-          <input
-            className="form-button-reg"
-            type={"submit"}
-            value="Create Account"
-          />
-          {/* <button type="submit" className="form-button-reg">
-            {" "}
-            Create Account{" "}
-          </button> */}
-          <button type="button" className="guest-button" onClick={handleBack}>
-            {" "}
-            Back to Login{" "}
-          </button>
-        </form>
+                  <input className="bg-[rgba(105,29,4,0.3)] h-[15%] text-[20px] 
+                                        font-semibold text-black text-opacity-60 rounded
+                                        mb-5 mt-5 cursor-pointer hover:bg-[rgba(105,29,4,0.4)]"
+                      type="submit" value="Create Account" />
 
-        <Outlet />
-      </div>
-    </>
+                  <button type="button" className="bg-white bg-opacity-60 border 
+                                                    border-[rgba(0,0,0,0.3)] rounded
+                                                    text-[rgba(0,0,0,0.5)] font-semibold cursor-pointer
+                                                    hover:border-[rgba(0,0,0,0.8)] hover:text-[rgba(0,0,0,0.9)]"
+                      onClick={handleBack}>
+                      Back to Login
+                  </button>
+              </form>
+              <Outlet />
+          </div>
+      </>
   );
 }

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import EnvironmentalCard from "../components/environmentalCard";
 import SocialCard from "../components/socialCard";
 import GovernanceCard from "../components/governanceCard";
-// import { Forecast } from "@/components/forecast";
+import { Forecast } from "@/components/forecast";
 
 export default function DashboardPage() {
   //Sample data for testing
@@ -338,7 +338,7 @@ export default function DashboardPage() {
             />
           )}
         </>
-        {/* <>{currCompanyDetails && <Forecast />}</> */}
+        <>{currCompanyDetails && <Forecast />}</>
       </div>
     </>
   );

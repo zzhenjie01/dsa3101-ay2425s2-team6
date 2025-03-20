@@ -1,6 +1,6 @@
 // "use client";
 
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "@/context/context";
 import { Button } from "@/components/ui/button";
 import {
@@ -31,6 +31,15 @@ export default function WeightsButton() {
     governanceWeight: user.governanceWeight,
   });
 
+  // To change slider values whenever the user changes - fix the error of slidervalues set to guest after refreshing the webpage
+  useEffect(() => {
+    setSliderValues({
+      environmentalWeight: user.environmentalWeight,
+      socialWeight: user.socialWeight,
+      governanceWeight: user.governanceWeight,
+    });
+  }, [user]);
+
   // Update slider value from slider component
   const handleSliderChange = (name, value) => {
     setSliderValues((prev) => ({
@@ -52,24 +61,37 @@ export default function WeightsButton() {
 
   // Save all slider values to user state
   const saveSettings = async () => {
-    const userSettings = {
-      ...user,
-      environmentalWeight: sliderValues.environmentalWeight,
-      socialWeight: sliderValues.socialWeight,
-      governanceWeight: sliderValues.governanceWeight,
-    };
-    toast.promise(axios.put("/auth/updateProfile", userSettings), {
-      loading: "Saving...",
-      success: "Weights successfully saved!",
-      error: "Weights could not be saved. Please try again.",
-    });
-    // const response = await axios.put("/auth/updateProfile", userSettings);
-    // console.log(response);
+    if (
+      sliderValues.environmentalWeight +
+        sliderValues.socialWeight +
+        sliderValues.governanceWeight ===
+      0
+    ) {
+      toast.error("All the weights cannot add up to 0.");
+    } else {
+      const userSettings = {
+        ...user,
+        environmentalWeight: sliderValues.environmentalWeight,
+        socialWeight: sliderValues.socialWeight,
+        governanceWeight: sliderValues.governanceWeight,
+      };
 
-    // Update user settings in context
-    setUser(userSettings);
-    setOpen(false);
-    // toast.success("Weights successfully saved!");
+      // update user profile in MongoDB
+      const updateProfile = await axios.put(
+        "/auth/updateProfile",
+        userSettings
+      );
+      console.log(updateProfile);
+
+      // record update transaction in postgres
+      const saveWeights = await axios.post("/auth/insertWeights", userSettings);
+      console.log(saveWeights);
+
+      // Update user settings in context
+      setUser(userSettings);
+      setOpen(false);
+      toast.success("Weights successfully saved!");
+    }
   };
 
   // Reset slider values when dialog is closed

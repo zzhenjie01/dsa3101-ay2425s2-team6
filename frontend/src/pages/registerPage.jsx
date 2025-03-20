@@ -47,7 +47,9 @@ export default function RegistrationPage() {
         cpassword,
       });
       if (data.error) {
-        toast.error(data.error);
+        for (e in data.error) {
+          toast.error(data.error[e]);
+        }
       } else {
         toast.success("User Registered Successfully!");
         toast.success("Redirecting to Login Page");

@@ -4,15 +4,11 @@ import { GoHome, GoGraph, GoTrophy } from "react-icons/go";
 import { IconContext } from "react-icons";
 
 function LinkButton(props) {
-  const logos = {
-    Home: <GoHome />,
-    Leaderboard: <GoTrophy />,
-    Dashboard: <GoGraph />,
-  };
+  const { idx, webUrl, logo, webName, ...otherProps } = props;
   return (
     <Link
-      key={props.idx}
-      to={props.webUrl}
+      key={idx}
+      to={webUrl}
       className="
       block
       p-6
@@ -22,11 +18,10 @@ function LinkButton(props) {
       hover:bg-emerald-500
       cursor-pointer
       "
+      {...otherProps}
     >
-      <IconContext.Provider value={{ size: 35 }}>
-        {logos[props.webName]}
-      </IconContext.Provider>
-      {props.webName}
+      <IconContext.Provider value={{ size: 35 }}>{logo}</IconContext.Provider>
+      {webName}
     </Link>
   );
 }

@@ -1,5 +1,5 @@
 import User from "../models/userModel.js";
-import { hashPassword, comparePassword } from "./authHelper.js";
+import { hashPassword, comparePassword, logWeights } from "./authHelper.js";
 import jwt from "jsonwebtoken";
 import guestProfile from "../models/guestProfile.js";
 
@@ -62,6 +62,8 @@ export const registerUser = async (req, res) => {
       email,
       password: hashedPassword,
     });
+
+    logWeights(user);
 
     return res.json(user);
   } catch (error) {

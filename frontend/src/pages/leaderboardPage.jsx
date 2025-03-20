@@ -3,6 +3,7 @@ import { useState, useEffect, useContext } from "react";
 import { UserContext } from "@/context/context";
 import axios from "axios";
 import LeaderboardRow from "@/components/leaderboardRow";
+import UserRecommendations from "@/components/userRecommendations";
 
 export default function LeaderboardPage() {
   const leaderboardData = [
@@ -41,19 +42,62 @@ export default function LeaderboardPage() {
 
   const { user } = useContext(UserContext);
 
-  const { environmentalWeight, socialWeight, governanceWeight } = axios.post(
-    "/weights/getUserAvgWeights",
-    user
+  const [data, setData] = useState(leaderboardData);
+
+  const [weights, setWeights] = useState({
+    environmentalWeight: null,
+    socialWeight: null,
+    governanceWeight: null,
+  });
+
+  const [companyTopRecommendations, setCompanyTopRecommendations] = useState(
+    []
   );
 
-  const testing = axios.get("/weights/getAllAvgWeights");
+  // To calculate UserAvgWeights and Top Recommendations for user in initial state
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // parallel requests
+        const [userAvgWeights, allOtherAvgWeights] = await Promise.all([
+          axios.get("/weights/getUserAvgWeights", { params: { user } }),
+          axios.get("/weights/getAllOtherAvgWeights", { params: { user } }),
+        ]);
 
-  const [data, setData] = useState(leaderboardData);
+        setWeights(userAvgWeights.data);
+
+        const companyTopRecommendations = await axios.get(
+          "/clicks/getUserRecommendations",
+          {
+            params: {
+              userAvgWeights: userAvgWeights.data,
+              allOtherAvgWeights: allOtherAvgWeights.data,
+            },
+          }
+        );
+        setCompanyTopRecommendations(companyTopRecommendations.data);
+      } catch (error) {
+        console.error("Data fetching error:", error);
+      }
+    };
+
+    // Add cleanup function
+    const controller = new AbortController();
+
+    fetchData();
+
+    return () => {
+      controller.abort(); // Cancel ongoing requests
+    };
+  }, [user]);
 
   // Effect to update data whenever weights change
   useEffect(() => {
     // Only recalculate when weights change, not when data changes
-    const totalWeight = environmentalWeight + socialWeight + governanceWeight;
+    const totalWeight =
+      weights.environmentalWeight +
+      weights.socialWeight +
+      weights.governanceWeight;
 
     if (totalWeight === 0) return;
 
@@ -62,22 +106,26 @@ export default function LeaderboardPage() {
       .map((row) => ({
         ...row,
         total: Math.round(
-          row.e_score * (environmentalWeight / totalWeight) +
-            row.s_score * (socialWeight / totalWeight) +
-            row.g_score * (governanceWeight / totalWeight)
+          row.e_score * (weights.environmentalWeight / totalWeight) +
+            row.s_score * (weights.socialWeight / totalWeight) +
+            row.g_score * (weights.governanceWeight / totalWeight)
         ),
       }))
       .sort((a, b) => b.total - a.total);
 
     setData(newData);
-  }, [environmentalWeight, socialWeight, governanceWeight]); // Only depend on weights
+  }, [
+    weights.environmentalWeight,
+    weights.socialWeight,
+    weights.governanceWeight,
+  ]); // Only depend on weights
 
   // console.log(data);
 
   return (
     <div className="flex-grow pt-20 text-center">
       <h1 className="text-3xl pt-8 pb-16">Leaderboard</h1>
-      <div className="flex justify-center items-baseline h-screen">
+      <div className="flex justify-center items-baseline">
         <table className="table-fixed">
           <thead className="bg-gray-200 text-gray-700 uppercase text-sm font-semibold">
             <tr>
@@ -95,6 +143,10 @@ export default function LeaderboardPage() {
             ))}
           </tbody>
         </table>
+      </div>
+      <div className="mt-12">
+        <h1 className="text-3xl pb-8">Companies you may be interested in</h1>
+        <UserRecommendations companies={companyTopRecommendations} />
       </div>
     </div>
   );

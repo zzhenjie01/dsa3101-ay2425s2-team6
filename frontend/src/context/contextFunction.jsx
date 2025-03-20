@@ -32,7 +32,6 @@ export default function UserContextProvider({ children }) {
         }
       } finally {
         setTimeout(() => {
-          console.log("Data");
           setLoading(false);
         }, 1000); // loading screen will be fetch data time + 1s
       }

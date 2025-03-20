@@ -1,12 +1,12 @@
 import User from "../models/userModel.js";
-import client from "../models/postgresDB.js";
+import pgPool from "../models/postgresDB.js";
 
 export const insertWeights = async (req, res) => {
   try {
     const user = req.body;
     const userExists = await User.findById(user._id);
     if (userExists) {
-      await client.query(
+      await pgPool.query(
         `
         INSERT INTO weight_transactions
           (user_id, 
@@ -39,10 +39,10 @@ export const insertWeights = async (req, res) => {
 
 export const getUserAvgWeights = async (req, res) => {
   try {
-    const user = req.body;
+    const user = req.query.user;
     const userExists = await User.findById(user._id);
     if (userExists) {
-      const data = await client.query(
+      const data = await pgPool.query(
         `
         SELECT
         AVG(environmental_weight) AS avg_environmental_weight,
@@ -60,12 +60,15 @@ export const getUserAvgWeights = async (req, res) => {
 
       const result = data.rows[0];
 
-      console.log("Average Weights Returned");
-      return res.json({
+      // console.log("Average Weights Returned");
+
+      const output = {
         environmentalWeight: result.avg_environmental_weight,
         socialWeight: result.avg_social_weight,
         governanceWeight: result.avg_governance_weight,
-      });
+      };
+
+      return res.json(output);
     } else {
       // User not found in db - Guest / Will just return the weights as is
       // console.log("Current Weights Returned");
@@ -81,9 +84,11 @@ export const getUserAvgWeights = async (req, res) => {
   }
 };
 
-export const getAllAvgWeights = async (req, res) => {
+export const getAllOtherAvgWeights = async (req, res) => {
   try {
-    const data = await client.query(
+    const user = req.query.user;
+    const user_id = user._id || "";
+    const data = await pgPool.query(
       `
       SELECT
       user_id,
@@ -97,14 +102,16 @@ export const getAllAvgWeights = async (req, res) => {
         FROM weight_transactions
         )
       WHERE row_num <= 5
+      AND user_id <> $1
       GROUP BY user_id
-      `
+      `,
+      [`_${user_id.toString()}`]
     );
 
     const result = data.rows;
     // console.log("All Users Average Weights Returned");
-
-    return res.json(result);
+    // console.log(result);
+    res.json(result);
   } catch (error) {
     console.error("Error getting all average weights", error);
   }
@@ -113,5 +120,5 @@ export const getAllAvgWeights = async (req, res) => {
 export default {
   insertWeights,
   getUserAvgWeights,
-  getAllAvgWeights,
+  getAllOtherAvgWeights,
 };

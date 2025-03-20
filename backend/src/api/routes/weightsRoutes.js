@@ -2,11 +2,11 @@ import router from "./baseRouter.js";
 import {
   insertWeights,
   getUserAvgWeights,
-  getAllAvgWeights,
+  getAllOtherAvgWeights,
 } from "../controllers/weightsController.js";
 
-router.get("/getAllAvgWeights", getAllAvgWeights);
+router.get("/getUserAvgWeights", getUserAvgWeights);
+router.get("/getAllOtherAvgWeights", getAllOtherAvgWeights);
 router.post("/insertWeights", insertWeights);
-router.post("/getUserAvgWeights", getUserAvgWeights);
 
 export default router;

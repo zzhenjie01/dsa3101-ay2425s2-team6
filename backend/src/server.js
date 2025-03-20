@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
 import authRouter from "./api/routes/authRoutes.js";
 import weightsRouter from "./api/routes/weightsRoutes.js";
+import clicksRouter from "./api/routes/clickRoutes.js";
 import createAllTables from "./pgserver.js";
 
 // Set up express server
@@ -17,6 +18,7 @@ app.use(express.urlencoded({ extended: false }));
 // Use routers of different paths
 app.use("/auth", authRouter);
 app.use("/weights", weightsRouter);
+app.use("/clicks", clicksRouter);
 
 // pull details from .env file
 const mongo_user = process.env.MONGODB_USERNAME;

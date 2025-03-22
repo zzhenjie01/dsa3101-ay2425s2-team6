@@ -41,17 +41,53 @@ export default function LeaderboardPage() {
 
   const { user } = useContext(UserContext);
 
-  const { environmentalWeight, socialWeight, governanceWeight } = axios.post(
-    "/auth/getAvgWeights",
-    user
-  );
+  const [avgWeight, setAvgWeight] = useState({
+    envWeight: -1,
+    socWeight: -1,
+    govWeight: -1,
+  });
+
+  // Effect for API call
+  useEffect(() => {
+    if (!user) return; // Prevent API call if user is not defined
+
+    axios
+      .post("/auth/getAvgWeights", user)
+      .then((response) => {
+        const { environmentalWeight, socialWeight, governanceWeight } =
+          response.data;
+
+        // Convert strings to integers
+        const newAvgWeight = {
+          envWeight: parseInt(environmentalWeight, 10),
+          socWeight: parseInt(socialWeight, 10),
+          govWeight: parseInt(governanceWeight, 10),
+        };
+
+        // Only update state if the values actually changed
+        setAvgWeight((prevWeight) => {
+          if (
+            prevWeight.envWeight === newAvgWeight.envWeight &&
+            prevWeight.socWeight === newAvgWeight.socWeight &&
+            prevWeight.govWeight === newAvgWeight.govWeight
+          ) {
+            return prevWeight; // Avoid unnecessary re-renders
+          }
+          return newAvgWeight;
+        });
+      })
+      .catch((error) => {
+        console.error("Error fetching weights:", error);
+      });
+  }, [user, avgWeight]); // Effect runs only when user or avgWeight changes
 
   const [data, setData] = useState(leaderboardData);
 
   // Effect to update data whenever weights change
   useEffect(() => {
     // Only recalculate when weights change, not when data changes
-    const totalWeight = environmentalWeight + socialWeight + governanceWeight;
+    const totalWeight =
+      avgWeight.envWeight + avgWeight.socWeight + avgWeight.govWeight;
 
     if (totalWeight === 0) return;
 
@@ -60,17 +96,15 @@ export default function LeaderboardPage() {
       .map((row) => ({
         ...row,
         total: Math.round(
-          row.e_score * (environmentalWeight / totalWeight) +
-            row.s_score * (socialWeight / totalWeight) +
-            row.g_score * (governanceWeight / totalWeight)
+          row.e_score * (avgWeight.envWeight / totalWeight) +
+            row.s_score * (avgWeight.socWeight / totalWeight) +
+            row.g_score * (avgWeight.govWeight / totalWeight)
         ),
       }))
       .sort((a, b) => b.total - a.total);
 
     setData(newData);
-  }, [environmentalWeight, socialWeight, governanceWeight]); // Only depend on weights
-
-  // console.log(data);
+  }, [avgWeight]); // Only depend on weights
 
   return (
     <div className="flex-grow pt-20 text-center">

@@ -31,6 +31,7 @@ export function Corruption(props) {
     { minYear: Infinity, maxYear: -Infinity }
   );
 
+  //Get the difference in number of cases between company and industry average
   const caseDifference = props.lastyeardata.cases - props.lastyeardata.avg;
 
   const chartConfig = {

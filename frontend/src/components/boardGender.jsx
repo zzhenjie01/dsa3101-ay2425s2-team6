@@ -29,6 +29,8 @@ export function BoardGender(props) {
     },
   };
 
+  //chartData consists of board gender data in the latest year with 2 rows (1 for male and 1 for female)
+  //Each row is in the format {gender:"???", number:???, fill:"???"}
   //Add fill key and value for styling
   const chartData = props.data.data.map((item) => ({
     ...item,

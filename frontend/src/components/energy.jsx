@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/chart";
 
 export function Energy(props) {
+  // chartData is an array with each row containing {year:???, company:???, average:???}
   const chartData = props.data.sort((a, b) => a.year - b.year);
 
   const chartConfig = {

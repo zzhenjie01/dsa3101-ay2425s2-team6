@@ -139,6 +139,70 @@ export default function DashboardPage() {
           "Number of Corruption cases": 12,
         },
       },
+      forecast: {
+        "existing data": [
+          { date: "2023-12-11", value: 34.6748 },
+          { date: "2023-12-12", value: 32.286 },
+          { date: "2023-12-13", value: 37.1282 },
+          { date: "2023-12-16", value: 37.7451 },
+          { date: "2023-12-18", value: 38.8014 },
+          { date: "2023-12-19", value: 35.367 },
+          { date: "2023-12-20", value: 32.2403 },
+          { date: "2023-12-21", value: 31.3015 },
+          { date: "2023-12-22", value: 36.6504 },
+          { date: "2023-12-25", value: 35.9448 },
+          { date: "2023-12-26", value: 36.6109 },
+          { date: "2023-12-27", value: 39.8475 },
+          { date: "2023-12-28", value: 32.1224 },
+          { date: "2023-12-30", value: 36.176 },
+          { date: "2024-01-03", value: 33.9855 },
+          { date: "2024-01-04", value: 33.5646 },
+          { date: "2024-01-07", value: 30.2771 },
+          { date: "2024-01-08", value: 31.3936 },
+          { date: "2024-01-09", value: 30.1558 },
+          { date: "2024-01-10", value: 30.8261 },
+          { date: "2024-01-11", value: 36.6144 },
+          { date: "2024-01-12", value: 30.4978 },
+          { date: "2024-01-13", value: 34.4847 },
+          { date: "2024-01-14", value: 32.2694 },
+          { date: "2024-01-15", value: 32.1831 },
+          { date: "2024-01-17", value: 35.5633 },
+          { date: "2024-01-19", value: 38.5366 },
+          { date: "2024-01-20", value: 30.5171 },
+          { date: "2024-01-22", value: 30.7162 },
+          { date: "2024-01-23", value: 32.3475 },
+          { date: "2024-01-24", value: 33.0478 },
+          { date: "2024-01-25", value: 38.0783 },
+          { date: "2024-01-26", value: 34.3663 },
+          { date: "2024-01-27", value: 33.5422 },
+          { date: "2024-01-28", value: 37.4866 },
+          { date: "2024-01-29", value: 31.148 },
+          { date: "2024-01-30", value: 38.3678 },
+          { date: "2024-02-01", value: 37.8834 },
+          { date: "2024-02-02", value: 30.2798 },
+          { date: "2024-02-03", value: 38.1317 },
+          { date: "2024-02-04", value: 36.5804 },
+          { date: "2024-02-07", value: 38.3608 },
+          { date: "2024-02-08", value: 34.1594 },
+          { date: "2024-02-10", value: 32.9399 },
+          { date: "2024-02-15", value: 38.6934 },
+        ],
+        "forecasted data": [
+          { date: "2024-02-17", value: 31.0674 },
+          { date: "2024-02-18", value: 32.4135 },
+          { date: "2024-02-20", value: 39.1486 },
+          { date: "2024-02-22", value: 32.6111 },
+          { date: "2024-02-23", value: 38.5279 },
+          { date: "2024-02-24", value: 30.1963 },
+          { date: "2024-02-25", value: 33.1464 },
+          { date: "2024-02-26", value: 38.1241 },
+          { date: "2024-02-28", value: 31.1251 },
+          { date: "2024-03-01", value: 32.6375 },
+          { date: "2024-03-02", value: 37.4464 },
+          { date: "2024-03-05", value: 30.0903 },
+          { date: "2024-03-07", value: 31.672 },
+        ],
+      },
     },
 
     {
@@ -172,6 +236,51 @@ export default function DashboardPage() {
           "Board of Director gender ratio": "51%",
           "Number of Corruption cases": 0,
         },
+      },
+      forecast: {
+        "existing data": [
+          { date: "2023-12-05", value: 145.23 },
+          { date: "2023-12-07", value: 147.89 },
+          { date: "2023-12-09", value: 149.34 },
+          { date: "2023-12-12", value: 144.78 },
+          { date: "2023-12-15", value: 146.91 },
+          { date: "2023-12-18", value: 143.5 },
+          { date: "2023-12-20", value: 141.78 },
+          { date: "2023-12-22", value: 139.45 },
+          { date: "2023-12-26", value: 144.32 },
+          { date: "2023-12-29", value: 143.11 },
+          { date: "2024-01-02", value: 145.89 },
+          { date: "2024-01-05", value: 151.67 },
+          { date: "2024-01-09", value: 140.45 },
+          { date: "2024-01-12", value: 146.78 },
+          { date: "2024-01-16", value: 144.22 },
+          { date: "2024-01-19", value: 142.88 },
+          { date: "2024-01-23", value: 138.67 },
+          { date: "2024-01-26", value: 140.92 },
+          { date: "2024-01-30", value: 139.45 },
+          { date: "2024-02-02", value: 141.23 },
+          { date: "2024-02-06", value: 147.34 },
+          { date: "2024-02-09", value: 140.22 },
+          { date: "2024-02-13", value: 144.78 },
+          { date: "2024-02-16", value: 142.34 },
+          { date: "2024-02-19", value: 142.01 },
+          { date: "2024-02-22", value: 145.67 },
+        ],
+        "forecasted data": [
+          { date: "2024-02-24", value: 139.89 },
+          { date: "2024-02-26", value: 141.56 },
+          { date: "2024-02-28", value: 148.23 },
+          { date: "2024-03-02", value: 140.91 },
+          { date: "2024-03-05", value: 147.88 },
+          { date: "2024-03-08", value: 138.56 },
+          { date: "2024-03-10", value: 142.45 },
+          { date: "2024-03-13", value: 147.12 },
+          { date: "2024-03-16", value: 139.01 },
+          { date: "2024-03-19", value: 140.78 },
+          { date: "2024-03-22", value: 145.34 },
+          { date: "2024-03-26", value: 137.67 },
+          { date: "2024-03-29", value: 140.12 },
+        ],
       },
     },
 
@@ -213,7 +322,7 @@ export default function DashboardPage() {
   // Function to transform the data
   const transformData = () => {
     return companyLst.map((company) => {
-      const { idx, companyName, data } = company;
+      const { idx, companyName, data, forecast } = company;
 
       // Create a new data structure organized by metric first
       const transformedData = {};
@@ -234,18 +343,23 @@ export default function DashboardPage() {
         });
       });
 
-      return {
+      // Construct the final object and only include forecast if it exists
+      const result = {
         idx,
         companyName,
         data: transformedData,
       };
+
+      if (forecast !== undefined) {
+        result.forecast = forecast;
+      }
+
+      return result;
     });
   };
 
   // State for all companies details
   const [allCompanyDetails, setAllCompanyDetails] = useState(transformData());
-
-  // console.log(allCompanyDetails);
 
   // State for the company details currently selected
   const [currCompanyDetails, setCurrCompanyDetails] = useState(null);
@@ -253,8 +367,6 @@ export default function DashboardPage() {
   const avgDetails = allCompanyDetails.find(
     (comp) => comp.companyName === "Industry Average"
   );
-
-  // console.log(avgDetails.data[`Turnover rate`]);
 
   // Get current company details in json format, if empty value is selected set it to null
   function getCurrCompanyDetails(event) {
@@ -338,7 +450,15 @@ export default function DashboardPage() {
             />
           )}
         </>
-        <>{currCompanyDetails && <Forecast />}</>
+        <>
+          {currCompanyDetails &&
+            currCompanyDetails.companyName !== "Industry Average" && (
+              <Forecast
+                name={currCompanyDetails.companyName}
+                data={currCompanyDetails.forecast}
+              />
+            )}
+        </>
       </div>
     </>
   );

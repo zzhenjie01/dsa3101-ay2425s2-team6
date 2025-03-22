@@ -7,6 +7,7 @@ import { Corruption } from "./corruption";
 import { convertPercentage } from "./helpers/percentage";
 
 export default function GovernanceCard(props) {
+  //Get board gender data for the latest year, separated into male and female
   const getBoardGenderData = (compdata, avgdata) => {
     const lastYear = getLastYear(compdata);
     return {
@@ -19,7 +20,7 @@ export default function GovernanceCard(props) {
         },
         {
           gender: "female",
-          number: 100 - convertPercentage(compdata[lastYear]) || 0,
+          number: 100 - convertPercentage(compdata[lastYear]) || 0, //assume female to be the complementary percentage of male
         },
       ],
       company_ratio: convertPercentage(compdata[lastYear]) || 0,
@@ -27,15 +28,17 @@ export default function GovernanceCard(props) {
     };
   };
 
+  //Convert company's corruption data to an array with each row containing {year:???, cases:???}
   const transformCorruptionData = (data) => {
     return Object.entries(data)
       .map(([year, cases]) => ({
         year: Number(year), // Convert year to number
         cases,
       }))
-      .sort((a, b) => a.year - b.year);
+      .sort((a, b) => a.year - b.year); //sort by ascending year
   };
 
+  //Get the latest year's corruption data which includes industry average data for comparison
   const getLastYearCorruptionData = (data, avgdata) => {
     // Get the latest year
     const lastYear = getLastYear(data);

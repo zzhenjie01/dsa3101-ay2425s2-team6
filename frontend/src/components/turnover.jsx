@@ -16,17 +16,8 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-// const chartData = [
-//   { month: "January", desktop: 186, mobile: 80 },
-//   { month: "February", desktop: 305, mobile: 200 },
-//   { month: "March", desktop: 237, mobile: 120 },
-//   { month: "April", desktop: 73, mobile: 190 },
-//   { month: "May", desktop: 209, mobile: 130 },
-//   { month: "June", desktop: 214, mobile: 140 },
-// ];
 
 export function Turnover(props) {
-  const chartData = props.data;
   const chartConfig = {
     company: {
       label: `${props.name}`,
@@ -38,6 +29,10 @@ export function Turnover(props) {
     },
   };
 
+  //chartData is an array containing the company's and average turnover rate per year, in the format
+  // {year:???, company:???, average:???}
+  const chartData = props.data;
+
   //Extract min and max year to display
   const { minYear, maxYear } = chartData.reduce(
     (acc, item) => ({
@@ -47,6 +42,7 @@ export function Turnover(props) {
     { minYear: Infinity, maxYear: -Infinity }
   );
 
+  // Extract last 2 years' data to compare percentage difference
   const lastYearData = chartData[chartData.length - 1]; // Most recent year
   const secondLastYearData = chartData[chartData.length - 2]; // Second most recent year
   const percentageDifference =

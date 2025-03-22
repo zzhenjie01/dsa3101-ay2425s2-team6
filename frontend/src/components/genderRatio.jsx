@@ -18,14 +18,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-// const chartData = [
-//   { month: "January", desktop: 186, mobile: 80 },
-//   { month: "February", desktop: 305, mobile: 200 },
-//   { month: "March", desktop: 237, mobile: 120 },
-//   { month: "April", desktop: 73, mobile: 190 },
-//   { month: "May", desktop: 209, mobile: 130 },
-//   { month: "June", desktop: 214, mobile: 140 },
-// ];
 
 export function GenderRatio(props) {
   //chartData is an array containing {year: ???, male: ???, female:???}, all values are integers
@@ -51,6 +43,7 @@ export function GenderRatio(props) {
     { minYear: Infinity, maxYear: -Infinity }
   );
 
+  //Get the difference in gender ratio between company and industry average, to 2dp
   const ratio = +(props.lastyeardata.avg - props.lastyeardata.company).toFixed(
     2
   );

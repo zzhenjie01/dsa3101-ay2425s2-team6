@@ -11,37 +11,46 @@ export const registerUser = async (req, res) => {
     const { name, email, password, cpassword } = req.body;
 
     const errors = [];
+    const errorFields = [];
 
     // Check if name is present and less than 20 characters
     if (!name) {
       errors.push("Name is required.");
+      errorFields.push("name");
     } else if (name.length > 20) {
       errors.push("Name must be less than 20 characters.");
+      errorFields.push("name");
     }
 
     // Check if email is present
     if (!email) {
       errors.push("Email is required.");
+      errorFields.push("email");
     }
 
     // Check if password is present
     if (!password) {
       errors.push("Password is required.");
+      errorFields.push("password");
     }
 
     // Check if confirm password is present
     if (!cpassword) {
       errors.push("Confirm Password is required.");
+      errorFields.push("cpassword");
     }
 
     // Check if the password and compare passwords are equal
     if (password && cpassword && password != cpassword) {
       errors.push("Passwords do not match.");
+      errorFields.push("password");
+      errorFields.push("cpassword");
     }
 
     if (errors.length !== 0) {
       return res.json({
         error: errors,
+        errorFields: errorFields,
       });
     }
 
@@ -50,6 +59,7 @@ export const registerUser = async (req, res) => {
     if (emailExists) {
       return res.json({
         error: ["Email is already taken."],
+        errorFields: ["email"],
       });
     }
 
@@ -76,20 +86,24 @@ export const loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     const errors = [];
+    const errorFields = [];
 
     // Check if email is present
     if (!email) {
       errors.push("Email is required.");
+      errorFields.push("email");
     }
 
     // Check if password is present
     if (!password) {
       errors.push("Password is required.");
+      errorFields.push("password");
     }
 
     if (errors.length !== 0) {
       return res.json({
         error: errors,
+        errorFields: errorFields,
       });
     }
 
@@ -98,6 +112,7 @@ export const loginUser = async (req, res) => {
     if (!user) {
       return res.json({
         error: ["User not found. Please try again"],
+        errorFields: ["email"],
       });
     }
 
@@ -120,6 +135,7 @@ export const loginUser = async (req, res) => {
     if (!match) {
       return res.json({
         error: ["Password is incorrect. Please try again."],
+        errorFields: ["password"],
       });
     }
   } catch (error) {

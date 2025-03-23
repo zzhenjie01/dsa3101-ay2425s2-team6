@@ -1,6 +1,5 @@
 import { useForm } from "react-hook-form";
 import { useState, useContext } from "react";
-import "./loginPage.css";
 import { Outlet } from "react-router";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -12,15 +11,20 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 Div centered on the login page
 */
 export default function LoginCredentialsDiv() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  // const {
+  //   register,
+  //   handleSubmit,
+  //   formState: { errors },
+  // } = useForm();
 
   const [data, setData] = useState({
     email: "",
     password: "",
+  });
+
+  const [inputErrors, setInputErrors] = useState({
+    email: false,
+    password: false,
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -30,14 +34,16 @@ export default function LoginCredentialsDiv() {
   const navigate = useNavigate();
 
   const onChange = (e) => {
+    setInputErrors({
+      ...inputErrors,
+      [e.target.name]: false,
+    });
+
     setData({
       ...data,
       [e.target.name]: e.target.value,
     });
   };
-
-  const [emailError, setEmailError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
 
   const onSubmit = async (e) => {
     console.log("LoginSubmit called");
@@ -49,21 +55,23 @@ export default function LoginCredentialsDiv() {
         password,
       });
 
-      setEmailError(false);
-      setPasswordError(false);
-
       if (data.error) {
-        for (e in data.error) {
-          toast.error(data.error[e]);
-          if (data.error[e].includes("User")) setEmailError(true);
-          if (data.error[e].includes("Password")) setPasswordError(true);
+        // Change input errors
+        const newInputErrors = {};
+        for (const e of data.errorFields) {
+          newInputErrors[e] = true;
+        }
+        setInputErrors((prevErrors) => ({ ...prevErrors, ...newInputErrors }));
+
+        // Toast notifications for errors
+        for (e of data.error) {
+          toast.error(e);
         }
       } else {
         toast.success(`Successfully logged in. Welcome ${data.name}!`);
         setUser(data);
         setData({});
         navigate("/home");
-        // window.location.reload();
       }
     } catch (error) {
       console.log(error);
@@ -113,7 +121,7 @@ export default function LoginCredentialsDiv() {
 
           {/* Email Input */}
           <input
-            className={`${emailError ? errorClass : inputFieldClass}`}
+            className={`${inputErrors.email ? errorClass : inputFieldClass}`}
             placeholder="Enter Email"
             type="email"
             autoComplete="off"
@@ -133,7 +141,9 @@ export default function LoginCredentialsDiv() {
           <div className="relative w-full flex items-center">
             <input
               id="password"
-              className={`${passwordError ? errorClass : inputFieldClass}`}
+              className={`${
+                inputErrors.password ? errorClass : inputFieldClass
+              }`}
               placeholder="Enter Password"
               type={showPassword ? "text" : "password"}
               name="password"

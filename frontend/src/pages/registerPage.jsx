@@ -1,6 +1,5 @@
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import "./registerPage.css";
 import { Outlet } from "react-router";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -8,12 +7,12 @@ import { toast } from "react-hot-toast";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function RegistrationPage() {
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm();
+  // const {
+  //   register,
+  //   handleSubmit,
+  //   watch,
+  //   formState: { errors },
+  // } = useForm();
 
   const [data, setData] = useState({
     name: "",
@@ -22,22 +21,29 @@ export default function RegistrationPage() {
     cpassword: "",
   });
 
-  const [showPassword, setShowPassword] = useState(false);
+  const [inputErrors, setInputErrors] = useState({
+    name: false,
+    email: false,
+    password: false,
+    cpassword: false,
+  });
 
+  const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const navigate = useNavigate();
 
   const onChange = (e) => {
+    setInputErrors({
+      ...inputErrors,
+      [e.target.name]: false,
+    });
+
     setData({
       ...data,
       [e.target.name]: e.target.value,
     });
   };
-
-  const [nameError, setNameError] = useState(false);
-  const [emailError, setEmailError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -53,14 +59,16 @@ export default function RegistrationPage() {
       });
 
       if (data.error) {
-        setNameError(false);
-        setEmailError(false);
-        setPasswordError(false);
-        for (e in data.error) {
-          toast.error(data.error[e]);
-          if (data.error[e].includes("Name")) setNameError(true);
-          if (data.error[e].includes("Email")) setEmailError(true);
-          if (data.error[e].includes("Password")) setPasswordError(true);
+        // Change input errors
+        const newInputErrors = {};
+        for (const e of data.errorFields) {
+          newInputErrors[e] = true;
+        }
+        setInputErrors((prevErrors) => ({ ...prevErrors, ...newInputErrors }));
+
+        // Toast notifications for errors
+        for (e of data.error) {
+          toast.error(e);
         }
       } else {
         toast.success("User Registered Successfully!");
@@ -78,12 +86,6 @@ export default function RegistrationPage() {
     console.log("Back to Login triggered");
     navigate("/login-page"); // Use React Router's navigate function
   };
-
-  // For validating password and confirm password
-  // const validatePasswordMatch = (value) => {
-  //   const password = watch("password");
-  //   return password === value ? "" : "Passwords do not match";
-  // };
 
   // Tailwind declarations
   const inputFieldClass =
@@ -113,18 +115,20 @@ export default function RegistrationPage() {
                                 bg-[rgba(256,256,256,0.85)] p-8 pt-4"
           onSubmit={onSubmit}
         >
+          {/* Name Label */}
           <div className="flex justify-between relative">
             <label className={labelClass} htmlFor="name">
               Name
             </label>
-            {errors.name && (
+            {/* {errors.name && (
               <span className="text-red-500 text-xs">
                 {errors.name.message}
               </span>
-            )}
+            )} */}
           </div>
+          {/* Name Input */}
           <input
-            className={`${nameError ? errorClass : inputFieldClass}`}
+            className={`${inputErrors.name ? errorClass : inputFieldClass}`}
             placeholder="Enter Name"
             type="name"
             name="name"
@@ -133,18 +137,21 @@ export default function RegistrationPage() {
             onChange={onChange}
           />
 
+          {/* Email Label */}
           <div className="flex justify-between relative">
             <label className={labelClass} htmlFor="email">
               Email
             </label>
-            {errors.email && (
+            {/* {errors.email && (
               <span className="text-red-500 text-xs">
                 {errors.email.message}
               </span>
-            )}
+            )} */}
           </div>
+
+          {/* Email Input */}
           <input
-            className={`${emailError ? errorClass : inputFieldClass}`}
+            className={`${inputErrors.email ? errorClass : inputFieldClass}`}
             placeholder="Enter Email"
             type="email"
             name="email"
@@ -153,19 +160,25 @@ export default function RegistrationPage() {
             onChange={onChange}
           />
 
+          {/* Password Label */}
           <div className="flex justify-between relative">
             <label className={labelClass} htmlFor="password">
               Password
             </label>
-            {errors.password && (
+            {/* {errors.password && (
               <span className="text-red-500 text-xs">
                 {errors.password.message}
               </span>
-            )}
+            )} */}
           </div>
+
+          {/* Password Input Box */}
           <div className="relative w-full flex items-center">
+            {/* Password Input */}
             <input
-              className={`${passwordError ? errorClass : inputFieldClass}`}
+              className={`${
+                inputErrors.password ? errorClass : inputFieldClass
+              }`}
               placeholder="Enter Password"
               type={showPassword ? "text" : "password"}
               name="password"
@@ -173,6 +186,7 @@ export default function RegistrationPage() {
               value={data.password}
               onChange={onChange}
             />
+            {/* Password Show Toggle */}
             <button
               type="button"
               className="absolute right-2 hover:cursor-pointer"
@@ -182,19 +196,25 @@ export default function RegistrationPage() {
             </button>
           </div>
 
+          {/* Confirm Password Label */}
           <div className="flex justify-between relative">
             <label className={labelClass} htmlFor="cpassword">
               Confirm Password
             </label>
-            {errors.cpassword && (
+            {/* {errors.cpassword && (
               <span className="text-red-500 text-xs">
                 {errors.cpassword.message}
               </span>
-            )}
+            )} */}
           </div>
+
+          {/* Confirm Password Input Box */}
           <div className="relative w-full flex items-center">
+            {/* Confirm Password Input */}
             <input
-              className={`${passwordError ? errorClass : inputFieldClass}`}
+              className={`${
+                inputErrors.cpassword ? errorClass : inputFieldClass
+              }`}
               placeholder="Re-enter Password"
               type={showConfirmPassword ? "text" : "password"}
               name="cpassword"
@@ -202,6 +222,7 @@ export default function RegistrationPage() {
               value={data.cpassword}
               onChange={onChange}
             />
+            {/* Confirm Password Show Toggle */}
             <button
               type="button"
               className="absolute right-2 hover:cursor-pointer"
@@ -211,6 +232,7 @@ export default function RegistrationPage() {
             </button>
           </div>
 
+          {/* Register Button */}
           <input
             className="bg-[rgba(105,29,4,0.3)] h-[15%] text-[20px] 
                                         font-semibold text-black text-opacity-60 rounded
@@ -219,6 +241,7 @@ export default function RegistrationPage() {
             value="Create Account"
           />
 
+          {/* Back to Login Button */}
           <button
             type="button"
             className="bg-white bg-opacity-60 border 

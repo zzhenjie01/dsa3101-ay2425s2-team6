@@ -87,6 +87,14 @@ Key Functions:
 - `combine_content(rewponse)`: Combines the content of the most relevant documents into a single text
 - `fact_check(query, combined_text, confidence = True)`: Performs fact-checking on the query based on the combined context using an LLM
 
+### 6. **`scrape_json.py`**
+Handles extracting LLM-generated responses from a JSON file (`rag_output.json`)
+This script loads environment variables, reads the JSON data, and retrieves `llm_response` values from the stored ESG-related insights.
+
+Key Functions and Behavior:
+- Parses `rag_output.json`: Extracts llm_response values
+- Stores Extracted Data: Collect all llm_response and store them in a list called `llm_responses`
+
 ## 👉 Workflow
 
 ### 1. **Clone the Repository**

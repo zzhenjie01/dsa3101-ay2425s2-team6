@@ -46,7 +46,12 @@ Key Functions:
 - `scrape()`: Uses NewsAPI to scrape latest ESG-related articles for a list of targeted banks
 - `split(scraped_text_df)`: Splits the scraped text into smaller, manageable chunks for indexing
 - `store_in_elastic(all_splits)`: Creates the Elasticsearch index and indexes the document chunks
-- `retrieve_and_fact_check(query)`: Queries Elasticsearch for relevant documents and performs a fact-checking task using LLMs
+- `retrieve_and_fact_check()`: Retrieves ESG-related claims from corporate reports, queries Elasticsearch for relevant documents and fact-checks them using LLMs
+
+>[!NOTE]
+>
+>- This script allows you to run different stages of the pipeline independently using command-line arguments.
+>- After fact-checking, the results are saved to `fact_checking.csv`. The final CSV includes ESG Claim, Combined News Content, Fact-Check Result and Confidence Score.
 
 ### 2. **`scrape.py`**
 Handles the scraping of ESG-related articles from NewsAPI.
@@ -80,7 +85,7 @@ Key Functions:
 - `generate_query_embedding(query)`: Generates embeddings for the query text
 - `knn_search(query, index_name, k=5)`: Performs a KNN search to find the top-k most relevant documents for the query
 - `combine_content(rewponse)`: Combines the content of the most relevant documents into a single text
-- `fact_check(query, combined_text, confidence = False): Performs fact-checking on the query based on the combined context using an LLM
+- `fact_check(query, combined_text, confidence = True)`: Performs fact-checking on the query based on the combined context using an LLM
 
 ## 👉 Workflow
 
@@ -107,12 +112,15 @@ Key Functions:
     - `ES_HOST`: The host URL for your Elasticsearch instance
     - `NEWSAPI_KEY`: Your API key for NewsAPI
     - `SAVE_DIR`: Directory where scraped data will be saved
+    - `RAG_OUTPUT_FILE`: 
   
     ```text
     ES_INDEX_NAME = esg_articles
     ES_HOST = http://localhost:9200
     NEWSAPI_KEY = '37439fc0e11546dd9b81a6f698800573'
     SAVE_DIR = ./data 
+    RAG_OUTPUT_FILE = C:\Users\jiayi\OneDrive - National University of Singapore\Desktop\WebScraper Latest\rag_output.json
+
     ```
   >[!IMPORTANT]
   > Notice the paths above ends with `/`. This is important as the scripts may not work correctly if you leave it out.
@@ -176,32 +184,40 @@ Key Functions:
     ollama pull llama3.2
    ```
 
-### 7(a). **Scrape ESG-related URLs from NewsAPI**
-  We can run the Python script directly inside VSCode or from the terminal using:
+### 7(a). **Scrape ESG-Related Articles from NewsAPI**
+  To scrape the latest ESG-related articles without performing fact-checking, run:
   
   ```shell
   python <REPO-ROOT>/webscraping/main.py --scrape 
   ```
 
   >[!NOTE]
-  > This step is useful when you only want to scrape ESG-related articles without performing fact-checking.
+  >  Use this option when you want to update the dataset with new ESG-related articles but do not need to run fact-checking immediately.
 
-### 7(b). **Scrap ESG-related URLs and Perform Facting Checking**
-  To scrape the latest ESG-related articles and immediately query for fact-checking.
-  We can run the Python script directly inside VSCode or from the terminal using:
+### 7(b). **Fact-Check ESG Claims from Corporate Reports**
+  To fact-check ESG-related claims from corporate reports without scraping new articles, run:
 
   ```shell
-  python <REPO-ROOT>/webscraping/main.py --scrape --query "Write Your Query Here"
+  python <REPO-ROOT>/webscraping/main.py --query 
+  ```
+  >[!NOTE]
+  > This option is useful when you want to verify ESG claims using previously scraped articles, saving time by skipping the scraping step.
+
+### 7(c). **Fact-Check Using a Custom Query**
+  To fact-check a user-defined query (instead of claims from corporate reports), run:
+
+  ```shell
+  python <REPO-ROOT>/webscraping/main.py --query "Your Query Here" 
+  ```
+  >[!NOTE]
+  > This allows you to manually check specific ESG-related statements using the existing dataset.
+
+### 7(d). **Scrape ESG Articles and Perform Fact-Checking**
+  To scrape the latest ESG-related articles and immediately perform fact-checking, run:
+
+  ```shell
+  python <REPO-ROOT>/webscraping/main.py --scrape --query 
   ```
 
   >[!NOTE]
-  > This approach ensures that the fact-checking process uses the most up-to-date ESG-related articles. 
-
-### 7(c). **Query for Fact-Checking Without Scraping**
-  If you only need to perform fact-checking without scraping new articles, use:
-
-  ```shell
-  python <REPO-ROOT>/webscraping/main.py --query "Your Query Here"
-  ```
-  >[!NOTE]
-  > This is useful when you want to fact-check a query based on previously scraped data, saving time by skipping the scraping step. 
+  > This ensures that fact-checking is conducted using the most up-to-date ESG-related news articles.

@@ -7,27 +7,30 @@ import { convertPercentage } from "./helpers/percentage";
 import { Turnover } from "./turnover";
 
 export default function SocialCard(props) {
+  //Change the gender ratio data to have a percentage for male, and the complement percentage for female
   const transformGenderRatioData = (data) => {
     return Object.entries(data)
       .map(([year, ratio]) => ({
         year: Number(year), // Convert year to number
-        male: convertPercentage(ratio),
-        female: 100 - convertPercentage(ratio),
+        male: ratio,
+        female: 100 - ratio,
       }))
       .sort((a, b) => a.year - b.year);
   };
 
+  //Get Gender Ratio data for the latest year
   const getLastYearGenderRatioData = (data, avgdata) => {
     // Get the latest year
     const lastYear = getLastYear(data);
 
     return {
       year: lastYear,
-      company: convertPercentage(data[lastYear]), // Get cases for the latest year
-      avg: convertPercentage(avgdata[lastYear]), // Get the average for the latest year
+      company: data[lastYear], // Get cases for the latest year
+      avg: avgdata[lastYear], // Get the average for the latest year
     };
   };
 
+  //Turnover data to combine company's turnover data with average turnover data per year
   const getTurnoverData = (compdata, avgdata) => {
     return Object.keys(compdata).map((year) => ({
       year: Number(year),

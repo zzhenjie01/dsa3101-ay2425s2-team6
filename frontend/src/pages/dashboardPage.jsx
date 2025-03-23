@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import EnvironmentalCard from "../components/environmentalCard";
 import SocialCard from "../components/socialCard";
 import GovernanceCard from "../components/governanceCard";
+// import { Forecast } from "@/components/forecast";
 import { UserContext } from "@/context/context";
 import axios from "axios";
 
@@ -116,28 +117,28 @@ export default function DashboardPage() {
           "GHG emissions": 120,
           "Electricity consumption": 15000,
           "Water consumption": 16000,
-          "Gender ratio": "75%",
+          "Gender ratio": "80%",
           "Turnover rate": 11.3,
           "Board of Director gender ratio": "95%",
-          "Number of Corruption cases": 2,
+          "Number of Corruption cases": 5,
         },
         2022: {
           "GHG emissions": 150,
           "Electricity consumption": 18400,
           "Water consumption": 17800,
-          "Gender ratio": "75%",
-          "Turnover rate": 11.3,
+          "Gender ratio": "70%",
+          "Turnover rate": 11.9,
           "Board of Director gender ratio": "80%",
-          "Number of Corruption cases": 2,
+          "Number of Corruption cases": 10,
         },
         2023: {
           "GHG emissions": 180,
           "Electricity consumption": 19200,
           "Water consumption": 17400,
-          "Gender ratio": "75%",
-          "Turnover rate": 11.3,
-          "Board of Director gender ratio": "60%",
-          "Number of Corruption cases": 2,
+          "Gender ratio": "65%",
+          "Turnover rate": 12.6,
+          "Board of Director gender ratio": "90%",
+          "Number of Corruption cases": 12,
         },
       },
     },
@@ -150,28 +151,28 @@ export default function DashboardPage() {
           "GHG emissions": 100,
           "Electricity consumption": 5000,
           "Water consumption": 4500,
-          "Gender ratio": "75%",
-          "Turnover rate": 11.3,
+          "Gender ratio": "45%",
+          "Turnover rate": 7.1,
           "Board of Director gender ratio": "40%",
-          "Number of Corruption cases": 2,
+          "Number of Corruption cases": 0,
         },
         2022: {
           "GHG emissions": 90,
           "Electricity consumption": 8000,
           "Water consumption": 6000,
-          "Gender ratio": "75%",
-          "Turnover rate": 11.3,
+          "Gender ratio": "48%",
+          "Turnover rate": 6.7,
           "Board of Director gender ratio": "43%",
-          "Number of Corruption cases": 2,
+          "Number of Corruption cases": 0,
         },
         2023: {
           "GHG emissions": 65,
           "Electricity consumption": 5500,
           "Water consumption": 6100,
-          "Gender ratio": "75%",
-          "Turnover rate": 11.3,
+          "Gender ratio": "37%",
+          "Turnover rate": 6.4,
           "Board of Director gender ratio": "51%",
-          "Number of Corruption cases": 2,
+          "Number of Corruption cases": 0,
         },
       },
     },
@@ -184,8 +185,8 @@ export default function DashboardPage() {
           "GHG emissions": 145,
           "Electricity consumption": 11000,
           "Water consumption": 5500,
-          "Gender ratio": "75%",
-          "Turnover rate": 11.3,
+          "Gender ratio": "70%",
+          "Turnover rate": 10.1,
           "Board of Director gender ratio": "75%",
           "Number of Corruption cases": 2,
         },
@@ -193,19 +194,19 @@ export default function DashboardPage() {
           "GHG emissions": 130,
           "Electricity consumption": 11500,
           "Water consumption": 6700,
-          "Gender ratio": "75%",
-          "Turnover rate": 11.3,
+          "Gender ratio": "72%",
+          "Turnover rate": 10.0,
           "Board of Director gender ratio": "73%",
-          "Number of Corruption cases": 2,
+          "Number of Corruption cases": 5,
         },
         2023: {
           "GHG emissions": 124,
           "Electricity consumption": 12100,
           "Water consumption": 6300,
-          "Gender ratio": "75%",
-          "Turnover rate": 11.3,
+          "Gender ratio": "71%",
+          "Turnover rate": 10.7,
           "Board of Director gender ratio": "71%",
-          "Number of Corruption cases": 2,
+          "Number of Corruption cases": 3,
         },
       },
     },
@@ -317,13 +318,13 @@ export default function DashboardPage() {
           {currCompanyDetails && (
             <SocialCard
               data={{
-                "Gender ratio": currCompanyDetails["Gender ratio"],
-                "Turnover rate": currCompanyDetails["Turnover rate"],
+                "Gender ratio": currCompanyDetails.data["Gender ratio"],
+                "Turnover rate": currCompanyDetails.data["Turnover rate"],
               }}
               name={currCompanyDetails.companyName}
               avgdata={{
-                "Gender ratio": avgDetails["Gender ratio"],
-                "Turnover rate": avgDetails["Turnover rate"],
+                "Gender ratio": avgDetails.data["Gender ratio"],
+                "Turnover rate": avgDetails.data["Turnover rate"],
               }}
             />
           )}
@@ -347,6 +348,7 @@ export default function DashboardPage() {
             />
           )}
         </>
+        {/* <>{currCompanyDetails && <Forecast />}</> */}
       </div>
     </>
   );

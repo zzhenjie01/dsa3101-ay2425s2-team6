@@ -14,7 +14,7 @@ export default function EnvironmentalCard(props) {
     const lastYear = getLastYear(compdata);
     return {
       company: props.name,
-      water: compdata[lastYear],
+      water: Math.round(compdata[lastYear]),
       average: avgdata[lastYear] || 0, //if avgdata for that year is unavailable, set average to 0
     };
   };

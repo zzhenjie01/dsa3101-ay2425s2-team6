@@ -16,15 +16,15 @@ export default function GovernanceCard(props) {
       data: [
         {
           gender: "male",
-          number: convertPercentage(compdata[lastYear]) || 0,
+          number: compdata[lastYear] || 0,
         },
         {
           gender: "female",
-          number: 100 - convertPercentage(compdata[lastYear]) || 0, //assume female to be the complementary percentage of male
+          number: 100 - compdata[lastYear] || 0, //assume female to be the complementary percentage of male
         },
       ],
-      company_ratio: convertPercentage(compdata[lastYear]) || 0,
-      average_ratio: convertPercentage(avgdata[lastYear]) || 0,
+      company_ratio: compdata[lastYear] || 0,
+      average_ratio: avgdata[lastYear] || 0,
     };
   };
 

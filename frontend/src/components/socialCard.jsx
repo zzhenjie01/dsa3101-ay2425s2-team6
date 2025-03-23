@@ -12,8 +12,8 @@ export default function SocialCard(props) {
     return Object.entries(data)
       .map(([year, ratio]) => ({
         year: Number(year), // Convert year to number
-        male: convertPercentage(ratio),
-        female: 100 - convertPercentage(ratio),
+        male: ratio,
+        female: 100 - ratio,
       }))
       .sort((a, b) => a.year - b.year);
   };
@@ -25,8 +25,8 @@ export default function SocialCard(props) {
 
     return {
       year: lastYear,
-      company: convertPercentage(data[lastYear]), // Get cases for the latest year
-      avg: convertPercentage(avgdata[lastYear]), // Get the average for the latest year
+      company: data[lastYear], // Get cases for the latest year
+      avg: avgdata[lastYear], // Get the average for the latest year
     };
   };
 

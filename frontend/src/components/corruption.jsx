@@ -32,7 +32,9 @@ export function Corruption(props) {
   );
 
   //Get the difference in number of cases between company and industry average
-  const caseDifference = props.lastyeardata.cases - props.lastyeardata.avg;
+  const caseDifference = (
+    props.lastyeardata.cases - props.lastyeardata.avg
+  ).toFixed(1);
 
   const chartConfig = {
     cases: {

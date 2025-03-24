@@ -38,8 +38,8 @@ export function OverallGHG(props) {
   const combinedData = Object.keys(props.data)
     .map((year) => ({
       year: parseInt(year),
-      company: props.data[year],
-      average: props.avg[year],
+      company: Math.round(props.data[year]),
+      average: Math.round(props.avg[year]),
     }))
     .sort((a, b) => a.year - b.year); //sort by ascending year
 
@@ -66,9 +66,9 @@ export function OverallGHG(props) {
   return (
     <Card className="h-full">
       <CardHeader>
-        <CardTitle>"Overall GHG Emissions"</CardTitle>
+        <CardTitle>Overall GHG Emissions</CardTitle>
         <CardDescription>
-          {minYear} - {maxYear}
+          {props.name}, {minYear} - {maxYear}
         </CardDescription>
       </CardHeader>
       <CardContent>

@@ -57,7 +57,7 @@ export function Energy(props) {
       <CardHeader>
         <CardTitle>Energy Consumption</CardTitle>
         <CardDescription>
-          {minYear} - {maxYear}
+          {props.name}, {minYear} - {maxYear}
         </CardDescription>
       </CardHeader>
       <CardContent>

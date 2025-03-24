@@ -34,8 +34,8 @@ export default function SocialCard(props) {
   const getTurnoverData = (compdata, avgdata) => {
     return Object.keys(compdata).map((year) => ({
       year: Number(year),
-      company: compdata[year],
-      average: avgdata[year] || 0, //if avgdata for that year is unavailable, set average to 0
+      company: Number.parseFloat(compdata[year]).toFixed(1),
+      average: Number.parseFloat(avgdata[year]).toFixed(1) || 0, //if avgdata for that year is unavailable, set average to 0
     }));
   };
 

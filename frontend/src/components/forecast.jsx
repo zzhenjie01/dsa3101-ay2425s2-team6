@@ -63,8 +63,8 @@ export function Forecast(props) {
   // { date: "???", "existing data": ??? , "forecasted data": ??? },
   const combineData = (forecast) => {
     const {
-      "existing data": existingData = [],
-      "forecasted data": forecastedData = [],
+      "Existing Data": existingData = [],
+      "Forecasted Data": forecastedData = [],
     } = forecast;
 
     // Create a map to store combined data by date
@@ -93,7 +93,7 @@ export function Forecast(props) {
   };
 
   const chartData = combineData(props.data);
-  const maxExistingDate = getMaxDate(props.data["existing data"]);
+  const maxExistingDate = getMaxDate(props.data["Existing Data"]);
 
   //Format minDate and maxDate to MMM YYYY
   const minDate = new Date(getMinDate(chartData)).toLocaleDateString("en-US", {
@@ -106,16 +106,16 @@ export function Forecast(props) {
   });
 
   //timeRange state for filtering existing data by last x days
-  const [timeRange, setTimeRange] = React.useState("90d");
+  const [timeRange, setTimeRange] = React.useState("99999d");
 
   const filteredData = chartData.filter((item) => {
     const date = new Date(item.date);
     const referenceDate = new Date(maxExistingDate);
-    let daysToSubtract = 90;
-    if (timeRange === "30d") {
-      daysToSubtract = 30;
-    } else if (timeRange === "7d") {
-      daysToSubtract = 7;
+    let daysToSubtract = 99999;
+    if (timeRange === "365d") {
+      daysToSubtract = 365;
+    } else if (timeRange === "90d") {
+      daysToSubtract = 90;
     }
     const startDate = new Date(referenceDate);
     startDate.setDate(startDate.getDate() - daysToSubtract);
@@ -141,14 +141,14 @@ export function Forecast(props) {
                 <SelectValue placeholder="Last 3 months" />
               </SelectTrigger>
               <SelectContent className="rounded-xl bg-white">
+                <SelectItem value="99999d" className="rounded-lg">
+                  All time
+                </SelectItem>
+                <SelectItem value="365d" className="rounded-lg">
+                  Last year
+                </SelectItem>
                 <SelectItem value="90d" className="rounded-lg">
                   Last 3 months
-                </SelectItem>
-                <SelectItem value="30d" className="rounded-lg">
-                  Last 30 days
-                </SelectItem>
-                <SelectItem value="7d" className="rounded-lg">
-                  Last 7 days
                 </SelectItem>
               </SelectContent>
             </Select>
@@ -204,11 +204,13 @@ export function Forecast(props) {
                   axisLine={false}
                   tickMargin={8}
                   minTickGap={32}
+                  interval="preserveStartEnd"
                   tickFormatter={(value) => {
                     const date = new Date(value);
                     return date.toLocaleDateString("en-US", {
-                      month: "short",
                       day: "numeric",
+                      month: "short",
+                      year: "numeric",
                     });
                   }}
                 />
@@ -218,8 +220,9 @@ export function Forecast(props) {
                     <ChartTooltipContent
                       labelFormatter={(value) => {
                         return new Date(value).toLocaleDateString("en-US", {
-                          month: "short",
                           day: "numeric",
+                          month: "short",
+                          year: "numeric",
                         });
                       }}
                       indicator="dot"

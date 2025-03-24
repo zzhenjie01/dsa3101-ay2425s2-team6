@@ -85,7 +85,7 @@ export function Water(props) {
                         <tspan
                           x={viewBox.cx}
                           y={viewBox.cy}
-                          className="fill-foreground text-4xl font-bold"
+                          className="fill-foreground text-3xl font-bold"
                         >
                           {chartData[0].water.toLocaleString()}
                         </tspan>

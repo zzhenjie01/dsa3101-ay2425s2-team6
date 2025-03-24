@@ -1,4 +1,4 @@
-import { company_data } from "./esg_data";
+import company_data from "../../esg_data.json" with {type: "json"};
 
 export function leaderboardScoring() {
   function logMinMaxScaling(data) {
@@ -117,6 +117,5 @@ export function leaderboardScoring() {
 
     return esgScores;
   }
-  // console.log(calculateESGScores(logMinMaxScaling(company_data)));
   return calculateESGScores(logMinMaxScaling(company_data));
 }

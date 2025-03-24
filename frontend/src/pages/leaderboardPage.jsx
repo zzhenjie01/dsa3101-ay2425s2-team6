@@ -7,11 +7,12 @@ import UserRecommendations from "@/components/userRecommendations";
 import { parseJsonValues } from "@/components/helpers/parseJson";
 
 import { scoring } from "@/components/helpers/scoring";
-import { scoring1 } from "@/components/helpers/scoring1";
+import { leaderboardScoring } from "@/components/helpers/scoring1";
 
 export default function LeaderboardPage() {
-  scoring1();
-  const leaderboardData = scoring();
+  // leaderboardScoring();
+  // scoring1();
+  // const leaderboardData = scoring();
   // const leaderboardData = [
   //   {
   //     _id: "1",
@@ -55,7 +56,53 @@ export default function LeaderboardPage() {
   //     socialScore: ??,
   //     governanceScore: ??,
   //   },
-  const [data, setData] = useState(leaderboardData);
+  const [companyData, setCompanyData] = useState(null);
+  const [leaderboardData, setLeaderboardData] = useState(null);
+
+  const fetchCompanyData = async () => {
+    try {
+      const response = await axios.get("/company/getAllCompanyData");
+      setCompanyData(response.data); // Store API data in state
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCompanyData();
+  }, []);
+
+  // console.log(companyData);
+
+  function extractLatestLeaderboard(companyData) {
+    if (companyData === null) return;
+    // Identify the latest year available across all companies
+    const latestYear = Math.max(
+      ...companyData
+        .map((company) => Object.keys(company.leaderboard || {}).map(Number))
+        .flat()
+    );
+
+    // Filter companies that have leaderboard data for the latest year
+    let filteredCompanies = companyData
+      .filter(
+        (company) => company.leaderboard && company.leaderboard[latestYear]
+      )
+      .map((company) => ({
+        _id: company.idx,
+        company: company.name,
+        environmentalScore: company.leaderboard[latestYear].environmentalScore,
+        socialScore: company.leaderboard[latestYear].socialScore,
+        governanceScore: company.leaderboard[latestYear].governanceScore,
+      }));
+
+    return filteredCompanies;
+  }
+
+  useEffect(() => {
+    setLeaderboardData(extractLatestLeaderboard(companyData));
+  }, [companyData]);
+  // console.log(leaderboardData);
 
   const [weights, setWeights] = useState({
     environmentalWeight: null,
@@ -105,9 +152,8 @@ export default function LeaderboardPage() {
     };
   }, [user]);
 
-  // Effect to update data whenever weights change
-  useEffect(() => {
-    // Only recalculate when weights change, not when data changes
+  //update total score based on user's weights
+  const updateTotalScore = () => {
     const totalWeight =
       weights.environmentalWeight +
       weights.socialWeight +
@@ -115,24 +161,32 @@ export default function LeaderboardPage() {
 
     if (totalWeight === 0) return;
 
-    //Update total to reflect the latest weights and sort by descending total score
-    const newData = leaderboardData
-      .map((row) => ({
-        ...row,
-        total: Math.round(
-          row.environmentalScore * (weights.environmentalWeight / totalWeight) +
-            row.socialScore * (weights.socialWeight / totalWeight) +
-            row.governanceScore * (weights.governanceWeight / totalWeight)
-        ),
-      }))
-      .sort((a, b) => b.total - a.total);
+    if (leaderboardData) {
+      setLeaderboardData((prevData) =>
+        prevData
+          .map((row) => ({
+            ...row,
+            total: Math.round(
+              row.environmentalScore *
+                (weights.environmentalWeight / totalWeight) +
+                row.socialScore * (weights.socialWeight / totalWeight) +
+                row.governanceScore * (weights.governanceWeight / totalWeight)
+            ),
+          }))
+          .sort((a, b) => b.total - a.total)
+      );
+    }
+  };
 
-    setData(newData);
+  // Effect to update data whenever weights change
+  useEffect(() => {
+    updateTotalScore();
   }, [
     weights.environmentalWeight,
     weights.socialWeight,
     weights.governanceWeight,
-  ]); // Only depend on weights
+    companyData,
+  ]); // Only depend on weights or when companyData first loads
 
   return (
     <div className="flex-grow pt-20 text-center">
@@ -150,9 +204,10 @@ export default function LeaderboardPage() {
           </thead>
 
           <tbody className="divide-y divide-gray-300">
-            {data.map((row) => (
-              <LeaderboardRow key={row._id} data={row} />
-            ))}
+            {leaderboardData &&
+              leaderboardData.map((row) => (
+                <LeaderboardRow key={row._id} data={row} />
+              ))}
           </tbody>
         </table>
       </div>

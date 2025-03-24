@@ -2,6 +2,7 @@ import "dotenv/config";
 import mongoose from "mongoose";
 import Company from "./api/models/companyModel.js";
 import extracted_output from "../esg_data.json" with {type: "json"};
+import { leaderboardScoring } from "./api/leaderboardScore.js";
 
 // pull details from .env file
 const mongo_user = process.env.MONGODB_USERNAME;
@@ -16,6 +17,8 @@ export const setupMongoDB = async () => {
     )
     .then(() => console.log("MongoDB connected"))
     .catch((error) => console.error("MongoDB connection error:", error));
+
+    const leaderboardData = leaderboardScoring()
   
   for (const company of extracted_output) {
     const companyName = company["companyName"]
@@ -30,7 +33,8 @@ export const setupMongoDB = async () => {
       if (!companyExists){
         await Company.create({
           name:companyName,
-          data:data
+          data:data,
+          leaderboard: leaderboardData[companyName]
         })
       }
   }

@@ -12,7 +12,7 @@
     "pg": "^8.14.0"
   },
   "scripts": {
-    "start": "docker compose up -d && node src/server.js",
+    "start": "copy-files-from-to && docker compose up -d && node src/server.js",
     "end": "docker compose down -v",
     "restart": "npm run end && npm run start"
   }

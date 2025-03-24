@@ -327,6 +327,8 @@ export default function DashboardPage() {
 
   console.log(companyData);
 
+  const companyData = axios.get("/company/getAllCompanyData");
+
   const { user } = useContext(UserContext);
 
   // Function to transform the data

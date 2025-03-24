@@ -4,6 +4,7 @@ import SocialCard from "../components/socialCard";
 import GovernanceCard from "../components/governanceCard";
 import { UserContext } from "@/context/context";
 import axios from "axios";
+import { company_data } from "@/components/helpers/esg_data";
 
 export default function DashboardPage() {
   //Sample data for testing
@@ -322,10 +323,16 @@ export default function DashboardPage() {
 
   const companyLst = company_data;
 
+  const companyData = axios.get("/company/getAllCompanyData");
+
+  console.log(companyData);
+
+  const { user } = useContext(UserContext);
+
   // Function to transform the data
   const transformData = () => {
     return companyLst.map((company) => {
-      const { idx, companyName, data, forecast } = company;
+      const { idx, companyName, data } = company;
 
       // Create a new data structure organized by metric first
       const transformedData = {};
@@ -346,23 +353,18 @@ export default function DashboardPage() {
         });
       });
 
-      // Construct the final object and only include forecast if it exists
-      const result = {
+      return {
         idx,
         companyName,
         data: transformedData,
       };
-
-      if (forecast !== undefined) {
-        result.forecast = forecast;
-      }
-
-      return result;
     });
   };
 
   // State for all companies details
   const [allCompanyDetails, setAllCompanyDetails] = useState(transformData());
+
+  // console.log(allCompanyDetails);
 
   // State for the company details currently selected
   const [currCompanyDetails, setCurrCompanyDetails] = useState(null);
@@ -370,6 +372,8 @@ export default function DashboardPage() {
   const avgDetails = allCompanyDetails.find(
     (comp) => comp.companyName === "Industry Average"
   );
+
+  // console.log(avgDetails.data[`Turnover rate`]);
 
   // Get current company details in json format, if empty value is selected set it to null
   function getCurrCompanyDetails(event) {
@@ -429,13 +433,13 @@ export default function DashboardPage() {
           {currCompanyDetails && (
             <SocialCard
               data={{
-                "Gender ratio": currCompanyDetails.data["Gender ratio"],
-                "Turnover rate": currCompanyDetails.data["Turnover rate"],
+                "Gender ratio": currCompanyDetails["Gender ratio"],
+                "Turnover rate": currCompanyDetails["Turnover rate"],
               }}
               name={currCompanyDetails.companyName}
               avgdata={{
-                "Gender ratio": avgDetails.data["Gender ratio"],
-                "Turnover rate": avgDetails.data["Turnover rate"],
+                "Gender ratio": avgDetails["Gender ratio"],
+                "Turnover rate": avgDetails["Turnover rate"],
               }}
             />
           )}
@@ -456,14 +460,6 @@ export default function DashboardPage() {
                 "Number of Corruption cases":
                   avgDetails.data["Number of Corruption cases"],
               }}
-            />
-          )}
-        </>
-        <>
-          {currCompanyDetails && currCompanyDetails.forecast && (
-            <Forecast
-              name={currCompanyDetails.companyName}
-              data={currCompanyDetails.forecast}
             />
           )}
         </>

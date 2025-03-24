@@ -35,13 +35,13 @@ export function BoardGender(props) {
     fill: `var(--color-${item.gender})`, // Assign pie chart colors depending on male or female
   }));
 
-  //Calculate absolute difference between company ratio and average ratio to 1dp
+  //Calculate difference between company ratio and average ratio to 1dp
   const ratio = +(props.data.company_ratio - props.data.average_ratio).toFixed(
     2
   );
 
   return (
-    <Card className="flex flex-col">
+    <Card className="flex flex-col h-full">
       <CardHeader className="items-center pb-0">
         <CardTitle>Board Diversity Ratio</CardTitle>
         <CardDescription>{props.data.year}</CardDescription>
@@ -67,7 +67,7 @@ export function BoardGender(props) {
       <CardFooter className="flex-col gap-2 text-sm">
         {props.data.company !== "Industry Average" && (
           <div className="flex items-center gap-2 font-medium leading-none">
-            {Math.abs(ratio) * 100}% {ratio >= 0 ? "better" : "worse"} than the
+            {Math.abs(ratio)}% {ratio >= 0 ? "better" : "worse"} than the
             industry average{" "}
             {ratio >= 0 ? (
               <TrendingUp className="h-4 w-4" />

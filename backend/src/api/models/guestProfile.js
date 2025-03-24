@@ -1,4 +1,5 @@
 export const guestProfile = {
+  _id: null,
   name: "Guest",
   email: "",
   password: "",

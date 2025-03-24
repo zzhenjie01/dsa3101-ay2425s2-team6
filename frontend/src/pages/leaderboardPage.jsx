@@ -6,43 +6,55 @@ import LeaderboardRow from "@/components/leaderboardRow";
 import UserRecommendations from "@/components/userRecommendations";
 import { parseJsonValues } from "@/components/helpers/parseJson";
 
+import { scoring } from "@/components/helpers/scoring";
+import { scoring1 } from "@/components/helpers/scoring1";
+
 export default function LeaderboardPage() {
-  const leaderboardData = [
-    {
-      _id: "1",
-      company_name: "ABC",
-      e_score: 40,
-      s_score: 60,
-      g_score: 50,
-    },
+  scoring1();
+  const leaderboardData = scoring();
+  // const leaderboardData = [
+  //   {
+  //     _id: "1",
+  //     company: "ABC",
+  //     environmentalScore: 40,
+  //     socialScore: 60,
+  //     governanceScore: 50,
+  //   },
 
-    {
-      _id: "2",
-      company_name: "DEF",
-      e_score: 36,
-      s_score: 28,
-      g_score: 41,
-    },
+  //   {
+  //     _id: "2",
+  //     company: "DEF",
+  //     environmentalScore: 36,
+  //     socialScore: 28,
+  //     governanceScore: 41,
+  //   },
 
-    {
-      _id: "3",
-      company_name: "XYZ",
-      e_score: 90,
-      s_score: 88,
-      g_score: 94,
-    },
+  //   {
+  //     _id: "3",
+  //     company: "XYZ",
+  //     environmentalScore: 90,
+  //     socialScore: 88,
+  //     governanceScore: 94,
+  //   },
 
-    {
-      _id: "4",
-      company_name: "JKL",
-      e_score: 63,
-      s_score: 57,
-      g_score: 72,
-    },
-  ];
+  //   {
+  //     _id: "4",
+  //     company: "JKL",
+  //     environmentalScore: 63,
+  //     socialScore: 57,
+  //     governanceScore: 72,
+  //   },
+  // ];
 
   const { user } = useContext(UserContext);
 
+  // data is an array in the format {
+  //     _id: "??",
+  //     company: "??"",
+  //     environmentalScore: ??,
+  //     socialScore: ??,
+  //     governanceScore: ??,
+  //   },
   const [data, setData] = useState(leaderboardData);
 
   const [weights, setWeights] = useState({
@@ -108,9 +120,9 @@ export default function LeaderboardPage() {
       .map((row) => ({
         ...row,
         total: Math.round(
-          row.e_score * (weights.environmentalWeight / totalWeight) +
-            row.s_score * (weights.socialWeight / totalWeight) +
-            row.g_score * (weights.governanceWeight / totalWeight)
+          row.environmentalScore * (weights.environmentalWeight / totalWeight) +
+            row.socialScore * (weights.socialWeight / totalWeight) +
+            row.governanceScore * (weights.governanceWeight / totalWeight)
         ),
       }))
       .sort((a, b) => b.total - a.total);

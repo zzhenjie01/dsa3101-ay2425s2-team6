@@ -3,13 +3,13 @@ import { useState, useEffect, useContext } from "react";
 import { UserContext } from "@/context/context";
 import axios from "axios";
 import LeaderboardRow from "@/components/leaderboardRow";
-import UserRecommendations from "@/components/userRecommendations";
+import { Suspense, lazy } from "react";
 
 export default function LeaderboardPage() {
   const leaderboardData = [
     {
       _id: "1",
-      company_name: "ABC",
+      company_name: "OCBC",
       e_score: 40,
       s_score: 60,
       g_score: 50,
@@ -17,7 +17,7 @@ export default function LeaderboardPage() {
 
     {
       _id: "2",
-      company_name: "DEF",
+      company_name: "Commonwealth Bank of Australia",
       e_score: 36,
       s_score: 28,
       g_score: 41,
@@ -25,7 +25,7 @@ export default function LeaderboardPage() {
 
     {
       _id: "3",
-      company_name: "XYZ",
+      company_name: "ANZ",
       e_score: 90,
       s_score: 88,
       g_score: 94,
@@ -33,7 +33,7 @@ export default function LeaderboardPage() {
 
     {
       _id: "4",
-      company_name: "JKL",
+      company_name: "Woori Financial Group",
       e_score: 63,
       s_score: 57,
       g_score: 72,
@@ -153,6 +153,8 @@ export default function LeaderboardPage() {
     setData(newData);
   }, [avgWeight]); // Only depend on weights
 
+  const UserRecommendations = lazy(() => import("@/components/userRecommendations"));
+
   return (
     <div className="flex-grow pt-20 text-center">
       <h1 className="text-3xl pt-8 pb-16">Leaderboard</h1>
@@ -177,7 +179,10 @@ export default function LeaderboardPage() {
       </div>
       <div className="mt-12">
         <h1 className="text-3xl pb-8">Companies you may be interested in</h1>
-        <UserRecommendations companies={companyTopRecommendations} />
+        {/* Suspense will show the fallback until UserRecommendations is loaded */}
+        <Suspense fallback={<p>Loading recommendations...</p>}>
+            <UserRecommendations companies={companyTopRecommendations} />
+        </Suspense>
       </div>
     </div>
   );

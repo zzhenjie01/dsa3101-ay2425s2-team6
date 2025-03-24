@@ -1,8 +1,0 @@
-{
-  "copyFiles": [
-    {
-      "from": "companies_stock_price_data.csv",
-      "to": "./pgdata/companies_stock_price_data.csv"
-    }
-  ]
-}

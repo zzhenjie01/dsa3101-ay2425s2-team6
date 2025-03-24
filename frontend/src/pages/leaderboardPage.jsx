@@ -17,7 +17,7 @@ export default function LeaderboardPage() {
 
     {
       _id: "2",
-      company_name: "Commonwealth Bank of Australia",
+      company_name: "BOQ",
       e_score: 36,
       s_score: 28,
       g_score: 41,
@@ -33,11 +33,54 @@ export default function LeaderboardPage() {
 
     {
       _id: "4",
-      company_name: "Woori Financial Group",
-      e_score: 63,
-      s_score: 57,
-      g_score: 72,
-    },
+      company_name: "Woori Bank",
+      e_score: 65,
+      s_score: 89,
+      g_score: 54,
+      },
+      {
+      _id: "5",
+      company_name: "Citigroup",
+      e_score: 76,
+      s_score: 58,
+      g_score: 77,
+      },
+
+      {
+        _id: "6",
+        company_name: "KrungThai Bank",
+        e_score: 88,
+        s_score: 33,
+        g_score: 22,
+      },
+      {
+          _id: "7",
+          company_name: "HSBC",
+          e_score: 65,
+          s_score: 85,
+          g_score: 82,
+      },
+      {
+          _id: "8",
+          company_name: "Banco Santander",
+          e_score: 91,
+          s_score: 52,
+          g_score: 63,
+      },
+      {
+          _id: "9",
+          company_name: "CBA",
+          e_score: 67,
+          s_score: 73,
+          g_score: 79,
+      },
+      {
+          _id: "10",
+          company_name: "Nubank",
+          e_score: 67,
+          s_score: 73,
+          g_score: 79,
+      },
   ];
 
   const { user } = useContext(UserContext);
@@ -181,7 +224,8 @@ export default function LeaderboardPage() {
         <h1 className="text-3xl pb-8">Companies you may be interested in</h1>
         {/* Suspense will show the fallback until UserRecommendations is loaded */}
         <Suspense fallback={<p>Loading recommendations...</p>}>
-            <UserRecommendations companies={companyTopRecommendations} />
+                  {/*<UserRecommendations companies={companyTopRecommendations} cdata={leaderboardData} />*/}
+                  <UserRecommendations companies={["ANZ", "OCBC", "Banco Santander", "Woori Bank", "BOQ"]} cdata={leaderboardData} />
         </Suspense>
       </div>
     </div>

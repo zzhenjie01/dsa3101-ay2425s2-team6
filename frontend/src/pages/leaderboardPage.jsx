@@ -4,6 +4,7 @@ import { UserContext } from "@/context/context";
 import axios from "axios";
 import LeaderboardRow from "@/components/leaderboardRow";
 import UserRecommendations from "@/components/userRecommendations";
+import { parseJsonValues } from "@/components/helpers/parseJson";
 
 export default function LeaderboardPage() {
   const leaderboardData = [
@@ -64,7 +65,8 @@ export default function LeaderboardPage() {
           axios.get("/weights/getAllOtherAvgWeights", { params: { user } }),
         ]);
 
-        setWeights(userAvgWeights.data);
+        // Convert weights to float using parseJsonValues then set the weights
+        setWeights(parseJsonValues(userAvgWeights.data));
 
         const companyTopRecommendations = await axios.get(
           "/clicks/getUserRecommendations",
@@ -119,8 +121,6 @@ export default function LeaderboardPage() {
     weights.socialWeight,
     weights.governanceWeight,
   ]); // Only depend on weights
-
-  // console.log(data);
 
   return (
     <div className="flex-grow pt-20 text-center">

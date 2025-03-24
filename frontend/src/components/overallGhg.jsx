@@ -41,7 +41,7 @@ export function OverallGHG(props) {
       company: props.data[year],
       average: props.avg[year],
     }))
-    .sort((a, b) => a.year - b.year);
+    .sort((a, b) => a.year - b.year); //sort by ascending year
 
   //Extract min and max year to display
   const { minYear, maxYear } = combinedData.reduce(
@@ -130,8 +130,8 @@ export function OverallGHG(props) {
               )}
             </div>
             <div className="flex items-center gap-2 leading-none text-muted-foreground">
-              Showing total GHG emissions for the last {maxYear - minYear + 1}{" "}
-              years
+              Showing total GHG emissions (in tonnes) for the last{" "}
+              {maxYear - minYear + 1} years
             </div>
           </div>
         </div>

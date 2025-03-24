@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/chart";
 
 export function Energy(props) {
+  // chartData is an array with each row containing {year:???, company:???, average:???}
   const chartData = props.data.sort((a, b) => a.year - b.year);
 
   const chartConfig = {
@@ -94,7 +95,7 @@ export function Energy(props) {
               <Lightning className="h-4 w-4" />
             </div>
             <div className="flex items-center gap-2 leading-none text-muted-foreground">
-              Showing total energy (in kWh) for the last {maxYear - minYear + 1}{" "}
+              Showing total energy (in MWh) for the last {maxYear - minYear + 1}{" "}
               years
             </div>
           </div>

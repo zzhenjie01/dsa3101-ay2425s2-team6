@@ -10,6 +10,7 @@ export default function ChatbotMessages({sendMessage}) {
         {
             text: "Hi there! How can I help you?",
             sender: "bot",
+            timestamp: new Date().toISOString()
         },
     ]);
     
@@ -31,13 +32,13 @@ export default function ChatbotMessages({sendMessage}) {
 
         try {
             // Send API request to backend
-            const response = await axios.post("http://localhost:5001/chat", {
+            const response = await axios.post("http://localhost:8000/chatbot", {
                 message: input,
                 history: messages
             });
 
             const botMessage = {
-                text: response.data.reply,
+                text: response.data.llm_response,
                 sender: "bot",
                 timestamp: new Date().toISOString()
             };

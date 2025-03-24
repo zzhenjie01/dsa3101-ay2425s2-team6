@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import EnvironmentalCard from "../components/environmentalCard";
 import SocialCard from "../components/socialCard";
 import GovernanceCard from "../components/governanceCard";
-import { Forecast } from "@/components/forecast";
-import { company_data } from "@/components/helpers/esg_data";
+import { UserContext } from "@/context/context";
+import axios from "axios";
 
 export default function DashboardPage() {
   //Sample data for testing
@@ -376,7 +376,13 @@ export default function DashboardPage() {
     if (!event.target.value) {
       setCurrCompanyDetails(null);
     } else {
-      setCurrCompanyDetails(JSON.parse(event.target.value));
+      const companyDetails = JSON.parse(event.target.value);
+      const companyName = companyDetails.companyName;
+      axios.post("clicks/insertClick", {
+        user,
+        companyName,
+      });
+      setCurrCompanyDetails(companyDetails);
     }
   }
 

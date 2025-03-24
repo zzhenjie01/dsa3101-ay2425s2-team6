@@ -1,8 +1,7 @@
-import User from "./userModel.js";
-import { hashPassword, comparePassword } from "./authHelper.js";
+import User from "../models/userModel.js";
+import { hashPassword, comparePassword, logWeights } from "./authHelper.js";
 import jwt from "jsonwebtoken";
-import { guestProfile } from "./guestProfile.js";
-import { client } from "./postgresDB.js";
+import guestProfile from "../models/guestProfile.js";
 
 // JWT Secret
 const JWT_SECRET = process.env.JWT_KEY;
@@ -63,6 +62,8 @@ export const registerUser = async (req, res) => {
       email,
       password: hashedPassword,
     });
+
+    logWeights(user);
 
     return res.json(user);
   } catch (error) {
@@ -143,42 +144,6 @@ export const logoutUser = (req, res) => {
   }
 };
 
-export const insertWeights = async (req, res) => {
-  try {
-    const user = req.body;
-    const userExists = await User.findById(user._id);
-    if (userExists) {
-      await client.query(
-        `
-        INSERT INTO weight_transactions
-          (user_id, 
-          transaction_datetime, 
-          environmental_weight, 
-          social_weight, 
-          governance_weight)
-        VALUES
-          ($1, NOW(), $2, $3, $4)
-        `,
-        [
-          `_${user._id.toString()}`, // value cannot start with a digit
-          user.environmentalWeight,
-          user.socialWeight,
-          user.governanceWeight,
-        ]
-      );
-
-      res.json("Weights successfully inserted into postgres.");
-    } else {
-      res.json("Guest User detected.");
-    }
-  } catch (error) {
-    console.log("Error with inserting weights into postgres:", error);
-    res
-      .status(500)
-      .json({ error: "An error occurred while inserting Weights." });
-  }
-};
-
 export const getProfile = (req, res) => {
   const { token } = req.cookies;
   if (token) {
@@ -209,47 +174,6 @@ export const getProfile = (req, res) => {
   }
 };
 
-export const getAvgWeights = async (req, res) => {
-  try {
-    const user = req.body;
-    const userExists = await User.findById(user._id);
-    if (userExists) {
-      const data = await client.query(
-        `
-        SELECT
-        AVG(environmental_weight) AS avg_environmental_weight,
-        AVG(social_weight) AS avg_social_weight,
-        AVG(governance_weight) AS avg_governance_weight
-        FROM 
-          (SELECT * FROM weight_transactions
-          WHERE user_id = $1
-          ORDER BY transaction_datetime DESC
-          LIMIT 5)
-        GROUP BY user_id
-        `,
-        [`_${user._id.toString()}`]
-      );
-
-      const result = data.rows[0];
-
-      return res.json({
-        environmentalWeight: result.avg_environmental_weight,
-        socialWeight: result.avg_social_weight,
-        governanceWeight: result.avg_governance_weight,
-      });
-    } else {
-      // User not found in db - Guest
-      return res.json({
-        environmentalWeight: user.environmentalWeight,
-        socialWeight: user.socialWeight,
-        governanceWeight: user.governanceWeight,
-      });
-    }
-  } catch (error) {
-    console.log("Error getting average weights", error);
-  }
-};
-
 export const updateProfile = async (req, res) => {
   try {
     const user = req.body;
@@ -272,8 +196,6 @@ export default {
   registerUser,
   loginUser,
   logoutUser,
-  insertWeights,
   getProfile,
-  getAvgWeights,
   updateProfile,
 };

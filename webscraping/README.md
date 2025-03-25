@@ -10,21 +10,21 @@ This section provides guidance on setting up and running the data pipeline and R
 In the future, this will be integrated into a multi-container setup. 
 
 ### Pre-Requisites
-Before running the project, make sure you have the following installed and configured:
+Before running the project, ensure you have the following installed and configured:
 
 - [Python 3.10.x](https://www.python.org/downloads/)
   - Python >= 3.11.x may not work well with Spark NLP since the library is poorly maintained for newer versions of Python.
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-  - Needed to run containers 
-  - Certain services like Elasticsearch can only run with Docker if you want to use it locally.
-  - Install Docker Desktop and make ssure that Docker is running before starting the container.
-  - You can verify Docker is working by running:
+  - Required to run containers 
+  - Certain services like Elasticsearch must be run via Docker for local use.
+  - Install Docker Desktop and ensure it is running before starting the container.
+  - Verify installation with:
   
     ```bash
     docker -- version
     ```
 - [Ollama](https://ollama.com/)
-  - An API to run LLMs like llamma 3.2 which we are using for this project.
+  - API to run LLMs like llamma 3.2, used for this project.
 - [NewsAPI](https://newsapi.org/)
   - An API to gather news articles related to ESG topics for analysis and fact-checking which we are using for this project.
   - Sign up for NewsAPI and obtain an API key to access news articles. You will need to add your API key to the `.env` file.
@@ -120,7 +120,7 @@ Key Functions and Behavior:
     - `ES_HOST`: The host URL for your Elasticsearch instance
     - `NEWSAPI_KEY`: Your API key for NewsAPI
     - `SAVE_DIR`: Directory where scraped data will be saved
-    - `RAG_OUTPUT_FILE`: 
+    - `RAG_OUTPUT_FILE`: File path for storing the RAG (i.e., LLM responses) output
   
     ```text
     ES_INDEX_NAME = esg_articles
@@ -164,7 +164,7 @@ Key Functions and Behavior:
    ```
 
 ### 5. **Run Elasticsearch Container**
-   Make sure you have Docker Desktop running in the background. Then, open up terminal and run the following command which starts Elasticsearch locally.
+   Ensure Docker Desktop is running. Then, open up terminal and run the following command which starts Elasticsearch locally.
    
    ```shell
    docker run --name elasticsearch `

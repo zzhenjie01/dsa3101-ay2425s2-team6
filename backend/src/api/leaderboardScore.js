@@ -31,18 +31,22 @@ export function leaderboardScoring() {
     // Apply log min-max scaling per year
     let scaledMetrics = {};
 
+    //First iterate by year
     Object.entries(metricsData).forEach(([year, metrics]) => {
       scaledMetrics[year] = {};
 
+      //Now iterate by metric
       Object.entries(metrics).forEach(([metric, values]) => {
         let logValues = values.map((entry) => ({
           company: entry.company,
           logValue: Math.log(entry.input_value + 1), // Apply log transformation
         }));
 
+        //Get min and max log values
         let minLog = Math.min(...logValues.map((e) => e.logValue));
         let maxLog = Math.max(...logValues.map((e) => e.logValue));
 
+        //Scale the values of each metric
         let scaledValues = logValues.map((entry) => ({
           company: entry.company,
           scaledValue:
@@ -93,6 +97,7 @@ export function leaderboardScoring() {
       });
     });
 
+    //Combine ESG scores to take key as company name, and a map object as a value, with year as key and object of metrics as value
     let esgScores = Object.fromEntries(
       Object.entries(companyScores).map(([company, years]) => [
         company,

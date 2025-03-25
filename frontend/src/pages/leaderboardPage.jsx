@@ -6,59 +6,21 @@ import LeaderboardRow from "@/components/leaderboardRow";
 import UserRecommendations from "@/components/userRecommendations";
 import { parseJsonValues } from "@/components/helpers/parseJson";
 
-import { scoring } from "@/components/helpers/scoring";
-import { leaderboardScoring } from "@/components/helpers/scoring1";
-
 export default function LeaderboardPage() {
-  // leaderboardScoring();
-  // scoring1();
-  // const leaderboardData = scoring();
-  // const leaderboardData = [
-  //   {
-  //     _id: "1",
-  //     company: "ABC",
-  //     environmentalScore: 40,
-  //     socialScore: 60,
-  //     governanceScore: 50,
-  //   },
-
-  //   {
-  //     _id: "2",
-  //     company: "DEF",
-  //     environmentalScore: 36,
-  //     socialScore: 28,
-  //     governanceScore: 41,
-  //   },
-
-  //   {
-  //     _id: "3",
-  //     company: "XYZ",
-  //     environmentalScore: 90,
-  //     socialScore: 88,
-  //     governanceScore: 94,
-  //   },
-
-  //   {
-  //     _id: "4",
-  //     company: "JKL",
-  //     environmentalScore: 63,
-  //     socialScore: 57,
-  //     governanceScore: 72,
-  //   },
-  // ];
-
   const { user } = useContext(UserContext);
 
-  // data is an array in the format {
+  const [companyData, setCompanyData] = useState(null);
+
+  // leaderboard data extracts the ESG scores for the latest year and is an array in the format {
   //     _id: "??",
   //     company: "??"",
   //     environmentalScore: ??,
   //     socialScore: ??,
   //     governanceScore: ??,
   //   },
-  const [companyData, setCompanyData] = useState(null);
   const [leaderboardData, setLeaderboardData] = useState(null);
 
+  //get all company's data
   const fetchCompanyData = async () => {
     try {
       const response = await axios.get("/company/getAllCompanyData");
@@ -72,8 +34,7 @@ export default function LeaderboardPage() {
     fetchCompanyData();
   }, []);
 
-  // console.log(companyData);
-
+  //get leaderboard data of latest year to display in the table
   function extractLatestLeaderboard(companyData) {
     if (companyData === null) return;
     // Identify the latest year available across all companies
@@ -102,7 +63,6 @@ export default function LeaderboardPage() {
   useEffect(() => {
     setLeaderboardData(extractLatestLeaderboard(companyData));
   }, [companyData]);
-  // console.log(leaderboardData);
 
   const [weights, setWeights] = useState({
     environmentalWeight: null,
@@ -159,8 +119,10 @@ export default function LeaderboardPage() {
       weights.socialWeight +
       weights.governanceWeight;
 
+    //to prevent division by total weight of 0
     if (totalWeight === 0) return;
 
+    //update total score with new weights
     if (leaderboardData) {
       setLeaderboardData((prevData) =>
         prevData

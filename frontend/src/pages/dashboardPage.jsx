@@ -97,9 +97,11 @@ export default function DashboardPage() {
 
   // Get current company details in json format, if empty value is selected set it to null
   function getCurrCompanyDetails(event) {
+    //if no value, set currCompanyDetails as null
     if (!event.target.value) {
       setCurrCompanyDetails(null);
     } else {
+      //set currCompanyDetails as the value of the data key of the company selected
       const companyDetails = JSON.parse(event.target.value);
       const name = companyDetails.name;
       axios.post("clicks/insertClick", {

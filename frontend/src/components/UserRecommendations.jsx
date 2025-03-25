@@ -9,10 +9,10 @@ export default function UserRecommendations({ companies, cdata}) {
 
     return (
         <div className="flex items-center justify-center w-screen">
-            <div className="relative w-[700px] flex flex-col items-center space-y-1 pb-20">
-                <div className="w-full flex font-bold space-y-0">
-                    <div className="w-1/6 text-center relative text-gray-400
-                                before:absolute before:top-1/2 before:left-0 before:w-full before:h-[2px] before:bg-gray-400 leading-tight">
+            <div className="relative w-[700px] flex flex-col items-center space-y-1 pb-20 mt-1">
+                <div className="w-full h-3 flex font-bold space-y-0 mt-1">
+                    <div className="w-1/6 text-center relative text-gray-400 text-xs
+                                before:absolute before:top-3/2 before:left-0 before:w-full before:h-[2px] before:bg-gray-400 leading-tight">
                         <span className="relative bg-white px-1">High</span>
                         <br />
                         <span className="relative bg-white px-1">Performer</span>

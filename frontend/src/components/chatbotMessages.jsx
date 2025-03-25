@@ -36,7 +36,7 @@ export default function ChatbotMessages({sendMessage}) {
                 message: input,
                 history: messages
             });
-
+            
             const botMessage = {
                 text: response.data.llm_response,
                 sender: "bot",

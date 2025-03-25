@@ -12,6 +12,8 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import List
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.encoders import jsonable_encoder
+from fastapi.responses import JSONResponse
 
 #%%
 # ================ Load the environmental variables ================
@@ -283,8 +285,10 @@ def chatbot(req: ChatRequest):
         "page_number": page_number
     }
 
+    response_dict = jsonable_encoder(response_dict)
+
     # Convert the dictionary to a JSON response
-    return json.dumps(response_dict, indent=4)
+    return JSONResponse(content=response_dict)
 
 
 # ================ To Test the Chatbot Endpoint API ================

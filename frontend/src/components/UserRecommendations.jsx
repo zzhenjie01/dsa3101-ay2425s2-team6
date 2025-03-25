@@ -4,11 +4,20 @@ export default function UserRecommendations({ companies, cdata}) {
 
     const newData = transformData(cdata);
     const [hoveredCompany, setHoveredCompany] = useState(null);
+    const threshold = getThreshold(companies,cdata);
 
 
     return (
         <div className="flex items-center justify-center w-screen">
-            <div className="relative w-[700px] flex flex-col items-center space-y-4 pb-20 group">
+            <div className="relative w-[700px] flex flex-col items-center space-y-1 pb-20">
+                <div className="w-full flex font-bold space-y-0">
+                    <div className="w-1/6 text-center relative text-gray-400
+                                before:absolute before:top-1/2 before:left-0 before:w-full before:h-[2px] before:bg-gray-400 leading-tight">
+                        <span className="relative bg-white px-1">High</span>
+                        <br />
+                        <span className="relative bg-white px-1">Performer</span>
+                    </div>
+                </div>
                 <ul className="relative w-full">
                     {companies.map((company, index) => {
                         const logoUrl = getPartialLogo(company);
@@ -22,26 +31,30 @@ export default function UserRecommendations({ companies, cdata}) {
                                 onMouseLeave={() => setHoveredCompany(null)} // Reset on hover leave
                             >
                                 {/* First Column: Numbered Circle - Environment*/}
-                                <div className="relative flex items-center justify-center mr-0">
-                                    <AwardWithLeaf percentile={companyData.e_percentile} />
+                                <div className={`relative flex items-center justify-center mr-0
+                                                    ${hoveredCompany && hoveredCompany !== company ? "opacity-30 backdrop-blur-sm" : ""}`}>
+                                    <AwardWithLeaf percentile={companyData.e_percentile} threshold={threshold}/>
                                 </div>
 
                                 {/* First Column: Numbered Circle -Social */}
-                                <div className="relative flex flex-col items-center mr-0">
+                                <div className={`relative flex items-center justify-center mr-0
+                                                    ${hoveredCompany && hoveredCompany !== company ? "opacity-30 backdrop-blur-sm" : ""}`}>
                                     {/* Overlapping SVG (Separate from the clipped div) */}
-                                    <AwardWithPerson percentile={companyData.s_percentile} />
+                                    <AwardWithPerson percentile={companyData.s_percentile} threshold={threshold} />
 
                                 </div>
 
                                 {/* First Column: Numbered Circle - Governance */}
-                                <div className="relative flex flex-col items-center">
-                                    <AwardWithGavel percentile={companyData.g_percentile} />
+                                <div className={`relative flex items-center justify-center mr-0
+                                                    ${hoveredCompany && hoveredCompany !== company ? "opacity-30 backdrop-blur-sm" : ""}`}>
+                                    <AwardWithGavel percentile={companyData.g_percentile} threshold={threshold} />
                                 </div>
 
                                 {/* Second Column: Main Row (Expanding) */}
-                                <div className="relative w-[280px] h-[60px] border-4 border-emerald-700 text-black 
-                                            font-semibold text-5xl flex items-center px-4 ml-2 mb-3 mt-3 rounded-xl 
-                                            transition-all duration-200 hover:scale-105 hover:shadow-[0_0_15px_rgba(0,0,0,0.5)]">
+                                <div className={`relative w-[280px] h-[60px] border-4 border-emerald-700 text-black 
+                                            font-semibold text-5xl flex items-center px-4 ml-6 mb-3 mt-3 rounded-xl 
+                                            transition-all duration-200 hover:scale-105 hover:shadow-[0_0_15px_rgba(0,0,0,0.5)]
+                                            ${hoveredCompany && hoveredCompany !== company ? "opacity-50 backdrop-blur-sm" : ""}`}>
 
                                     {/* Logo */}
                                     <img
@@ -91,9 +104,7 @@ function transformData(data) {
     return companiesWithPercentiles;
 }
 
-const threshold = 40;
-
-const AwardWithLeaf = ({ percentile, size = 16 }) => {
+const AwardWithLeaf = ({ percentile, size = 12 , threshold}) => {
     if (percentile < threshold) {
         return (
             <div className={`relative flex items-center justify-center w-${size} h-${size}`}>
@@ -104,23 +115,24 @@ const AwardWithLeaf = ({ percentile, size = 16 }) => {
         <div className={`relative flex items-center justify-center w-${size} h-${size}`}>
             {/* Award SVG - Background */}
             <svg xmlns="http://www.w3.org/2000/svg"
-                width="900" height="900" fill="none"
-                viewBox="0 0 24 24">
-                <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5"
-                    d="M7.869 15.46 7 22l4.588-2.753c.15-.09.225-.135.305-.152a.5.5 0 0 1 .214 0c.08.017.155.062.305.152L17 22l-.868-6.543m.294-11.208c.154.373.45.67.824.825l1.309.542a1.525 1.525 0 0 1 .825 1.992l-.542 1.308a1.522 1.522 0 0 0 0 1.168l.542 1.307a1.525 1.525 0 0 1-.826 1.993l-1.308.542c-.373.154-.67.45-.825.824l-.542 1.309a1.524 1.524 0 0 1-1.992.825l-1.308-.542a1.525 1.525 0 0 0-1.166 0l-1.31.542a1.524 1.524 0 0 1-1.99-.824l-.542-1.31a1.524 1.524 0 0 0-.824-.825l-1.31-.542a1.524 1.524 0 0 1-.825-1.991l.542-1.308a1.525 1.525 0 0 0 0-1.167l-.542-1.31a1.525 1.525 0 0 1 .826-1.992l1.307-.542c.374-.154.67-.45.825-.823l.543-1.309a1.524 1.524 0 0 1 1.991-.825l1.308.542c.374.154.793.154 1.167-.001l1.31-.54a1.525 1.525 0 0 1 1.99.825l.543 1.31v-.003Z" />
+                width="800" height="800" fill="none"
+                viewBox="2.857 0.459 18.439 23.082">
+                <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" fill="#fef2c4" fill-rule="evenodd" 
+                    d="m8.2 15.944-.3 1.514-.3 1.514-.3 1.514L7 22l1.147-.688 1.147-.688 1.147-.688 1.147-.689.1-.059a.967.967 0 0 1 .079-.044c.024-.012.045-.023.066-.031a.489.489 0 0 1 .4.031c.024.012.05.026.079.044l.1.059 1.179.65 1.179.65 1.179.65 1.179.65-.268-1.483-.268-1.482-.268-1.483-.268-1.483s-.679 1.037-1.35 1.082c-.698.046-2.745-.803-2.745-.803.005 0-1.443.591-2.675.777-.517.078-1.086-1.028-1.086-1.028Zm8.226-11.695a1.519 1.519 0 0 0 .824.825l.327.135.327.136.328.136.327.135a1.497 1.497 0 0 1 .495.331 1.486 1.486 0 0 1 .33.495 1.46 1.46 0 0 1 .116.583 1.555 1.555 0 0 1-.116.583l-.135.327-.136.327-.135.327-.136.327a1.49 1.49 0 0 0-.116.584 1.547 1.547 0 0 0 .117.584l.135.326.135.327.136.327.135.327a1.387 1.387 0 0 1 .086.286 1.469 1.469 0 0 1-.036.741 1.387 1.387 0 0 1-.114.276 1.496 1.496 0 0 1-.378.46 1.365 1.365 0 0 1-.249.165 1.674 1.674 0 0 1-.135.065l-.327.135-.327.136-.327.135-.327.136a1.528 1.528 0 0 0-.494.33 1.492 1.492 0 0 0-.331.494l-.135.328-.136.327-.135.327-.136.327a1.565 1.565 0 0 1-.331.494 1.499 1.499 0 0 1-.782.418 1.478 1.478 0 0 1-.592 0 1.46 1.46 0 0 1-.287-.087l-.327-.135-.327-.136-.327-.135-.327-.136a1.554 1.554 0 0 0-1.166.001l-.327.136-.328.135-.327.135-.327.135a1.48 1.48 0 0 1-.583.116 1.547 1.547 0 0 1-.583-.116.773.773 0 0 1-.265-.205 2.122 2.122 0 0 1-.229-.329 4.617 4.617 0 0 1-.189-.37c-.055-.121-.102-.235-.141-.328l-.136-.225-.136-.226-.135-.225-.136-.226a1.533 1.533 0 0 0-.824-.825l-.327-.135-.328-.136-.327-.135-.327-.136a1.533 1.533 0 0 1-.912-1.112 1.555 1.555 0 0 1-.001-.592c.02-.098.049-.194.087-.287l.136-.327.135-.327.136-.327.135-.327c.039-.093.067-.19.086-.287a1.48 1.48 0 0 0 0-.593 1.502 1.502 0 0 0-.087-.287l-.135-.327-.136-.328-.135-.327-.135-.327a1.48 1.48 0 0 1-.087-.286 1.506 1.506 0 0 1 0-.596 1.688 1.688 0 0 1 .151-.422 1.473 1.473 0 0 1 .267-.358 1.53 1.53 0 0 1 .495-.331l.327-.135.326-.136.327-.135.327-.136a1.493 1.493 0 0 0 .683-.559c.056-.082.103-.171.142-.264l.136-.327.135-.328.136-.327.136-.327a1.6 1.6 0 0 1 .141-.265 1.597 1.597 0 0 1 .419-.418 1.533 1.533 0 0 1 1.144-.229c.097.019.194.048.287.087l.327.136.327.135.327.136.327.135c.094.039.19.067.288.086a1.47 1.47 0 0 0 .592 0 1.48 1.48 0 0 0 .287-.087l.327-.135.327-.135.328-.135.327-.135a1.502 1.502 0 0 1 .583-.116 1.557 1.557 0 0 1 .584.116 1.551 1.551 0 0 1 .494.33 1.553 1.553 0 0 1 .331.495l.136.328.135.327.136.327.135.327v-.002Z"/>
             </svg>
 
             {/* Leaf SVG - Foreground (Shifted Up) */}
             <svg xmlns="http://www.w3.org/2000/svg"
-                width="800" height="800" viewBox="0 0 32 32"
-            className="absolute w-6 h-6 top-[9px]"            >
-                <path d="M29.555 2.843a.751.751 0 0 0-.565-.546l-.005-.001a.756.756 0 0 0-.743.265l-.001.001a14.022 14.022 0 0 1-6.462 4.32l-.099.027c-1.693.552-3.662.946-5.697 1.103l-.088.005c-2.231.083-4.325.58-6.236 1.417l.11-.043c-3.3 1.788-5.502 5.225-5.502 9.176l.002.186v-.009c.009.303.03.602.064.9.154 1.198.484 2.285.966 3.285l-.028-.064a29.629 29.629 0 0 0-3.886 6.67l-.073.197a.75.75 0 0 0 1.378.595l.002-.005c.964-2.307 2.092-4.294 3.425-6.123l-.059.085a11.11 11.11 0 0 0 4.567 4.021l.067.029a11.695 11.695 0 0 0 4.833 1.028h.079-.004a13.865 13.865 0 0 0 5.324-1.081l-.092.034c5.262-2.385 9.002-7.306 9.678-13.16l.007-.077a29.82 29.82 0 0 0 .231-3.762c0-3.018-.436-5.935-1.247-8.69l.055.217zm-.524 12.012a15.05 15.05 0 0 1-8.674 12.03l-.094.038a11.212 11.212 0 0 1-4.528.939c-1.599 0-3.121-.329-4.501-.924l.074.028a9.636 9.636 0 0 1-4.242-3.864l-.024-.045c3.317-3.812 7.63-5.711 13.801-6.312a.75.75 0 0 0-.148-1.493h.003a21.076 21.076 0 0 0-14.343 6.343l-.004.004a8.752 8.752 0 0 1-.526-2.083l-.005-.045a8.618 8.618 0 0 1-.057-.934 8.852 8.852 0 0 1 4.623-7.78l.046-.023c1.65-.708 3.565-1.152 5.575-1.225l.028-.001a27.183 27.183 0 0 0 6.313-1.232l-.192.054a16.294 16.294 0 0 0 6.279-3.744l-.006.005c.523 2.02.823 4.338.823 6.727 0 1.247-.082 2.475-.24 3.678l.015-.142z" />
+                width="800" height="800" viewBox="0 0 24 24"
+            className="absolute w-7 h-7 top-[3px]"            >
+                <path stroke="#000" fill="#64ca5a" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4.449 17.009C-.246 7.838 7.34.686 19.555 3.612a1.843 1.843 0 0 1 1.41 1.883c-.379 7.793-3.93 12.21-14.832 12.49a1.828 1.828 0 0 1-1.684-.976Z" />
+                <path stroke="#000" fill="#64ca5a" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 21c1.5-5.5 2-8.5 8-11" />
             </svg>
         </div>
     );
 };
 
-const AwardWithPerson = ({ percentile, size = 16 }) => {
+const AwardWithPerson = ({ percentile, size = 12, threshold}) => {
     if (percentile < threshold) {
         return (
             <div className={`relative flex items-center justify-center w-${size} h-${size}`}>
@@ -131,23 +143,24 @@ const AwardWithPerson = ({ percentile, size = 16 }) => {
         <div className={`relative flex items-center justify-center w-${size} h-${size}`}>
             {/* Award SVG - Background */}
             <svg xmlns="http://www.w3.org/2000/svg"
-                width="900" height="900" fill="none"
-                viewBox="0 0 24 24">
-                <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5"
-                    d="M7.869 15.46 7 22l4.588-2.753c.15-.09.225-.135.305-.152a.5.5 0 0 1 .214 0c.08.017.155.062.305.152L17 22l-.868-6.543m.294-11.208c.154.373.45.67.824.825l1.309.542a1.525 1.525 0 0 1 .825 1.992l-.542 1.308a1.522 1.522 0 0 0 0 1.168l.542 1.307a1.525 1.525 0 0 1-.826 1.993l-1.308.542c-.373.154-.67.45-.825.824l-.542 1.309a1.524 1.524 0 0 1-1.992.825l-1.308-.542a1.525 1.525 0 0 0-1.166 0l-1.31.542a1.524 1.524 0 0 1-1.99-.824l-.542-1.31a1.524 1.524 0 0 0-.824-.825l-1.31-.542a1.524 1.524 0 0 1-.825-1.991l.542-1.308a1.525 1.525 0 0 0 0-1.167l-.542-1.31a1.525 1.525 0 0 1 .826-1.992l1.307-.542c.374-.154.67-.45.825-.823l.543-1.309a1.524 1.524 0 0 1 1.991-.825l1.308.542c.374.154.793.154 1.167-.001l1.31-.54a1.525 1.525 0 0 1 1.99.825l.543 1.31v-.003Z" />
+                width="800" height="800" fill="none"
+                viewBox="2.857 0.459 18.439 23.082">
+                <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" fill="#fef2c4" fill-rule="evenodd"
+                    d="m8.2 15.944-.3 1.514-.3 1.514-.3 1.514L7 22l1.147-.688 1.147-.688 1.147-.688 1.147-.689.1-.059a.967.967 0 0 1 .079-.044c.024-.012.045-.023.066-.031a.489.489 0 0 1 .4.031c.024.012.05.026.079.044l.1.059 1.179.65 1.179.65 1.179.65 1.179.65-.268-1.483-.268-1.482-.268-1.483-.268-1.483s-.679 1.037-1.35 1.082c-.698.046-2.745-.803-2.745-.803.005 0-1.443.591-2.675.777-.517.078-1.086-1.028-1.086-1.028Zm8.226-11.695a1.519 1.519 0 0 0 .824.825l.327.135.327.136.328.136.327.135a1.497 1.497 0 0 1 .495.331 1.486 1.486 0 0 1 .33.495 1.46 1.46 0 0 1 .116.583 1.555 1.555 0 0 1-.116.583l-.135.327-.136.327-.135.327-.136.327a1.49 1.49 0 0 0-.116.584 1.547 1.547 0 0 0 .117.584l.135.326.135.327.136.327.135.327a1.387 1.387 0 0 1 .086.286 1.469 1.469 0 0 1-.036.741 1.387 1.387 0 0 1-.114.276 1.496 1.496 0 0 1-.378.46 1.365 1.365 0 0 1-.249.165 1.674 1.674 0 0 1-.135.065l-.327.135-.327.136-.327.135-.327.136a1.528 1.528 0 0 0-.494.33 1.492 1.492 0 0 0-.331.494l-.135.328-.136.327-.135.327-.136.327a1.565 1.565 0 0 1-.331.494 1.499 1.499 0 0 1-.782.418 1.478 1.478 0 0 1-.592 0 1.46 1.46 0 0 1-.287-.087l-.327-.135-.327-.136-.327-.135-.327-.136a1.554 1.554 0 0 0-1.166.001l-.327.136-.328.135-.327.135-.327.135a1.48 1.48 0 0 1-.583.116 1.547 1.547 0 0 1-.583-.116.773.773 0 0 1-.265-.205 2.122 2.122 0 0 1-.229-.329 4.617 4.617 0 0 1-.189-.37c-.055-.121-.102-.235-.141-.328l-.136-.225-.136-.226-.135-.225-.136-.226a1.533 1.533 0 0 0-.824-.825l-.327-.135-.328-.136-.327-.135-.327-.136a1.533 1.533 0 0 1-.912-1.112 1.555 1.555 0 0 1-.001-.592c.02-.098.049-.194.087-.287l.136-.327.135-.327.136-.327.135-.327c.039-.093.067-.19.086-.287a1.48 1.48 0 0 0 0-.593 1.502 1.502 0 0 0-.087-.287l-.135-.327-.136-.328-.135-.327-.135-.327a1.48 1.48 0 0 1-.087-.286 1.506 1.506 0 0 1 0-.596 1.688 1.688 0 0 1 .151-.422 1.473 1.473 0 0 1 .267-.358 1.53 1.53 0 0 1 .495-.331l.327-.135.326-.136.327-.135.327-.136a1.493 1.493 0 0 0 .683-.559c.056-.082.103-.171.142-.264l.136-.327.135-.328.136-.327.136-.327a1.6 1.6 0 0 1 .141-.265 1.597 1.597 0 0 1 .419-.418 1.533 1.533 0 0 1 1.144-.229c.097.019.194.048.287.087l.327.136.327.135.327.136.327.135c.094.039.19.067.288.086a1.47 1.47 0 0 0 .592 0 1.48 1.48 0 0 0 .287-.087l.327-.135.327-.135.328-.135.327-.135a1.502 1.502 0 0 1 .583-.116 1.557 1.557 0 0 1 .584.116 1.551 1.551 0 0 1 .494.33 1.553 1.553 0 0 1 .331.495l.136.328.135.327.136.327.135.327v-.002Z" />
             </svg>
+
 
             {/* Person SVG - Foreground (Shifted Up) */}
             <svg xmlns="http://www.w3.org/2000/svg"
                 width="800" height="800" fill="none" stroke="#000" stroke-width="3" viewBox="0 0 64 64"
-            className="absolute w-6 h-6 top-[9px]"            >
-                <circle cx="32" cy="18.14" r="11.14" />
-                <path d="M54.55 56.85A22.55 22.55 0 0 0 32 34.3 22.55 22.55 0 0 0 9.45 56.85Z" /></svg>
+            className="absolute w-7 h-7 top-[2px]"            >
+                <circle fill="#feca9b" cx="32" cy="18.14" r="11.14" />
+                <path fill="#feca9b" d="M54.55 56.85A22.55 22.55 0 0 0 32 34.3 22.55 22.55 0 0 0 9.45 56.85Z" /></svg>
         </div>
     );
 };
 
-const AwardWithGavel = ({ percentile, size = 16 }) => {
+const AwardWithGavel = ({ percentile, size = 12, threshold }) => {
     if (percentile < threshold) {
         return (
             <div className={`relative flex items-center justify-center w-${size} h-${size}`}>
@@ -158,23 +171,43 @@ const AwardWithGavel = ({ percentile, size = 16 }) => {
         <div className={`relative flex items-center justify-center w-${size} h-${size}`}>
             {/* Award SVG - Background */}
             <svg xmlns="http://www.w3.org/2000/svg"
-                width="900" height="900" fill="none"
-                viewBox="0 0 24 24">
-                <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5"
-                    d="M7.869 15.46 7 22l4.588-2.753c.15-.09.225-.135.305-.152a.5.5 0 0 1 .214 0c.08.017.155.062.305.152L17 22l-.868-6.543m.294-11.208c.154.373.45.67.824.825l1.309.542a1.525 1.525 0 0 1 .825 1.992l-.542 1.308a1.522 1.522 0 0 0 0 1.168l.542 1.307a1.525 1.525 0 0 1-.826 1.993l-1.308.542c-.373.154-.67.45-.825.824l-.542 1.309a1.524 1.524 0 0 1-1.992.825l-1.308-.542a1.525 1.525 0 0 0-1.166 0l-1.31.542a1.524 1.524 0 0 1-1.99-.824l-.542-1.31a1.524 1.524 0 0 0-.824-.825l-1.31-.542a1.524 1.524 0 0 1-.825-1.991l.542-1.308a1.525 1.525 0 0 0 0-1.167l-.542-1.31a1.525 1.525 0 0 1 .826-1.992l1.307-.542c.374-.154.67-.45.825-.823l.543-1.309a1.524 1.524 0 0 1 1.991-.825l1.308.542c.374.154.793.154 1.167-.001l1.31-.54a1.525 1.525 0 0 1 1.99.825l.543 1.31v-.003Z" />
+                width="800" height="800" fill="none"
+                viewBox="2.857 0.459 18.439 23.082">
+                <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" fill="#fef2c4" fill-rule="evenodd"
+                    d="m8.2 15.944-.3 1.514-.3 1.514-.3 1.514L7 22l1.147-.688 1.147-.688 1.147-.688 1.147-.689.1-.059a.967.967 0 0 1 .079-.044c.024-.012.045-.023.066-.031a.489.489 0 0 1 .4.031c.024.012.05.026.079.044l.1.059 1.179.65 1.179.65 1.179.65 1.179.65-.268-1.483-.268-1.482-.268-1.483-.268-1.483s-.679 1.037-1.35 1.082c-.698.046-2.745-.803-2.745-.803.005 0-1.443.591-2.675.777-.517.078-1.086-1.028-1.086-1.028Zm8.226-11.695a1.519 1.519 0 0 0 .824.825l.327.135.327.136.328.136.327.135a1.497 1.497 0 0 1 .495.331 1.486 1.486 0 0 1 .33.495 1.46 1.46 0 0 1 .116.583 1.555 1.555 0 0 1-.116.583l-.135.327-.136.327-.135.327-.136.327a1.49 1.49 0 0 0-.116.584 1.547 1.547 0 0 0 .117.584l.135.326.135.327.136.327.135.327a1.387 1.387 0 0 1 .086.286 1.469 1.469 0 0 1-.036.741 1.387 1.387 0 0 1-.114.276 1.496 1.496 0 0 1-.378.46 1.365 1.365 0 0 1-.249.165 1.674 1.674 0 0 1-.135.065l-.327.135-.327.136-.327.135-.327.136a1.528 1.528 0 0 0-.494.33 1.492 1.492 0 0 0-.331.494l-.135.328-.136.327-.135.327-.136.327a1.565 1.565 0 0 1-.331.494 1.499 1.499 0 0 1-.782.418 1.478 1.478 0 0 1-.592 0 1.46 1.46 0 0 1-.287-.087l-.327-.135-.327-.136-.327-.135-.327-.136a1.554 1.554 0 0 0-1.166.001l-.327.136-.328.135-.327.135-.327.135a1.48 1.48 0 0 1-.583.116 1.547 1.547 0 0 1-.583-.116.773.773 0 0 1-.265-.205 2.122 2.122 0 0 1-.229-.329 4.617 4.617 0 0 1-.189-.37c-.055-.121-.102-.235-.141-.328l-.136-.225-.136-.226-.135-.225-.136-.226a1.533 1.533 0 0 0-.824-.825l-.327-.135-.328-.136-.327-.135-.327-.136a1.533 1.533 0 0 1-.912-1.112 1.555 1.555 0 0 1-.001-.592c.02-.098.049-.194.087-.287l.136-.327.135-.327.136-.327.135-.327c.039-.093.067-.19.086-.287a1.48 1.48 0 0 0 0-.593 1.502 1.502 0 0 0-.087-.287l-.135-.327-.136-.328-.135-.327-.135-.327a1.48 1.48 0 0 1-.087-.286 1.506 1.506 0 0 1 0-.596 1.688 1.688 0 0 1 .151-.422 1.473 1.473 0 0 1 .267-.358 1.53 1.53 0 0 1 .495-.331l.327-.135.326-.136.327-.135.327-.136a1.493 1.493 0 0 0 .683-.559c.056-.082.103-.171.142-.264l.136-.327.135-.328.136-.327.136-.327a1.6 1.6 0 0 1 .141-.265 1.597 1.597 0 0 1 .419-.418 1.533 1.533 0 0 1 1.144-.229c.097.019.194.048.287.087l.327.136.327.135.327.136.327.135c.094.039.19.067.288.086a1.47 1.47 0 0 0 .592 0 1.48 1.48 0 0 0 .287-.087l.327-.135.327-.135.328-.135.327-.135a1.502 1.502 0 0 1 .583-.116 1.557 1.557 0 0 1 .584.116 1.551 1.551 0 0 1 .494.33 1.553 1.553 0 0 1 .331.495l.136.328.135.327.136.327.135.327v-.002Z" />
             </svg>
 
             {/* Leaf SVG - Foreground (Shifted Up) */}
             <svg xmlns="http://www.w3.org/2000/svg"
                 width="800" height="800" viewBox="0 0 36 36"
-                className="absolute w-6 h-6 top-[9px]">
-                <path d="M23.7 10.41a1 1 0 0 1-.71-.29l-7.43-7.43A1 1 0 0 1 17 1.28l7.44 7.43a1 1 0 0 1-.71 1.7ZM11.86 22.25a1 1 0 0 0-.29-.71l-7.43-7.43a1 1 0 0 0-1.42 1.42L10.15 23a1 1 0 0 0 1.42 0 1 1 0 0 0 .29-.75ZM21.93 34H3a1 1 0 0 1-1-1.27l1.13-4a1 1 0 0 1 1-.73H20.8a1 1 0 0 1 1 .73l1.13 4a1 1 0 0 1-.17.87 1 1 0 0 1-.83.4ZM4.31 32H20.6l-.6-2H4.87ZM33.11 27.44l-14-14 2.36-2.36-6.95-6.95-8.94 8.94L12.51 20l2.35-2.34 14 14a3 3 0 0 0 4.24 0 3 3 0 0 0 .01-4.22ZM8.4 13.07 14.52 7l4.11 4.11-6.12 6.11Zm23.29 17.2a1 1 0 0 1-1.41 0l-14-14 1.41-1.41 14 14a1 1 0 0 1 0 1.41Z" />
+                className="absolute w-7 h-7 top-[1px]">
+                <path fill="purple"
+                    d="M23.7 10.79a1 1 0 0 1-.71-.3l-7.43-7.43A1 1 0 0 1 17 1.65l7.44 7.43a1 1 0 0 1 0 1.41 1 1 0 0 1-.74.3ZM10.69 23.79a1 1 0 0 1-.7-.29l-7.44-7.43A1 1 0 1 1 4 14.65l7.43 7.43a1 1 0 0 1-.71 1.71ZM20.64 31l.5 1.77a.89.89 0 0 1-.85 1.12H3.67a.89.89 0 0 1-.85-1.12L3.33 31a1.51 1.51 0 0 1 1.47-1.08h14.36A1.53 1.53 0 0 1 20.64 31ZM32.19 28.08 18.43 14.46l3-3-6.91-6.96-8.94 8.94 6.93 6.94 3.21-3.2 13.74 13.6a1.89 1.89 0 0 0 1.36.56 1.91 1.91 0 0 0 1.37-3.26Z" />
                 <path fill="none" d="M0 0h36v36H0z" />
             </svg>
         </div>
     );
 };
 
+function getThreshold(companyData, allData) {
+
+    // This functions finds the best threshold to give just enough medals to the list of recommended companies
+
+    const transData = transformData(allData); //converts scores to percentile
+    const filteredData = transData.filter(item => companyData.includes(item.company_name));
+    const percentiles = filteredData.flatMap(item => [
+        item.e_percentile,
+        item.s_percentile,
+        item.g_percentile
+    ]);
+
+    percentiles.sort((a, b) => a - b);
+
+    const percentileIndex = Math.floor(0.7 * (percentiles.length - 1));
+    console.log(percentiles[percentileIndex]);
+    return percentiles[percentileIndex];
+
+}
 
 const Overview = ({ hoveredCompany, newData }) => {
 
@@ -186,13 +219,13 @@ const Overview = ({ hoveredCompany, newData }) => {
 
     if (hoveredCompany === null) {
         return (
-            <div className="absolute left-[450px] h-120 top-0 bottom-0 w-80 bg-white">
+            <div className="absolute left-[430px] h-120 top-10 bottom-0 w-80 bg-white">
             </div>
         );
     }
     const companyData = newData ? newData.find(companyData => companyData.company_name === hoveredCompany) : null;
     return (
-        <div className="absolute left-[450px] h-125 top-0 bottom-0 w-80 border-3 
+        <div className="absolute left-[430px] h-125 top-10 bottom-0 w-80 border-3 
                                     border-[rgba(64,121,47,0.8)] bg-white rounded-3xl mt-3">
             {/* Placeholder for graphs/data */}
             <div className="h-full flex flex-col items-center justify-start px-4 ">

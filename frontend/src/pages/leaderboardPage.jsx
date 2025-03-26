@@ -26,6 +26,7 @@ export default function LeaderboardPage() {
     try {
       const response = await axios.get("/company/getAllCompanyData");
       setCompanyData(response.data); // Store API data in state
+      
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -38,6 +39,7 @@ export default function LeaderboardPage() {
   //get leaderboard data of latest year to display in the table
   function extractLatestLeaderboard(companyData) {
     if (companyData === null) return;
+    console.log(companyData);
     // Identify the latest year available across all companies
     const latestYear = Math.max(
       ...companyData
@@ -183,6 +185,7 @@ export default function LeaderboardPage() {
             <UserRecommendations
                 companies={companyTopRecommendations}
                 cdata={leaderboardData}
+                historicalData={companyData}
             />
             )}
         </Suspense>

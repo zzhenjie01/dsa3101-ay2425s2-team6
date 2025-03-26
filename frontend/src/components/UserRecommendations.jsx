@@ -1,29 +1,56 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { arc } from "d3-shape";
+import * as d3 from "d3";
 import logosFull from "../assets/BankLogo/getLogoFull.js";
 import logosPart from "../assets/BankLogo/getLogoPart.js";
-export default function UserRecommendations({ companies, cdata}) {
+
+export default function UserRecommendations({ companies, cdata, historicalData}) {
 
     const newData = transformData(cdata);
     const [hoveredCompany, setHoveredCompany] = useState(null);
     const threshold = getThreshold(companies,cdata);
-
+    const [isExpanded, setExpanded] = useState(false);
     
     return (
         <div className="flex items-center justify-center w-screen">
             <div className="relative w-[700px] flex flex-col items-center space-y-1 pb-20 mt-1">
+
+                {/* HEADER for MEDALS ---------------------------------------------------------- */}
                 <div className="w-full h-3 flex font-bold space-y-0 mt-1">
-                    <div className="w-1/6 text-center relative text-gray-400 text-xs
+                    {!isExpanded && (<div className="w-1/6 text-center relative text-gray-400 text-xs
                                 before:absolute before:top-3/2 before:left-0 before:w-full before:h-[2px] before:bg-gray-400 leading-tight">
                         <span className="relative bg-white px-1">High</span>
                         <br />
                         <span className="relative bg-white px-1">Performer</span>
-                    </div>
+                    </div>)}
+                    
                 </div>
+                
+                {/* CONDITIONAL COMPANY SUMMARY -------------------------------------------------*/}
+                {/* appears only when clicked */}
+
+                {isExpanded && (
+                    <>
+                        <div className={`absolute left-0 w-145 h-115 top-5 border-3 border-r-0 
+                                        border-[rgba(64,121,47,0.8)] bg-[rgba(64,121,47,0.1)] rounded-l-3xl mt-8
+                                        transition-all delay-500 duration-500 ${isExpanded ? "translate-x-0" : "translate-x-full"}`}
+                            onMouseLeave={()=> setExpanded(null)}>
+                                <CompanySummary company={isExpanded} alldata={historicalData}/>
+                        </div>
+                        <div className="absolute left-[430px] h-200 top-5 bottom-0 w-80 bg-white pb-20">
+                        </div>
+                    </>
+                )}
+
+                {/* ACTUAL COMPANY LIST ---------------------------------------------------------*/}
                 <ul className="relative w-full">
                     {companies.map((company, index) => {
                         const companyData = newData ? newData.find(companyData => companyData.company_name === company) : null;
                         if (!companyData) return null;
+                        if (isExpanded) return null;
+
+                        // ------------------- UPON INITIALIZATION --------------------
+                        // ---------------------LISTS EVERYTHING -----------------------
                         return (
                             <li
                                 key={index}
@@ -60,9 +87,10 @@ export default function UserRecommendations({ companies, cdata}) {
 
                                 {/* Second Column: Main Row (Expanding) */}
                                 <div className={`relative w-[280px] h-[60px] border-4 border-emerald-700 text-black 
-                                            font-semibold text-5xl flex items-center px-4 ml-6 mb-3 mt-3 rounded-xl 
+                                            font-semibold text-5xl flex items-center px-4 ml-6 mb-3 mt-3 rounded-xl hover:cursor-pointer
                                             transition-all duration-200 hover:scale-105 hover:shadow-[0_0_15px_rgba(0,0,0,0.5)]
-                                            ${hoveredCompany && hoveredCompany !== company ? "opacity-50 backdrop-blur-sm" : ""}`}>
+                                            ${hoveredCompany && hoveredCompany !== company ? "opacity-50 backdrop-blur-sm" : ""}`}
+                                             onClick={() => setExpanded(hoveredCompany)}>
 
                                     {/* Logo */}
                                     <img
@@ -125,9 +153,9 @@ const AwardWithLeaf = ({ percentile, size = 12 , threshold}) => {
             <svg xmlns="http://www.w3.org/2000/svg"
                 width="800" height="800" fill="none"
                 viewBox="2.857 0.459 18.439 23.082">
-                <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" fill="#d16e7f" fill-rule="evenodd"
+                <path stroke="#000" strokeWidth="0.5" fill="#d16e7f" fillRule="evenodd"
                     d="m8.2 15.944-.3 1.514-.3 1.514-.3 1.514L7 22l1.147-.688 1.147-.688 1.147-.688 1.147-.689.1-.059a.967.967 0 0 1 .079-.044c.024-.012.045-.023.066-.031a.489.489 0 0 1 .4.031c.024.012.05.026.079.044l.1.059 1.179.65 1.179.65 1.179.65 1.179.65-.268-1.483-.268-1.482-.268-1.483-.268-1.483s-.679 1.037-1.35 1.082c-.698.046-2.745-.803-2.745-.803.005 0-1.443.591-2.675.777-.517.078-1.086-1.028-1.086-1.028Z" />
-                <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" fill="#ffe200" fill-rule="evenodd"
+                <path stroke="#000" strokeWidth="0.5" fill="#ffe200" fillRule="evenodd"
                     d="M16.426 4.249a1.519 1.519 0 0 0 .824.825l.327.135.327.136.328.136.327.135a1.497 1.497 0 0 1 .495.331 1.486 1.486 0 0 1 .33.495 1.46 1.46 0 0 1 .116.583 1.555 1.555 0 0 1-.116.583l-.135.327-.136.327-.135.327-.136.327a1.49 1.49 0 0 0-.116.584 1.547 1.547 0 0 0 .117.584l.135.326.135.327.136.327.135.327a1.387 1.387 0 0 1 .086.286 1.469 1.469 0 0 1-.036.741 1.387 1.387 0 0 1-.114.276 1.496 1.496 0 0 1-.378.46 1.365 1.365 0 0 1-.249.165 1.674 1.674 0 0 1-.135.065l-.327.135-.327.136-.327.135-.327.136a1.528 1.528 0 0 0-.494.33 1.492 1.492 0 0 0-.331.494l-.135.328-.136.327-.135.327-.136.327a1.565 1.565 0 0 1-.331.494 1.499 1.499 0 0 1-.782.418 1.478 1.478 0 0 1-.592 0 1.46 1.46 0 0 1-.287-.087l-.327-.135-.327-.136-.327-.135-.327-.136a1.554 1.554 0 0 0-1.166.001l-.327.136-.328.135-.327.135-.327.135a1.48 1.48 0 0 1-.583.116 1.547 1.547 0 0 1-.583-.116.773.773 0 0 1-.265-.205 2.122 2.122 0 0 1-.229-.329 4.617 4.617 0 0 1-.189-.37c-.055-.121-.102-.235-.141-.328l-.136-.225-.136-.226-.135-.225-.136-.226a1.533 1.533 0 0 0-.824-.825l-.327-.135-.328-.136-.327-.135-.327-.136a1.533 1.533 0 0 1-.912-1.112 1.555 1.555 0 0 1-.001-.592c.02-.098.049-.194.087-.287l.136-.327.135-.327.136-.327.135-.327c.039-.093.067-.19.086-.287a1.48 1.48 0 0 0 0-.593 1.502 1.502 0 0 0-.087-.287l-.135-.327-.136-.328-.135-.327-.135-.327a1.48 1.48 0 0 1-.087-.286 1.506 1.506 0 0 1 0-.596 1.688 1.688 0 0 1 .151-.422 1.473 1.473 0 0 1 .267-.358 1.53 1.53 0 0 1 .495-.331l.327-.135.326-.136.327-.135.327-.136a1.493 1.493 0 0 0 .683-.559c.056-.082.103-.171.142-.264l.136-.327.135-.328.136-.327.136-.327a1.6 1.6 0 0 1 .141-.265 1.597 1.597 0 0 1 .419-.418 1.533 1.533 0 0 1 1.144-.229c.097.019.194.048.287.087l.327.136.327.135.327.136.327.135c.094.039.19.067.288.086a1.47 1.47 0 0 0 .592 0 1.48 1.48 0 0 0 .287-.087l.327-.135.327-.135.328-.135.327-.135a1.502 1.502 0 0 1 .583-.116 1.557 1.557 0 0 1 .584.116 1.551 1.551 0 0 1 .494.33 1.553 1.553 0 0 1 .331.495l.136.328.135.327.136.327.135.327v-.002Z" />
             </svg>
 
@@ -135,8 +163,8 @@ const AwardWithLeaf = ({ percentile, size = 12 , threshold}) => {
             <svg xmlns="http://www.w3.org/2000/svg"
                 width="800" height="800" viewBox="0 0 24 24"
             className="absolute w-7 h-7 top-[3px]"            >
-                <path stroke="#000" fill="#64ca5a" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4.449 17.009C-.246 7.838 7.34.686 19.555 3.612a1.843 1.843 0 0 1 1.41 1.883c-.379 7.793-3.93 12.21-14.832 12.49a1.828 1.828 0 0 1-1.684-.976Z" />
-                <path stroke="#000" fill="#64ca5a" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 21c1.5-5.5 2-8.5 8-11" />
+                <path stroke="#000" fill="#64ca5a" strokeWidth="1" d="M4.449 17.009C-.246 7.838 7.34.686 19.555 3.612a1.843 1.843 0 0 1 1.41 1.883c-.379 7.793-3.93 12.21-14.832 12.49a1.828 1.828 0 0 1-1.684-.976Z" />
+                <path stroke="#000" fill="#64ca5a" strokeWidth="1" d="M4 21c1.5-5.5 2-8.5 8-11" />
             </svg>
         </div>
     );
@@ -155,16 +183,16 @@ const AwardWithPerson = ({ percentile, size = 12, threshold}) => {
             <svg xmlns="http://www.w3.org/2000/svg"
                 width="800" height="800" fill="none"
                 viewBox="2.857 0.459 18.439 23.082">
-                <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" fill="#d16e7f" fill-rule="evenodd"
+                <path stroke="#000" strokeWidth="0.5" fill="#d16e7f" fillRule="evenodd"
                     d="m8.2 15.944-.3 1.514-.3 1.514-.3 1.514L7 22l1.147-.688 1.147-.688 1.147-.688 1.147-.689.1-.059a.967.967 0 0 1 .079-.044c.024-.012.045-.023.066-.031a.489.489 0 0 1 .4.031c.024.012.05.026.079.044l.1.059 1.179.65 1.179.65 1.179.65 1.179.65-.268-1.483-.268-1.482-.268-1.483-.268-1.483s-.679 1.037-1.35 1.082c-.698.046-2.745-.803-2.745-.803.005 0-1.443.591-2.675.777-.517.078-1.086-1.028-1.086-1.028Z" />
-                <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" fill="#ffe200" fill-rule="evenodd"
+                <path stroke="#000" strokeWidth="0.5" fill="#ffe200" fillRule="evenodd"
                     d="M16.426 4.249a1.519 1.519 0 0 0 .824.825l.327.135.327.136.328.136.327.135a1.497 1.497 0 0 1 .495.331 1.486 1.486 0 0 1 .33.495 1.46 1.46 0 0 1 .116.583 1.555 1.555 0 0 1-.116.583l-.135.327-.136.327-.135.327-.136.327a1.49 1.49 0 0 0-.116.584 1.547 1.547 0 0 0 .117.584l.135.326.135.327.136.327.135.327a1.387 1.387 0 0 1 .086.286 1.469 1.469 0 0 1-.036.741 1.387 1.387 0 0 1-.114.276 1.496 1.496 0 0 1-.378.46 1.365 1.365 0 0 1-.249.165 1.674 1.674 0 0 1-.135.065l-.327.135-.327.136-.327.135-.327.136a1.528 1.528 0 0 0-.494.33 1.492 1.492 0 0 0-.331.494l-.135.328-.136.327-.135.327-.136.327a1.565 1.565 0 0 1-.331.494 1.499 1.499 0 0 1-.782.418 1.478 1.478 0 0 1-.592 0 1.46 1.46 0 0 1-.287-.087l-.327-.135-.327-.136-.327-.135-.327-.136a1.554 1.554 0 0 0-1.166.001l-.327.136-.328.135-.327.135-.327.135a1.48 1.48 0 0 1-.583.116 1.547 1.547 0 0 1-.583-.116.773.773 0 0 1-.265-.205 2.122 2.122 0 0 1-.229-.329 4.617 4.617 0 0 1-.189-.37c-.055-.121-.102-.235-.141-.328l-.136-.225-.136-.226-.135-.225-.136-.226a1.533 1.533 0 0 0-.824-.825l-.327-.135-.328-.136-.327-.135-.327-.136a1.533 1.533 0 0 1-.912-1.112 1.555 1.555 0 0 1-.001-.592c.02-.098.049-.194.087-.287l.136-.327.135-.327.136-.327.135-.327c.039-.093.067-.19.086-.287a1.48 1.48 0 0 0 0-.593 1.502 1.502 0 0 0-.087-.287l-.135-.327-.136-.328-.135-.327-.135-.327a1.48 1.48 0 0 1-.087-.286 1.506 1.506 0 0 1 0-.596 1.688 1.688 0 0 1 .151-.422 1.473 1.473 0 0 1 .267-.358 1.53 1.53 0 0 1 .495-.331l.327-.135.326-.136.327-.135.327-.136a1.493 1.493 0 0 0 .683-.559c.056-.082.103-.171.142-.264l.136-.327.135-.328.136-.327.136-.327a1.6 1.6 0 0 1 .141-.265 1.597 1.597 0 0 1 .419-.418 1.533 1.533 0 0 1 1.144-.229c.097.019.194.048.287.087l.327.136.327.135.327.136.327.135c.094.039.19.067.288.086a1.47 1.47 0 0 0 .592 0 1.48 1.48 0 0 0 .287-.087l.327-.135.327-.135.328-.135.327-.135a1.502 1.502 0 0 1 .583-.116 1.557 1.557 0 0 1 .584.116 1.551 1.551 0 0 1 .494.33 1.553 1.553 0 0 1 .331.495l.136.328.135.327.136.327.135.327v-.002Z" />
             </svg>
 
 
             {/* Person SVG - Foreground (Shifted Up) */}
             <svg xmlns="http://www.w3.org/2000/svg"
-                width="800" height="800" fill="none" stroke="#000" stroke-width="3" viewBox="0 0 64 64"
+                width="800" height="800" fill="none" stroke="#000" strokeWidth="3" viewBox="0 0 64 64"
             className="absolute w-7 h-7 top-[2px]"            >
                 <circle fill="#ff997b" cx="32" cy="18.14" r="11.14" />
                 <path fill="#ff997b" d="M54.55 56.85A22.55 22.55 0 0 0 32 34.3 22.55 22.55 0 0 0 9.45 56.85Z" /></svg>
@@ -185,9 +213,9 @@ const AwardWithGavel = ({ percentile, size = 12, threshold }) => {
             <svg xmlns="http://www.w3.org/2000/svg"
                 width="800" height="800" fill="none"
                 viewBox="2.857 0.459 18.439 23.082">
-                <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" fill="#d16e7f" fill-rule="evenodd"
+                <path stroke="#000" strokeWidth="0.5" fill="#d16e7f" fillRule="evenodd"
                     d="m8.2 15.944-.3 1.514-.3 1.514-.3 1.514L7 22l1.147-.688 1.147-.688 1.147-.688 1.147-.689.1-.059a.967.967 0 0 1 .079-.044c.024-.012.045-.023.066-.031a.489.489 0 0 1 .4.031c.024.012.05.026.079.044l.1.059 1.179.65 1.179.65 1.179.65 1.179.65-.268-1.483-.268-1.482-.268-1.483-.268-1.483s-.679 1.037-1.35 1.082c-.698.046-2.745-.803-2.745-.803.005 0-1.443.591-2.675.777-.517.078-1.086-1.028-1.086-1.028Z" />
-                <path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.5" fill="#ffe200" fill-rule="evenodd"
+                <path stroke="#000" strokeWidth="0.5" fill="#ffe200" fillRule="evenodd"
                     d="M16.426 4.249a1.519 1.519 0 0 0 .824.825l.327.135.327.136.328.136.327.135a1.497 1.497 0 0 1 .495.331 1.486 1.486 0 0 1 .33.495 1.46 1.46 0 0 1 .116.583 1.555 1.555 0 0 1-.116.583l-.135.327-.136.327-.135.327-.136.327a1.49 1.49 0 0 0-.116.584 1.547 1.547 0 0 0 .117.584l.135.326.135.327.136.327.135.327a1.387 1.387 0 0 1 .086.286 1.469 1.469 0 0 1-.036.741 1.387 1.387 0 0 1-.114.276 1.496 1.496 0 0 1-.378.46 1.365 1.365 0 0 1-.249.165 1.674 1.674 0 0 1-.135.065l-.327.135-.327.136-.327.135-.327.136a1.528 1.528 0 0 0-.494.33 1.492 1.492 0 0 0-.331.494l-.135.328-.136.327-.135.327-.136.327a1.565 1.565 0 0 1-.331.494 1.499 1.499 0 0 1-.782.418 1.478 1.478 0 0 1-.592 0 1.46 1.46 0 0 1-.287-.087l-.327-.135-.327-.136-.327-.135-.327-.136a1.554 1.554 0 0 0-1.166.001l-.327.136-.328.135-.327.135-.327.135a1.48 1.48 0 0 1-.583.116 1.547 1.547 0 0 1-.583-.116.773.773 0 0 1-.265-.205 2.122 2.122 0 0 1-.229-.329 4.617 4.617 0 0 1-.189-.37c-.055-.121-.102-.235-.141-.328l-.136-.225-.136-.226-.135-.225-.136-.226a1.533 1.533 0 0 0-.824-.825l-.327-.135-.328-.136-.327-.135-.327-.136a1.533 1.533 0 0 1-.912-1.112 1.555 1.555 0 0 1-.001-.592c.02-.098.049-.194.087-.287l.136-.327.135-.327.136-.327.135-.327c.039-.093.067-.19.086-.287a1.48 1.48 0 0 0 0-.593 1.502 1.502 0 0 0-.087-.287l-.135-.327-.136-.328-.135-.327-.135-.327a1.48 1.48 0 0 1-.087-.286 1.506 1.506 0 0 1 0-.596 1.688 1.688 0 0 1 .151-.422 1.473 1.473 0 0 1 .267-.358 1.53 1.53 0 0 1 .495-.331l.327-.135.326-.136.327-.135.327-.136a1.493 1.493 0 0 0 .683-.559c.056-.082.103-.171.142-.264l.136-.327.135-.328.136-.327.136-.327a1.6 1.6 0 0 1 .141-.265 1.597 1.597 0 0 1 .419-.418 1.533 1.533 0 0 1 1.144-.229c.097.019.194.048.287.087l.327.136.327.135.327.136.327.135c.094.039.19.067.288.086a1.47 1.47 0 0 0 .592 0 1.48 1.48 0 0 0 .287-.087l.327-.135.327-.135.328-.135.327-.135a1.502 1.502 0 0 1 .583-.116 1.557 1.557 0 0 1 .584.116 1.551 1.551 0 0 1 .494.33 1.553 1.553 0 0 1 .331.495l.136.328.135.327.136.327.135.327v-.002Z" />
             </svg>
 
@@ -233,14 +261,14 @@ const Overview = ({ hoveredCompany, newData }) => {
 
     if (hoveredCompany === null) {
         return (
-            <div className="absolute left-[430px] h-120 top-5 bottom-0 w-80 bg-white">
+            <div className="absolute left-[430px] h-120 top-5 bottom-0 w-80 bg-white pb-20">
             </div>
         );
     }
     const companyData = newData ? newData.find(companyData => companyData.company_name === hoveredCompany) : null;
     return (
-        <div className="absolute left-[430px] h-125 top-5 bottom-0 w-80 border-3 
-                                    border-[rgba(64,121,47,0.8)] bg-white rounded-3xl mt-3">
+        <div className="absolute left-[430px] h-125 top-5 w-80 border-3 
+                                    border-[rgba(64,121,47,0.8)] bg-white rounded-3xl mt-3 overflow-auto">
             {/* Placeholder for graphs/data */}
             <div className="h-full flex flex-col items-center justify-start px-4 ">
                 <img
@@ -385,4 +413,187 @@ const CircularArcGov = ({ startAngle, endAngle, radius, strokeColor, percent }) 
             </text>
         </svg>
     );
+};
+
+const CompanySummary = ({company, alldata}) => {
+    const companyData = alldata ? alldata.find(companyData => companyData.name === company) : null;
+    const esgData = Object.entries(companyData.leaderboard).map(([year, scores]) => ({
+              year: parseInt(year), // Convert year string to number
+              environmental: scores.environmentalScore,
+              social: scores.socialScore,
+              governance: scores.governanceScore
+            }));
+    esgData.sort((a, b) => a.year - b.year);
+    const oldest = esgData[0];
+    const recent = esgData[esgData.length - 1];
+    console.log(companyData);
+    console.log();
+    
+    // Time frame (years difference)
+    const timeFrame = recent.year - oldest.year;
+
+    // Calculate average changes per year
+    const avgChange = {
+        environmental: ((recent.environmental - oldest.environmental) / (timeFrame * oldest.environmental) * 100).toFixed(1),
+        social: ((recent.social - oldest.social) / (timeFrame * oldest.environmental) * 100).toFixed(1),
+        governance: ((recent.governance - oldest.governance) / (timeFrame * oldest.environmental) * 100).toFixed(1)
+    };
+
+    return (
+            <div className="flex">
+                <div className="flex-[1]">
+                    
+                    {/*Main Header ---------------------- */}
+                    <div className="font-sans font-extrabold scale-y-200 text-xl tracking-wide text-gray-500 mt-2 ml-2">Impact Trends</div>
+                    
+                    {/*Stock ---------------------------- */}
+                    <div className="font-sans font-bold text-2xl tracking-wide text-gray-400 ml-3 mt-6">Stock Price</div>
+                    <div className="font-sans font-bold text-4xl tracking-wide text-gray-900 ml-3 mt-0">${companyData.forecast["Existing Data"][companyData.forecast["Existing Data"].length-1].value}</div>
+
+                    {/*ESG Change ----------------------- */}
+                    <div className="font-sans font-bold text-2xl tracking-wide text-gray-400 ml-3 mt-6">Ave Change</div>
+
+                    {/* Environment--------- */}
+                    <div className="flex h-3 ml-2">
+                        <div className="flex-[1] border-b border-gray-500"></div>
+                        <div className="flex-[1]">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                width="800" height="800" viewBox="0 0 24 24"
+                            className="relative w-7 h-7 left-4"            >
+                                <path stroke="#000" fill="#64ca5a" strokeWidth="1" d="M4.449 17.009C-.246 7.838 7.34.686 19.555 3.612a1.843 1.843 0 0 1 1.41 1.883c-.379 7.793-3.93 12.21-14.832 12.49a1.828 1.828 0 0 1-1.684-.976Z" />
+                                <path stroke="#000" fill="#64ca5a" strokeWidth="1" d="M4 21c1.5-5.5 2-8.5 8-11" />
+                            </svg>
+                        </div>
+                        <div className="flex-[1] border-b border-gray-500"></div>
+                    </div>
+                    {/*Actual number*/}
+                    <div className={`font-sans font-bold text-4xl tracking-wide ml-3 mt-2 mb-4
+                    ${avgChange.environmental<0 ? "text-[#14aa00]" : "text-[#d51600]"}`}>{avgChange.environmental}%</div>
+
+
+
+                    {/* Social----------------- */}
+                    <div className="flex h-3 ml-2">
+                        <div className="flex-[1] border-b border-gray-500"></div>
+                        <div className="flex-[1]">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                width="800" height="800" fill="none" stroke="#000" strokeWidth="3" viewBox="0 0 64 64"
+                            className="relative w-7 h-7 left-4 -top-1"            >
+                                <circle fill="#ff997b" cx="32" cy="18.14" r="11.14" />
+                                <path fill="#ff997b" d="M54.55 56.85A22.55 22.55 0 0 0 32 34.3 22.55 22.55 0 0 0 9.45 56.85Z" />
+                            </svg>
+                        </div>
+                        <div className="flex-[1] border-b border-gray-500"></div>
+                    </div>
+                    {/*Actual number*/}
+                    <div className={`font-sans font-bold text-4xl tracking-wide ml-3 mt-2 mb-4
+                    ${avgChange.social<0 ? "text-[#14aa00]" : "text-[#d51600]"}`}>{avgChange.social}%</div>
+
+
+                    {/* Governance ----------------- */}
+                    <div className="flex h-3 ml-2">
+                        <div className="flex-[1] border-b border-gray-500"></div>
+                        <div className="flex-[1]">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                width="800" height="800" viewBox="0 0 36 36"
+                                className="relative w-7 h-7 left-4 -top-1">
+                                <path fill="purple"
+                                    d="M23.7 10.79a1 1 0 0 1-.71-.3l-7.43-7.43A1 1 0 0 1 17 1.65l7.44 7.43a1 1 0 0 1 0 1.41 1 1 0 0 1-.74.3ZM10.69 23.79a1 1 0 0 1-.7-.29l-7.44-7.43A1 1 0 1 1 4 14.65l7.43 7.43a1 1 0 0 1-.71 1.71ZM20.64 31l.5 1.77a.89.89 0 0 1-.85 1.12H3.67a.89.89 0 0 1-.85-1.12L3.33 31a1.51 1.51 0 0 1 1.47-1.08h14.36A1.53 1.53 0 0 1 20.64 31ZM32.19 28.08 18.43 14.46l3-3-6.91-6.96-8.94 8.94 6.93 6.94 3.21-3.2 13.74 13.6a1.89 1.89 0 0 0 1.36.56 1.91 1.91 0 0 0 1.37-3.26Z" />
+                                <path fill="none" d="M0 0h36v36H0z" />
+                            </svg>
+                        </div>
+                        <div className="flex-[1] border-b border-gray-500"></div>
+                    </div>
+                    {/*Actual number*/}
+                    <div className={`font-sans font-bold text-4xl tracking-wide ml-3 mt-2 mb-4
+                    ${avgChange.governance<0 ? "text-[#14aa00]" : "text-[#d51600]"}`}>{avgChange.governance}%</div>
+
+
+
+                </div>
+
+                <div className="flex-[2] flex flex-col ml-4">
+                    <div><StreamGraph data={esgData} /></div>
+                    <a href="/dashboard">Dashboard>></a>
+                </div>
+            </div>
+        );
+
+}
+
+const StreamGraph = ({ data }) => {
+  const svgRef = useRef();
+
+  useEffect(() => {
+    const margin = { top: 30, right: 10, bottom: 50, left: 40 };
+    const width = 300 - margin.left - margin.right;
+    const height = 300 - margin.top - margin.bottom;
+
+    const svg = d3.select(svgRef.current)
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    // X and Y scales
+    const xScale = d3.scaleBand()
+      .domain(data.map(d => d.year))
+      .range([0, width-margin.right])
+      .padding(0);
+
+    const yScale = d3.scaleLinear()
+      .domain([0, d3.max(data, d => d.environmental + d.social + d.governance)])
+      .nice()
+      .range([height, 0]);
+
+    
+        
+    // Stack the data
+    const stack = d3.stack().keys(["environmental", "social", "governance"]);
+    const series = stack(data);
+
+    const color = d3.scaleOrdinal()
+      .domain(["governance", "social", "environmental"])
+      .range(["#cca2fa", "#facba2", "#56c454"]);
+
+    svg.selectAll(".layer")
+      .data(series)
+      .enter().append("path")
+      .attr("class", "layer")
+      .attr("d", d3.area()
+        .x(d => xScale(d.data.year) + xScale.bandwidth() / 2)
+        .y0(d => yScale(d[0]))
+        .y1(d => yScale(d[1]))
+        .curve(d3.curveBasis)
+      )
+      .attr("fill", d => color(d.key));
+
+    // Add X-axis
+    svg.append("g")
+      .attr("transform", `translate(0, ${height+5})`)
+      .call(d3.axisBottom(xScale).ticks(data.length).tickSize(0))
+      .selectAll("text")
+      .style("font-family", "Arial, sans-serif") 
+      .style("font-size", "12px")  
+      .style("font-weight", "bold")
+      .style("fill", "#555");     
+
+    svg.select(".domain").remove(); // Remove the axis line
+
+
+        // Add Y-axis with styling
+    svg.append("g")
+      .call(d3.axisLeft(yScale))
+      .selectAll("text")
+      .style("font-family", "Arial, sans-serif")
+      .style("font-size", "12px")
+      .style("fill", "#555");
+
+    // Style Y-axis line
+    svg.selectAll(".tick line")
+      .attr("stroke", "#ddd")
+      .attr("stroke-dasharray", "2,2"); 
+  }, [data]);
+
+  return <svg ref={svgRef}></svg>;
 };

@@ -20,7 +20,7 @@ export default function LeaderboardPage() {
   //     governanceScore: ??,
   //   },
   const [leaderboardData, setLeaderboardData] = useState(null);
-
+  const [isLeaderboardDataReady, setIsLeaderboardDataReady] = useState(false);
   //get all company's data
   const fetchCompanyData = async () => {
     try {
@@ -178,8 +178,13 @@ export default function LeaderboardPage() {
         <h1 className="text-3xl pb-8">Companies you may be interested in</h1>
         {/* Suspense will show the fallback until UserRecommendations is loaded */}
         <Suspense fallback={<p>Loading recommendations...</p>}>
-                  {/*<UserRecommendations companies={companyTopRecommendations} cdata={leaderboardData} />*/}
-                  <UserRecommendations companies={["ANZ", "OCBC", "Banco Santander", "Woori Bank", "BOQ"]} cdata={leaderboardData} />
+            {/*<UserRecommendations companies={companyTopRecommendations} cdata={leaderboardData} />*/}
+            {leaderboardData && companyTopRecommendations && (
+            <UserRecommendations
+                companies={companyTopRecommendations}
+                cdata={leaderboardData}
+            />
+            )}
         </Suspense>
       </div>
     </div>

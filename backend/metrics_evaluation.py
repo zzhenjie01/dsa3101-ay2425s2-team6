@@ -10,7 +10,7 @@ from langchain_ollama.llms import OllamaLLM
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 
-# to set the evaluator LLM model run "deepeval set-ollama <model_name>" eg deepeval set-ollama deepseek-r1:14b
+# to set the evaluator LLM model run "deepeval set-ollama <model_name>" eg: deepeval set-ollama deepseek-r1:14b
 
 async def main():
     # make folder to store evaluation results
@@ -42,19 +42,19 @@ async def main():
     rag_chain = prompt | llm | StrOutputParser()
 
     async_functions = [
-        faithfulness_quantitative_text_singlechunk(rag_chain, quantitative_text_singlechunk),
-        context_precision_quantitative_text_singlechunk(rag_chain, quantitative_text_singlechunk),
-        faithfulness_quantitative_nonmachinereadable(rag_chain, quantitative_nonmachinereadable),
-        context_precision_quantitative_nonmachinereadable(rag_chain, quantitative_nonmachinereadable),
-        faithfulness_quantitative_text_multichunk(rag_chain, quantitative_text_multichunk),
-        context_precision_quantitative_text_multichunk(rag_chain, quantitative_text_multichunk),
-        faithfulness_qualitative_text_singlechunk(rag_chain, qualitative_text_singlechunk),
-        context_precision_qualitative_text_singlechunk(rag_chain, qualitative_text_singlechunk),
-        faithfulness_qualitative_nonmachinereadable(rag_chain, qualitative_nonmachinereadable),
-        context_precision_qualitative_nonmachinereadable(rag_chain, qualitative_nonmachinereadable),
-        faithfulness_qualitative_text_multichunk(rag_chain, qualitative_text_multichunk),
-        context_precision_qualitative_text_multichunk(rag_chain, qualitative_text_multichunk)
-        ]
+        text_singlechunk_test(rag_chain, quantitative_text_singlechunk, 'faithfulness', 'quantitative'),
+        text_singlechunk_test(rag_chain, quantitative_text_singlechunk, 'context_precision', 'quantitative'),
+        nonmachinereadable_test(rag_chain, quantitative_nonmachinereadable, 'faithfulness', 'quantitative'),
+        nonmachinereadable_test(rag_chain, quantitative_nonmachinereadable, 'context_precision', 'quantitative'),
+        text_multichunk_test(rag_chain, quantitative_text_multichunk, 'faithfulness', 'quantitative'),
+        text_multichunk_test(rag_chain, quantitative_text_multichunk, 'context_precision', 'quantitative'),
+        text_singlechunk_test(rag_chain, qualitative_text_singlechunk, 'faithfulness', 'qualitative'),
+        text_singlechunk_test(rag_chain, qualitative_text_singlechunk, 'context_precision', 'qualitative'),
+        nonmachinereadable_test(rag_chain, qualitative_nonmachinereadable, 'faithfulness', 'qualitative'),
+        nonmachinereadable_test(rag_chain, qualitative_nonmachinereadable, 'context_precision', 'qualitative'),
+        text_multichunk_test(rag_chain, qualitative_text_multichunk, 'faithfulness', 'qualitative'),
+        text_multichunk_test(rag_chain, qualitative_text_multichunk, 'context_precision', 'qualitative')
+    ]
     
     # running all evaluation functions asynchronously
     metric_results_list = await asyncio.gather(*async_functions)

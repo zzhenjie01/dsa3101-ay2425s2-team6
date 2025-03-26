@@ -3,128 +3,67 @@ import { useState, useEffect, useContext } from "react";
 import { UserContext } from "@/context/context";
 import axios from "axios";
 import LeaderboardRow from "@/components/leaderboardRow";
+import UserRecommendations from "@/components/userRecommendations";
+import { parseJsonValues } from "@/components/helpers/parseJson";
 import { Suspense, lazy } from "react";
 
 export default function LeaderboardPage() {
-  const leaderboardData = [
-    {
-      _id: "1",
-      company_name: "OCBC",
-      e_score: 40,
-      s_score: 60,
-      g_score: 50,
-    },
-
-    {
-      _id: "2",
-      company_name: "BOQ",
-      e_score: 36,
-      s_score: 28,
-      g_score: 41,
-    },
-
-    {
-      _id: "3",
-      company_name: "ANZ",
-      e_score: 90,
-      s_score: 88,
-      g_score: 94,
-    },
-
-    {
-      _id: "4",
-      company_name: "Woori Bank",
-      e_score: 65,
-      s_score: 89,
-      g_score: 54,
-      },
-      {
-      _id: "5",
-      company_name: "Citigroup",
-      e_score: 76,
-      s_score: 58,
-      g_score: 77,
-      },
-
-      {
-        _id: "6",
-        company_name: "KrungThai Bank",
-        e_score: 88,
-        s_score: 33,
-        g_score: 22,
-      },
-      {
-          _id: "7",
-          company_name: "HSBC",
-          e_score: 65,
-          s_score: 85,
-          g_score: 82,
-      },
-      {
-          _id: "8",
-          company_name: "Banco Santander",
-          e_score: 91,
-          s_score: 52,
-          g_score: 63,
-      },
-      {
-          _id: "9",
-          company_name: "CBA",
-          e_score: 67,
-          s_score: 73,
-          g_score: 79,
-      },
-      {
-          _id: "10",
-          company_name: "Nubank",
-          e_score: 67,
-          s_score: 73,
-          g_score: 79,
-      },
-  ];
-
   const { user } = useContext(UserContext);
 
-  const [avgWeight, setAvgWeight] = useState({
-    envWeight: -1,
-    socWeight: -1,
-    govWeight: -1,
-  });
+  const [companyData, setCompanyData] = useState(null);
 
-  // Effect for API call
+  // leaderboard data extracts the ESG scores for the latest year and is an array in the format {
+  //     _id: "??",
+  //     company: "??"",
+  //     environmentalScore: ??,
+  //     socialScore: ??,
+  //     governanceScore: ??,
+  //   },
+  const [leaderboardData, setLeaderboardData] = useState(null);
+
+  //get all company's data
+  const fetchCompanyData = async () => {
+    try {
+      const response = await axios.get("/company/getAllCompanyData");
+      setCompanyData(response.data); // Store API data in state
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   useEffect(() => {
-    if (!user) return; // Prevent API call if user is not defined
+    fetchCompanyData();
+  }, []);
 
-    axios
-      .post("/auth/getAvgWeights", user)
-      .then((response) => {
-        const { environmentalWeight, socialWeight, governanceWeight } =
-          response.data;
+  //get leaderboard data of latest year to display in the table
+  function extractLatestLeaderboard(companyData) {
+    if (companyData === null) return;
+    // Identify the latest year available across all companies
+    const latestYear = Math.max(
+      ...companyData
+        .map((company) => Object.keys(company.leaderboard || {}).map(Number))
+        .flat()
+    );
 
-        // Convert strings to integers
-        const newAvgWeight = {
-          envWeight: parseInt(environmentalWeight, 10),
-          socWeight: parseInt(socialWeight, 10),
-          govWeight: parseInt(governanceWeight, 10),
-        };
+    // Filter companies that have leaderboard data for the latest year
+    let filteredCompanies = companyData
+      .filter(
+        (company) => company.leaderboard && company.leaderboard[latestYear]
+      )
+      .map((company) => ({
+        _id: company.idx,
+        company: company.name,
+        environmentalScore: company.leaderboard[latestYear].environmentalScore,
+        socialScore: company.leaderboard[latestYear].socialScore,
+        governanceScore: company.leaderboard[latestYear].governanceScore,
+      }));
 
-        // Only update state if the values actually changed
-        setAvgWeight((prevWeight) => {
-          if (
-            prevWeight.envWeight === newAvgWeight.envWeight &&
-            prevWeight.socWeight === newAvgWeight.socWeight &&
-            prevWeight.govWeight === newAvgWeight.govWeight
-          ) {
-            return prevWeight; // Avoid unnecessary re-renders
-          }
-          return newAvgWeight;
-        });
-      })
-      .catch((error) => {
-        console.error("Error fetching weights:", error);
-      });
-  }, [user, avgWeight]); // Effect runs only when user or avgWeight changes
-  const [data, setData] = useState(leaderboardData);
+    return filteredCompanies;
+  }
+
+  useEffect(() => {
+    setLeaderboardData(extractLatestLeaderboard(companyData));
+  }, [companyData]);
 
   const [weights, setWeights] = useState({
     environmentalWeight: null,
@@ -146,7 +85,8 @@ export default function LeaderboardPage() {
           axios.get("/weights/getAllOtherAvgWeights", { params: { user } }),
         ]);
 
-        setWeights(userAvgWeights.data);
+        // Convert weights to float using parseJsonValues then set the weights
+        setWeights(parseJsonValues(userAvgWeights.data));
 
         const companyTopRecommendations = await axios.get(
           "/clicks/getUserRecommendations",
@@ -173,30 +113,43 @@ export default function LeaderboardPage() {
     };
   }, [user]);
 
-  // Effect to update data whenever weights change
-  useEffect(() => {
-    // Only recalculate when weights change, not when data changes
+  //update total score based on user's weights
+  const updateTotalScore = () => {
     const totalWeight =
-      avgWeight.envWeight + avgWeight.socWeight + avgWeight.govWeight;
+      weights.environmentalWeight +
+      weights.socialWeight +
+      weights.governanceWeight;
 
+    //to prevent division by total weight of 0
     if (totalWeight === 0) return;
 
-    //Update total to reflect the latest weights and sort by descending total score
-    const newData = leaderboardData
-      .map((row) => ({
-        ...row,
-        total: Math.round(
-          row.e_score * (avgWeight.envWeight / totalWeight) +
-            row.s_score * (avgWeight.socWeight / totalWeight) +
-            row.g_score * (avgWeight.govWeight / totalWeight)
-        ),
-      }))
-      .sort((a, b) => b.total - a.total);
+    //update total score with new weights
+    if (leaderboardData) {
+      setLeaderboardData((prevData) =>
+        prevData
+          .map((row) => ({
+            ...row,
+            total: Math.round(
+              row.environmentalScore *
+                (weights.environmentalWeight / totalWeight) +
+                row.socialScore * (weights.socialWeight / totalWeight) +
+                row.governanceScore * (weights.governanceWeight / totalWeight)
+            ),
+          }))
+          .sort((a, b) => b.total - a.total)
+      );
+    }
+  };
 
-    setData(newData);
-  }, [avgWeight]); // Only depend on weights
-
-  const UserRecommendations = lazy(() => import("@/components/userRecommendations"));
+  // Effect to update data whenever weights change
+  useEffect(() => {
+    updateTotalScore();
+  }, [
+    weights.environmentalWeight,
+    weights.socialWeight,
+    weights.governanceWeight,
+    companyData,
+  ]); // Only depend on weights or when companyData first loads
 
   return (
     <div className="flex-grow pt-20 text-center">
@@ -214,9 +167,10 @@ export default function LeaderboardPage() {
           </thead>
 
           <tbody className="divide-y divide-gray-300">
-            {data.map((row) => (
-              <LeaderboardRow key={row._id} data={row} />
-            ))}
+            {leaderboardData &&
+              leaderboardData.map((row) => (
+                <LeaderboardRow key={row._id} data={row} />
+              ))}
           </tbody>
         </table>
       </div>

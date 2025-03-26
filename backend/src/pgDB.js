@@ -1,7 +1,8 @@
 import pgPool from "./api/models/postgresDB.js";
 
-export const createAllTables = async () => {
+export const setupPG = async () => {
   try {
+    // Create weight_transactions table
     await pgPool.query(
       `CREATE TABLE IF NOT EXISTS 
         weight_transactions(
@@ -13,6 +14,7 @@ export const createAllTables = async () => {
         )`
     );
 
+    // Create click_transactinos table
     await pgPool.query(
       `CREATE TABLE IF NOT EXISTS 
         click_transactions(
@@ -22,14 +24,26 @@ export const createAllTables = async () => {
         )`
     );
 
+    // Delete company_stock_data table if it exists
+    await pgPool.query(`DROP TABLE IF EXISTS company_stock_data`);
+
+    // Creates company_stock_data table
     await pgPool.query(
-      `CREATE TABLE IF NOT EXISTS 
+      `CREATE TABLE 
         company_stock_data(
         company_name TEXT NOT NULL,
-        price_type TEXT NOT NULL,
         price_date TIMESTAMP NOT NULL,
+        price_type TEXT NOT NULL,
         price FLOAT NOT NULL
       )`
+    );
+
+    // Fills up company_stock_data table with the .csv file
+    await pgPool.query(
+      `COPY company_stock_data 
+      FROM '/var/lib/postgresql/data/companies_stock_price_data.csv' 
+      DELIMITER ',' CSV HEADER
+      `
     );
 
     console.log("All tables successfully created in Postgres DB");
@@ -38,4 +52,4 @@ export const createAllTables = async () => {
   }
 };
 
-export default createAllTables;
+export default setupPG;

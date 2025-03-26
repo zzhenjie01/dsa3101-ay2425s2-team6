@@ -1,3 +1,4 @@
+import "dotenv/config";
 import pg from "pg";
 
 const pg_user = process.env.POSTGRES_USER;

@@ -1,11 +1,11 @@
-import "dotenv/config";
 import express from "express";
 import cookieParser from "cookie-parser";
-import mongoose from "mongoose";
 import authRouter from "./api/routes/authRoutes.js";
 import weightsRouter from "./api/routes/weightsRoutes.js";
 import clicksRouter from "./api/routes/clickRoutes.js";
-import createAllTables from "./pgserver.js";
+import companyRouter from "./api/routes/companyRoutes.js";
+import setupMongoDB from "./mongoDB.js";
+import setupPG from "./pgDB.js";
 
 // Set up express server
 const app = express();
@@ -19,21 +19,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/auth", authRouter);
 app.use("/weights", weightsRouter);
 app.use("/clicks", clicksRouter);
+app.use("/company", companyRouter);
 
-// pull details from .env file
-const mongo_user = process.env.MONGODB_USERNAME;
-const mongo_password = process.env.MONGODB_PASSWORD;
+// Connect to MongoDB and create all the necessary tables
+setupMongoDB();
 
-// connect to mongodb
-mongoose
-  .connect(
-    `mongodb://${mongo_user}:${mongo_password}@localhost:27017/users?authSource=admin`
-  )
-  .then(() => console.log("MongoDB connected"))
-  .catch((error) => console.error("MongoDB connection error:", error));
-
-// Create all neceesary tables in psql
-createAllTables();
+// Create all necessary tables in psql
+setupPG();
 
 // initialise express server
 const port = 5000;

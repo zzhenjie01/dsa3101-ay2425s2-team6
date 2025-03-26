@@ -357,8 +357,8 @@ This command will run the `start` script, which runs both the `docker compose up
    npm install
    ```
 
-   > [!NOTE]
-   > If there are any dependency issues, you can follow what the verbose output suggests.
+> [!NOTE]
+> If there are any dependency issues, you can follow what the verbose output suggests.
 
 1. **Launching of Frontend**
    Now that all the necessary packages are installed, we can now launch our frontend using the following command:

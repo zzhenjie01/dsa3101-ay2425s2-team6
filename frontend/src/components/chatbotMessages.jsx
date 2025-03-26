@@ -3,8 +3,11 @@ import { useState, useContext, useRef, useEffect } from "react";
 import { ChatBotContext } from "../context/context";
 import { loadMessages,saveMessages } from "../services/chatbotStorage";
 
+// Displays chat messages between user and bot
 export default function ChatbotMessages({sendMessage}) {
+    // Get state of chatbot
     const { chatbotOpen, setChatbotOpen } = useContext(ChatBotContext);
+
     const [messages, setMessages] = useState([
         //Starting message
         {
@@ -20,15 +23,23 @@ export default function ChatbotMessages({sendMessage}) {
         saveMessages(messages);
     }, [messages]);
 
+    //Auto-scroll to the bottom of the chat window
     useEffect(() => {
         chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
 
+    // Function to handle sending a user's message
+    // - Updates chat history
+    // - Sends message and chat history to the backend via axios
     const sendMessageInternal = async (input) => {
+        // Dont send empty messages
         if (input.trim() === "") return;
 
+        // Message object for user
         const userMessage = { text: input, sender: "user", timestamp: new Date().toISOString()};
-        setMessages((prev) => [...prev, userMessage]); // Update chat history
+
+        // Update local storage by appending user message
+        setMessages((prev) => [...prev, userMessage]); 
 
         try {
             // Send API request to backend
@@ -37,17 +48,19 @@ export default function ChatbotMessages({sendMessage}) {
                 history: messages
             });
             
+            // Message object for bot
             const botMessage = {
                 text: response.data.llm_response,
                 sender: "bot",
                 timestamp: new Date().toISOString()
             };
 
-            // Add bot response to chat
+            // Add bot response to local storage
             setMessages((prev) => [
                 ...prev,
                 botMessage,
             ]);
+        // If there's an error, show a fallback message
         } catch (error) {
             console.error("Error fetching response:", error);
             setMessages((prev) => [
@@ -59,6 +72,7 @@ export default function ChatbotMessages({sendMessage}) {
 
     if (sendMessage) sendMessage.current = sendMessageInternal;
 
+    // Component to show all chat messages
     return(
         <div className="flex-1 overflow-y-auto p-2 space-y-2">
         {messages.map(

@@ -5,9 +5,11 @@ import ChatbotMessages from "../components/chatbotMessages";
 import ChatbotInput from "./chatbotInput";
 
 export default function ChatbotPopup() {
+  // Get current state of chatbot
   const { chatbotOpen, setChatbotOpen } = useContext(ChatBotContext);
   const sendMessageRef = useRef(null);
 
+  // Component for the popup window for the chatbot
   return (
     <div
       className={`

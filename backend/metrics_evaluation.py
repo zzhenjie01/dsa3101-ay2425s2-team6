@@ -41,24 +41,20 @@ async def main():
     llm = OllamaLLM(model='llama3.2')
     rag_chain = prompt | llm | StrOutputParser()
 
-    async_functions = [
-        text_singlechunk_test(rag_chain, quantitative_text_singlechunk, 'faithfulness', 'quantitative'),
-        text_singlechunk_test(rag_chain, quantitative_text_singlechunk, 'context_precision', 'quantitative'),
-        nonmachinereadable_test(rag_chain, quantitative_nonmachinereadable, 'faithfulness', 'quantitative'),
-        nonmachinereadable_test(rag_chain, quantitative_nonmachinereadable, 'context_precision', 'quantitative'),
-        text_multichunk_test(rag_chain, quantitative_text_multichunk, 'faithfulness', 'quantitative'),
-        text_multichunk_test(rag_chain, quantitative_text_multichunk, 'context_precision', 'quantitative'),
-        text_singlechunk_test(rag_chain, qualitative_text_singlechunk, 'faithfulness', 'qualitative'),
-        text_singlechunk_test(rag_chain, qualitative_text_singlechunk, 'context_precision', 'qualitative'),
-        nonmachinereadable_test(rag_chain, qualitative_nonmachinereadable, 'faithfulness', 'qualitative'),
-        nonmachinereadable_test(rag_chain, qualitative_nonmachinereadable, 'context_precision', 'qualitative'),
-        text_multichunk_test(rag_chain, qualitative_text_multichunk, 'faithfulness', 'qualitative'),
-        text_multichunk_test(rag_chain, qualitative_text_multichunk, 'context_precision', 'qualitative')
+    metric_results_list = [
+        await text_singlechunk_test(rag_chain, quantitative_text_singlechunk, 'faithfulness', 'quantitative'),
+        await text_singlechunk_test(rag_chain, quantitative_text_singlechunk, 'context_precision', 'quantitative'),
+        await nonmachinereadable_test(rag_chain, quantitative_nonmachinereadable, 'faithfulness', 'quantitative'),
+        await nonmachinereadable_test(rag_chain, quantitative_nonmachinereadable, 'context_precision', 'quantitative'),
+        await text_multichunk_test(rag_chain, quantitative_text_multichunk, 'faithfulness', 'quantitative'),
+        await text_multichunk_test(rag_chain, quantitative_text_multichunk, 'context_precision', 'quantitative'),
+        await text_singlechunk_test(rag_chain, qualitative_text_singlechunk, 'faithfulness', 'qualitative'),
+        await text_singlechunk_test(rag_chain, qualitative_text_singlechunk, 'context_precision', 'qualitative'),
+        await nonmachinereadable_test(rag_chain, qualitative_nonmachinereadable, 'faithfulness', 'qualitative'),
+        await nonmachinereadable_test(rag_chain, qualitative_nonmachinereadable, 'context_precision', 'qualitative'),
+        await text_multichunk_test(rag_chain, qualitative_text_multichunk, 'faithfulness', 'qualitative'),
+        await text_multichunk_test(rag_chain, qualitative_text_multichunk, 'context_precision', 'qualitative')
     ]
-    
-    # running all evaluation functions asynchronously
-    metric_results_list = await asyncio.gather(*async_functions)
-    
     
     # combining all results into a single dataframe and save it as an Excel file in the output folder
     combined_metrics_result = pd.concat(metric_results_list, axis=0, ignore_index=True)

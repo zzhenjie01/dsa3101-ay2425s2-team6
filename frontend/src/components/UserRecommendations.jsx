@@ -12,109 +12,116 @@ export default function UserRecommendations({ companies, cdata, historicalData})
     const [isExpanded, setExpanded] = useState(false);
     
     return (
-        <div className="flex items-center justify-center w-screen">
-            <div className="relative w-[700px] flex flex-col items-center space-y-1 pb-20 mt-1">
+        <div className="flex flex-col items-center justify-start w-screen h-[80dvh] pb-2 mt-1">
+            <div className="relative w-[60%] h-[60vh] grid grid-cols-[3fr_2fr] items-start space-y-1 pb-5 mt-1  bg-gray">
 
-                {/* HEADER for MEDALS ---------------------------------------------------------- */}
-                <div className="w-full h-3 flex font-bold space-y-0 mt-1">
-                    {!isExpanded && (<div className="w-1/6 text-center relative text-gray-400 text-xs
+                <div className="flex flex-col items-start pt-0">
+                    {/* HEADER for MEDALS ---------------------------------------------------------- */}
+                    <div className="w-full h-3 flex font-bold space-y-0 mb-2">
+                        {!isExpanded && (<div className="w-1/4 text-center relative text-gray-400 text-xs
                                 before:absolute before:top-3/2 before:left-0 before:w-full before:h-[2px] before:bg-gray-400 leading-tight">
-                        <span className="relative bg-white px-1">High</span>
-                        <br />
-                        <span className="relative bg-white px-1">Performer</span>
-                    </div>)}
-                    
-                </div>
-                
-                {/* CONDITIONAL COMPANY SUMMARY -------------------------------------------------*/}
-                {/* appears only when clicked */}
+                            <span className="relative bg-white px-1">High</span>
+                            <br />
+                            <span className="relative bg-white px-1">Performer</span>
+                        </div>)}
 
-                {isExpanded && (
-                    <>
-                        <div className={`absolute left-0 w-145 h-115 top-5 border-3 border-r-0 
-                                        border-[rgba(64,121,47,0.8)] bg-[rgba(0,64,255,0.05)] rounded-l-3xl mt-8
-                                        transition-all delay-500 duration-500 ${isExpanded ? "translate-x-0" : "translate-x-full"}`}
-                            onMouseOut={(event) => {
-                                if (!event.relatedTarget || !event.currentTarget.contains(event.relatedTarget)) {
-                                    setExpanded(null);
-                                }
-                            }}>
-                                <CompanySummary company={isExpanded} alldata={historicalData}/>
-                        </div>
-                        <div className="absolute left-[430px] h-200 top-5 bottom-0 w-80 bg-white pb-20">
-                        </div>
-                    </>
-                )}
+                    </div>
 
-                {/* ACTUAL COMPANY LIST ---------------------------------------------------------*/}
-                <ul className="relative w-full">
-                    {companies.map((company, index) => {
-                        const companyData = newData ? newData.find(companyData => companyData.company_name === company) : null;
-                        if (!companyData) return null;
-                        if (isExpanded) return null;
+                    {/* CONDITIONAL COMPANY SUMMARY -------------------------------------------------*/}
+                    {/* appears only when clicked */}
 
-                        // ------------------- UPON INITIALIZATION --------------------
-                        // ---------------------LISTS EVERYTHING -----------------------
-                        return (
-                            <li
-                                key={index}
-                                className="relative flex items-center space-x-3 w-full transition-all duration-300 group-hover:z-10"
-                                onMouseEnter={() => setHoveredCompany(company)} // Set hovered company on hover
-                                onMouseLeave={() => setHoveredCompany(null)} // Reset on hover leave
-                            >
-                                
-                                <div className={`absolute top-1/2 left-0 w-full flex flex-col gap-1 pointer-events-none -translate-y-1/2 
+                    {isExpanded && (
+                        <>
+                            <div className={`h-[350px] w-full border-3 border-r-0 
+                                        border-[rgba(64,121,47,0.8)] bg-[rgba(0,64,255,0.05)] rounded-l-3xl mt-5`}
+                                onMouseOut={(event) => {
+                                    if (!event.relatedTarget || !event.currentTarget.contains(event.relatedTarget)) {
+                                        setExpanded(null);
+                                    }
+                                }}>
+                                <CompanySummary company={isExpanded} alldata={historicalData} />
+                            </div>
+                            
+                        </>
+                    )}
+
+                    {/* ACTUAL COMPANY LIST ---------------------------------------------------------*/}
+                    <ul className="relative w-full items-end mr-2">
+                        {companies.map((company, index) => {
+                            const companyData = newData ? newData.find(companyData => companyData.company_name === company) : null;
+                            if (!companyData) return null;
+                            if (isExpanded) return null;
+
+                            // ------------------- UPON INITIALIZATION --------------------
+                            // ---------------------LISTS EVERYTHING -----------------------
+                            return (
+                                <li
+                                    key={index}
+                                    className="relative flex items-center space-x-3 w-full transition-all duration-300 group-hover:z-10"
+                                    onMouseEnter={() => setHoveredCompany(company)} // Set hovered company on hover
+                                    onMouseLeave={() => setHoveredCompany(null)} // Reset on hover leave
+                                >
+
+                                    <div className={`absolute w-full flex flex-col gap-1 pointer-events-none  
                                 ${hoveredCompany && hoveredCompany !== company ? "opacity-30 backdrop-blur-sm" : ""}`}>
-                                    <div className="w-1/6 h-[2px] bg-[#00850e] opacity-20"></div>
-                                    <div className="w-1/6 h-[2px] bg-[#ffb230] opacity-20"></div>
-                                    <div className="w-1/6 h-[2px] bg-[#f360e7] opacity-20"></div>
-                                </div>
-                                {/* First Column: Numbered Circle - Environment*/}
-                                <div className={`relative flex items-center justify-center mr-0
+                                        <div className="w-1/4 h-[2px] bg-[#00850e] opacity-20"></div>
+                                        <div className="w-1/4 h-[2px] bg-[#ffb230] opacity-20"></div>
+                                        <div className="w-1/4 h-[2px] bg-[#f360e7] opacity-20"></div>
+                                    </div>
+                                    {/* First Column: Numbered Circle - Environment*/}
+                                    <div className={`relative flex items-center justify-center mr-0
                                                     ${hoveredCompany && hoveredCompany !== company ? "opacity-30 backdrop-blur-sm" : ""}`}>
-                                    <AwardWithLeaf percentile={companyData.e_percentile} threshold={threshold}/>
-                                </div>
+                                        <AwardWithLeaf percentile={companyData.e_percentile} threshold={threshold} />
+                                    </div>
 
-                                {/* First Column: Numbered Circle -Social */}
-                                <div className={`relative flex items-center justify-center mr-0
+                                    {/* First Column: Numbered Circle -Social */}
+                                    <div className={`relative flex items-center justify-center mr-0
                                                     ${hoveredCompany && hoveredCompany !== company ? "opacity-30 backdrop-blur-sm" : ""}`}>
-                                    {/* Overlapping SVG (Separate from the clipped div) */}
-                                    <AwardWithPerson percentile={companyData.s_percentile} threshold={threshold} />
+                                        {/* Overlapping SVG (Separate from the clipped div) */}
+                                        <AwardWithPerson percentile={companyData.s_percentile} threshold={threshold} />
 
-                                </div>
+                                    </div>
 
-                                {/* First Column: Numbered Circle - Governance */}
-                                <div className={`relative flex items-center justify-center mr-0
+                                    {/* First Column: Numbered Circle - Governance */}
+                                    <div className={`relative flex items-center justify-center mr-0
                                                     ${hoveredCompany && hoveredCompany !== company ? "opacity-30 backdrop-blur-sm" : ""}`}>
-                                    <AwardWithGavel percentile={companyData.g_percentile} threshold={threshold} />
-                                </div>
+                                        <AwardWithGavel percentile={companyData.g_percentile} threshold={threshold} />
+                                    </div>
 
-                                {/* Second Column: Main Row (Expanding) */}
-                                <div className={`relative w-[280px] h-[60px] border-4 border-emerald-700 text-black 
+                                    {/* Second Column: Main Row (Expanding) */}
+                                    <div className={`relative w-[280px] h-[60px] border-4 border-emerald-700 text-black 
                                             font-semibold text-5xl flex items-center px-4 ml-6 mb-3 mt-3 rounded-xl hover:cursor-pointer
                                             transition-all duration-200 hover:scale-105 hover:shadow-[0_0_15px_rgba(0,0,0,0.5)]
                                             ${hoveredCompany && hoveredCompany !== company ? "opacity-50 backdrop-blur-sm" : ""}`}
-                                             onClick={() => setExpanded(hoveredCompany)}>
+                                        onClick={() => setExpanded(hoveredCompany)}>
 
-                                    {/* Logo */}
-                                    <img
-                                        src={logosFull[company]}
-                                        alt={`${company} logo`}
-                                        className="w-12 h-12 absolute left-[30px]"
-                                        onError={(e) => (e.target.src = 'https://www.svgrepo.com/download/9509/bank.svg')}
-                                    />
+                                        {/* Logo */}
+                                        <img
+                                            src={logosFull[company]}
+                                            alt={`${company} logo`}
+                                            className="w-12 h-12 absolute left-[30px]"
+                                            onError={(e) => (e.target.src = 'https://www.svgrepo.com/download/9509/bank.svg')}
+                                        />
 
-                                    {/* Company Name */}
-                                    <span className="absolute left-[90px]"
-                                        style={{ fontSize: 'clamp(16px, 5vw, 20px)' }}>{company}</span>
-                                </div>
-                            </li>
-                        );
-                    })}
-                </ul>
+                                        {/* Company Name */}
+                                        <span className="absolute left-[90px]"
+                                            style={{ fontSize: 'clamp(16px, 5vw, 20px)' }}>{company}</span>
+                                    </div>
+                                </li>
+                            );
+                        })}
+                    </ul>
 
-                {/* Third Column: Expanding Data Area */}
-                <Overview hoveredCompany={hoveredCompany} newData={newData} />
+                </div>
+
+                <div className=" flex flex-col h-[405px]">
+                    {/* Third Column: Expanding Data Area */}
+                    <Overview hoveredCompany={hoveredCompany} newData={newData} />
+
+                </div>
+            </div>
+            <div className="w-[70%] text-[12px] text-gray-500 pt-10 text-right">
+                *High Performers are based on your search profile and percentile performance against industry average
             </div>
         </div>
     );
@@ -265,13 +272,13 @@ const Overview = ({ hoveredCompany, newData }) => {
 
     if (hoveredCompany === null) {
         return (
-            <div className="absolute left-[430px] h-120 top-5 bottom-0 w-80 bg-white pb-20">
+            <div className="w-full h-135 top-5 bottom-0 w-80 bg-gray pb-5">
             </div>
         );
     }
     const companyData = newData ? newData.find(companyData => companyData.company_name === hoveredCompany) : null;
     return (
-        <div className="absolute left-[430px] h-125 top-5 w-80 border-3 
+        <div className="w-full h-full top-5 w-80 border-3 
                                     border-[rgba(64,121,47,0.8)] bg-white rounded-3xl mt-3 overflow-auto">
             {/* Placeholder for graphs/data */}
             <div className="h-full flex flex-col items-center justify-start px-4 ">
@@ -430,8 +437,6 @@ const CompanySummary = ({company, alldata}) => {
     esgData.sort((a, b) => a.year - b.year);
     const oldest = esgData[0];
     const recent = esgData[esgData.length - 1];
-    console.log(companyData);
-    console.log();
     
     // Time frame (years difference)
     const timeFrame = recent.year - oldest.year;
@@ -445,25 +450,27 @@ const CompanySummary = ({company, alldata}) => {
 
     return (
             <div className="flex">
-                <div className="flex-[1]">
+                <div className="w-[30%]">
                     
                     {/*Main Header ---------------------- */}
-                    <div className="font-sans font-extrabold scale-y-200 text-xl tracking-wide text-gray-500 mt-2 ml-2">Impact Trends</div>
+                    <div className="font-sans font-extrabold text-[clamp(10px,5vw,30px)] tracking-wide text-gray-500 mt-2 ml-3 w-fit truncate">
+                        Trends
+                    </div>
                     
                     {/*Stock ---------------------------- */}
-                    <div className="font-sans font-bold text-2xl tracking-wide text-gray-400 ml-3 mt-6">Stock Price</div>
-                    <div className="font-sans font-bold text-4xl tracking-wide text-gray-900 ml-3 mt-0">${companyData.forecast["Existing Data"][companyData.forecast["Existing Data"].length-1].value}</div>
+                    <div className="font-sans font-bold text-[clamp(10px,5vw,15px)] w-fit tracking-wide text-gray-400 ml-3 mt-3">Stock Price</div>
+                    <div className="font-sans font-bold text-[clamp(10px,5vw,20px)] tracking-wide text-gray-900 ml-3 mt-0">${companyData.forecast["Existing Data"][companyData.forecast["Existing Data"].length-1].value}</div>
 
                     {/*ESG Change ----------------------- */}
-                    <div className="font-sans font-bold text-2xl tracking-wide text-gray-400 ml-3 mt-6">Ave Change</div>
+                    <div className="font-sans font-bold text-[clamp(10px,5vw,15px)] tracking-wide text-gray-400 ml-3 mt-3">Ave Change</div>
 
                     {/* Environment--------- */}
                     <div className="flex h-3 ml-2">
                         <div className="flex-[1] border-b border-gray-500"></div>
                         <div className="flex-[1]">
                             <svg xmlns="http://www.w3.org/2000/svg"
-                                width="800" height="800" viewBox="0 0 24 24"
-                            className="relative w-7 h-7 left-4"            >
+                                width="600" height="600" viewBox="0 0 24 24"
+                            className="relative w-6 h-6 left-2"            >
                                 <path stroke="#000" fill="#64ca5a" strokeWidth="1" d="M4.449 17.009C-.246 7.838 7.34.686 19.555 3.612a1.843 1.843 0 0 1 1.41 1.883c-.379 7.793-3.93 12.21-14.832 12.49a1.828 1.828 0 0 1-1.684-.976Z" />
                                 <path stroke="#000" fill="#64ca5a" strokeWidth="1" d="M4 21c1.5-5.5 2-8.5 8-11" />
                             </svg>
@@ -471,8 +478,8 @@ const CompanySummary = ({company, alldata}) => {
                         <div className="flex-[1] border-b border-gray-500"></div>
                     </div>
                     {/*Actual number*/}
-                    <div className={`font-sans font-bold text-4xl tracking-wide ml-3 mt-2 mb-4
-                    ${avgChange.environmental<0 ? "text-[#14aa00]" : "text-[#d51600]"}`}>{avgChange.environmental}%</div>
+                    <div className={`font-sans font-bold text-[clamp(20px,5vw,30px)] tracking-wide ml-3 mt-0 mb-2
+                    ${avgChange.environmental>0 ? "text-[#14aa00]" : "text-[#d51600]"}`}>{avgChange.environmental}%</div>
 
 
 
@@ -481,8 +488,8 @@ const CompanySummary = ({company, alldata}) => {
                         <div className="flex-[1] border-b border-gray-500"></div>
                         <div className="flex-[1]">
                             <svg xmlns="http://www.w3.org/2000/svg"
-                                width="800" height="800" fill="none" stroke="#000" strokeWidth="3" viewBox="0 0 64 64"
-                            className="relative w-7 h-7 left-4 -top-1"            >
+                                width="600" height="600" fill="none" stroke="#000" strokeWidth="3" viewBox="0 0 64 64"
+                            className="relative w-6 h-6 left-2 -top-1"            >
                                 <circle fill="#ff997b" cx="32" cy="18.14" r="11.14" />
                                 <path fill="#ff997b" d="M54.55 56.85A22.55 22.55 0 0 0 32 34.3 22.55 22.55 0 0 0 9.45 56.85Z" />
                             </svg>
@@ -490,8 +497,8 @@ const CompanySummary = ({company, alldata}) => {
                         <div className="flex-[1] border-b border-gray-500"></div>
                     </div>
                     {/*Actual number*/}
-                    <div className={`font-sans font-bold text-4xl tracking-wide ml-3 mt-2 mb-4
-                    ${avgChange.social<0 ? "text-[#14aa00]" : "text-[#d51600]"}`}>{avgChange.social}%</div>
+                    <div className={`font-sans font-bold text-[clamp(20px,5vw,30px)] tracking-wide ml-3 mt-1 mb-1
+                    ${avgChange.social>0 ? "text-[#14aa00]" : "text-[#d51600]"}`}>{avgChange.social}%</div>
 
 
                     {/* Governance ----------------- */}
@@ -499,8 +506,8 @@ const CompanySummary = ({company, alldata}) => {
                         <div className="flex-[1] border-b border-gray-500"></div>
                         <div className="flex-[1]">
                             <svg xmlns="http://www.w3.org/2000/svg"
-                                width="800" height="800" viewBox="0 0 36 36"
-                                className="relative w-7 h-7 left-4 -top-1">
+                                width="600" height="600" viewBox="0 0 36 36"
+                                className="relative w-6 h-6 left-2 -top-1">
                                 <path fill="purple"
                                     d="M23.7 10.79a1 1 0 0 1-.71-.3l-7.43-7.43A1 1 0 0 1 17 1.65l7.44 7.43a1 1 0 0 1 0 1.41 1 1 0 0 1-.74.3ZM10.69 23.79a1 1 0 0 1-.7-.29l-7.44-7.43A1 1 0 1 1 4 14.65l7.43 7.43a1 1 0 0 1-.71 1.71ZM20.64 31l.5 1.77a.89.89 0 0 1-.85 1.12H3.67a.89.89 0 0 1-.85-1.12L3.33 31a1.51 1.51 0 0 1 1.47-1.08h14.36A1.53 1.53 0 0 1 20.64 31ZM32.19 28.08 18.43 14.46l3-3-6.91-6.96-8.94 8.94 6.93 6.94 3.21-3.2 13.74 13.6a1.89 1.89 0 0 0 1.36.56 1.91 1.91 0 0 0 1.37-3.26Z" />
                                 <path fill="none" d="M0 0h36v36H0z" />
@@ -509,27 +516,27 @@ const CompanySummary = ({company, alldata}) => {
                         <div className="flex-[1] border-b border-gray-500"></div>
                     </div>
                     {/*Actual number*/}
-                    <div className={`font-sans font-bold text-4xl tracking-wide ml-3 mt-2 mb-4
-                    ${avgChange.governance<0 ? "text-[#14aa00]" : "text-[#d51600]"}`}>{avgChange.governance}%</div>
+                    <div className={`font-sans font-bold text-[clamp(20px,5vw,30px)] tracking-wide ml-3 mt-2 mb-2
+                    ${avgChange.governance>0 ? "text-[#14aa00]" : "text-[#d51600]"}`}>{avgChange.governance}%</div>
 
 
 
                 </div>
 
-                <div className="flex-[2] flex flex-col justify-center ml-4">
+                <div className="w-[70%] flex flex-col justify-center ml-4">
                     <div><StreamGraph data={esgData} /></div>
-                        <a href="/dashboard"
-                            className="w-35 flex gap-2 px-4 py-2 bg-gray-300 text-white ml-35   
-                                    rounded-3xl shadow-md hover:bg-gray-500 transition-all">
-                            <span>Dashboard</span>
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                className="w-5 h-5"
-                                viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor"
-                                strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M9 18l6-6-6-6" />
-                            </svg>
-                        </a>
+                    <a href="/dashboard"
+                    className="w-full flex gap-2 px-4 py-2 bg-gray-200 text-gray-500 justify-center items-center h-[28px]  
+                                rounded-[20px] shadow-md hover:bg-gray-500 hover:text-white transition-all">
+                        <span>Dashboard</span>
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            className="w-5 h-5"
+                            viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor"
+                            strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M9 18l6-6-6-6" />
+                        </svg>
+                    </a>
                     
                 </div>
             </div>

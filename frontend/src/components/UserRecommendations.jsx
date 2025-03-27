@@ -32,9 +32,13 @@ export default function UserRecommendations({ companies, cdata, historicalData})
                 {isExpanded && (
                     <>
                         <div className={`absolute left-0 w-145 h-115 top-5 border-3 border-r-0 
-                                        border-[rgba(64,121,47,0.8)] bg-[rgba(64,121,47,0.1)] rounded-l-3xl mt-8
+                                        border-[rgba(64,121,47,0.8)] bg-[rgba(0,64,255,0.05)] rounded-l-3xl mt-8
                                         transition-all delay-500 duration-500 ${isExpanded ? "translate-x-0" : "translate-x-full"}`}
-                            onMouseLeave={()=> setExpanded(null)}>
+                            onMouseOut={(event) => {
+                                if (!event.relatedTarget || !event.currentTarget.contains(event.relatedTarget)) {
+                                    setExpanded(null);
+                                }
+                            }}>
                                 <CompanySummary company={isExpanded} alldata={historicalData}/>
                         </div>
                         <div className="absolute left-[430px] h-200 top-5 bottom-0 w-80 bg-white pb-20">
@@ -512,9 +516,21 @@ const CompanySummary = ({company, alldata}) => {
 
                 </div>
 
-                <div className="flex-[2] flex flex-col ml-4">
+                <div className="flex-[2] flex flex-col justify-center ml-4">
                     <div><StreamGraph data={esgData} /></div>
-                    <a href="/dashboard">Dashboard>></a>
+                        <a href="/dashboard"
+                            className="w-35 flex gap-2 px-4 py-2 bg-gray-300 text-white ml-35   
+                                    rounded-3xl shadow-md hover:bg-gray-500 transition-all">
+                            <span>Dashboard</span>
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                className="w-5 h-5"
+                                viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor"
+                                strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M9 18l6-6-6-6" />
+                            </svg>
+                        </a>
+                    
                 </div>
             </div>
         );
@@ -522,78 +538,125 @@ const CompanySummary = ({company, alldata}) => {
 }
 
 const StreamGraph = ({ data }) => {
-  const svgRef = useRef();
+    const svgRef = useRef();
 
-  useEffect(() => {
-    const margin = { top: 30, right: 10, bottom: 50, left: 40 };
-    const width = 300 - margin.left - margin.right;
-    const height = 300 - margin.top - margin.bottom;
+    useEffect(() => {
+        const margin = { top: 20, right: 10, bottom: 20, left: 40 };
+        const width = 300 - margin.left - margin.right;
+        const height = 300 - margin.top - margin.bottom;
 
-    const svg = d3.select(svgRef.current)
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-      .attr("transform", `translate(${margin.left},${margin.top})`);
+        d3.select(svgRef.current).selectAll("*").remove(); // Fix duplicate renders
 
-    // X and Y scales
-    const xScale = d3.scaleBand()
-      .domain(data.map(d => d.year))
-      .range([0, width-margin.right])
-      .padding(0);
+        const svg = d3.select(svgRef.current)
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    const yScale = d3.scaleLinear()
-      .domain([0, d3.max(data, d => d.environmental + d.social + d.governance)])
-      .nice()
-      .range([height, 0]);
+        const xScale = d3.scaleBand()
+            .domain(data.map(d => d.year))
+            .range([0, width - margin.right])
+            .padding(0);
 
-    
-        
-    // Stack the data
-    const stack = d3.stack().keys(["environmental", "social", "governance"]);
-    const series = stack(data);
+        const yScale = d3.scaleLinear()
+            .domain([0, d3.max(data, d => d.environmental + d.social + d.governance)])
+            .nice()
+            .range([height, 0]);
 
-    const color = d3.scaleOrdinal()
-      .domain(["governance", "social", "environmental"])
-      .range(["#cca2fa", "#facba2", "#56c454"]);
+        // Enforce correct stack order: Governance at the bottom, Environmental at the top
+        const keys = ["governance", "social", "environmental"];
+        const stack = d3.stack().keys(keys);
+        const series = stack(data);
 
-    svg.selectAll(".layer")
-      .data(series)
-      .enter().append("path")
-      .attr("class", "layer")
-      .attr("d", d3.area()
-        .x(d => xScale(d.data.year) + xScale.bandwidth() / 2)
-        .y0(d => yScale(d[0]))
-        .y1(d => yScale(d[1]))
-        .curve(d3.curveBasis)
-      )
-      .attr("fill", d => color(d.key));
+        const color = d3.scaleOrdinal()
+            .domain(keys)
+            .range(["#cca2fa","#facba2", "#56c454"]);
 
-    // Add X-axis
-    svg.append("g")
-      .attr("transform", `translate(0, ${height+5})`)
-      .call(d3.axisBottom(xScale).ticks(data.length).tickSize(0))
-      .selectAll("text")
-      .style("font-family", "Arial, sans-serif") 
-      .style("font-size", "12px")  
-      .style("font-weight", "bold")
-      .style("fill", "#555");     
+        const Tooltip = d3.select("body").append("div")
+            .style("position", "absolute")
+            .style("background", "white")
+            .style("border", "1px solid black")
+            .style("padding", "5px")
+            .style("border-radius", "5px")
+            .style("opacity", 0)
+            .style("pointer-events", "none"); // Fix: Prevents tooltip from interfering
 
-    svg.select(".domain").remove(); // Remove the axis line
+        // Mouse events
+        const mouseover = function (event, d) {
+            Tooltip.style("opacity", 1);
+            d3.selectAll(".layer").style("opacity", 0.4);
+            d3.select(this).style("opacity", 1);
+        };
 
+        const mousemove = function (event, d) {
+            Tooltip
+                .html(d.key)
+                .style("left", (event.pageX + 10) + "px")
+                .style("top", (event.pageY - 10) + "px");
+        };
 
-        // Add Y-axis with styling
-    svg.append("g")
-      .call(d3.axisLeft(yScale))
-      .selectAll("text")
-      .style("font-family", "Arial, sans-serif")
-      .style("font-size", "12px")
-      .style("fill", "#555");
+        const mouseleave = function (event, d) {
+            if (!event.relatedTarget || !event.relatedTarget.classList.contains("layer")) {
+                // Only fade back if mouse is really leaving the graph, not moving between layers
+                Tooltip.style("opacity", 0);
+                d3.selectAll(".layer").style("opacity", 1);
+            }
+        };
 
-    // Style Y-axis line
-    svg.selectAll(".tick line")
-      .attr("stroke", "#ddd")
-      .attr("stroke-dasharray", "2,2"); 
-  }, [data]);
+        svg.selectAll(".layer")
+            .data(series)
+            .enter().append("path")
+            .attr("class", "layer")
+            .attr("d", d3.area()
+                .x(d => xScale(d.data.year) + xScale.bandwidth() / 2)
+                .y0(d => yScale(d[0]))
+                .y1(d => yScale(d[1]))
+                .curve(d3.curveBasis)
+            )
+            .attr("fill", d => color(d.key))
+            .attr("stroke", "black") // Always has black outline
+            .attr("stroke-width", 1.5)
+            .attr("stroke-linejoin", "round")
+            .attr("stroke-linecap", "round")
+            .on("mouseover", mouseover)
+            .on("mousemove", mousemove)
+            .on("mouseleave", mouseleave); // FIX: Attach only to `.layer`
 
-  return <svg ref={svgRef}></svg>;
+        svg.append("g")
+            .attr("transform", `translate(0, ${height + 5})`)
+            .call(d3.axisBottom(xScale).tickSize(0))
+            .selectAll("text")
+            .style("font-family", "Arial, sans-serif")
+            .style("font-size", "12px")
+            .style("font-weight", "bold")
+            .style("fill", "#555");
+
+        svg.select(".domain").remove();
+
+        svg.append("g")
+            .call(d3.axisLeft(yScale).tickSize(-width))
+            .selectAll("text")
+            .style("font-family", "Arial, sans-serif")
+            .style("font-size", "12px")
+            .style("fill", "#c6c6c6");
+
+        svg.selectAll(".tick line")
+            .attr("stroke", "#c6c6c6")
+            .attr("stroke-dasharray", "2,2")
+            .attr("stroke-width", 2)
+            .attr("stroke-opacity", 0.5);
+
+        svg.append("text")
+            .attr("x", width / 2)               // Center horizontally
+            .attr("y", 10)                      // Position slightly above
+            .attr("text-anchor", "middle")      // Align center
+            .style("font-size", "16px")         // Adjust font size
+            .style("font-weight", "bold")       // Make it bold
+            .style("fill", "#666")              // Dark gray color
+            .text("ESG over Time");           // Your title text
+
+        svg.select(".domain").remove();
+    }, [data]);
+
+    return <svg ref={svgRef}></svg>;
 };

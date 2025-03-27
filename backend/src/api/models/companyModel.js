@@ -34,6 +34,18 @@ const yearMetricSchema = new mongoose.Schema({
   },
 });
 
+const leaderboardSchema = new mongoose.Schema({
+  environmentalScore: {
+    type: Number,
+  },
+  socialScore: {
+    type: Number,
+  },
+  governanceScore: {
+    type: Number,
+  },
+});
+
 const companySchema = new mongoose.Schema({
   name: {
     type: String,
@@ -41,6 +53,10 @@ const companySchema = new mongoose.Schema({
   },
   data: {
     type: [yearMetricSchema],
+  },
+  leaderboard: {
+    type: Map,
+    of: leaderboardSchema,
   },
 });
 

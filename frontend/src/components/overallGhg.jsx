@@ -38,10 +38,10 @@ export function OverallGHG(props) {
   const combinedData = Object.keys(props.data)
     .map((year) => ({
       year: parseInt(year),
-      company: props.data[year],
-      average: props.avg[year],
+      company: Math.round(props.data[year]),
+      average: Math.round(props.avg[year]),
     }))
-    .sort((a, b) => a.year - b.year);
+    .sort((a, b) => a.year - b.year); //sort by ascending year
 
   //Extract min and max year to display
   const { minYear, maxYear } = combinedData.reduce(
@@ -66,9 +66,9 @@ export function OverallGHG(props) {
   return (
     <Card className="h-full">
       <CardHeader>
-        <CardTitle>"Overall GHG Emissions"</CardTitle>
+        <CardTitle>Overall GHG Emissions</CardTitle>
         <CardDescription>
-          {minYear} - {maxYear}
+          {props.name}, {minYear} - {maxYear}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -130,8 +130,8 @@ export function OverallGHG(props) {
               )}
             </div>
             <div className="flex items-center gap-2 leading-none text-muted-foreground">
-              Showing total GHG emissions for the last {maxYear - minYear + 1}{" "}
-              years
+              Showing total GHG emissions (in tonnes) for the last{" "}
+              {maxYear - minYear + 1} years
             </div>
           </div>
         </div>

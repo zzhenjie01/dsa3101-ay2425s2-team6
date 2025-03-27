@@ -4,45 +4,68 @@ import { UserContext } from "@/context/context";
 import axios from "axios";
 import LeaderboardRow from "@/components/leaderboardRow";
 import UserRecommendations from "@/components/userRecommendations";
+import { parseJsonValues } from "@/components/helpers/parseJson";
+import { Suspense, lazy } from "react";
 
 export default function LeaderboardPage() {
-  const leaderboardData = [
-    {
-      _id: "1",
-      company_name: "ABC",
-      e_score: 40,
-      s_score: 60,
-      g_score: 50,
-    },
-
-    {
-      _id: "2",
-      company_name: "DEF",
-      e_score: 36,
-      s_score: 28,
-      g_score: 41,
-    },
-
-    {
-      _id: "3",
-      company_name: "XYZ",
-      e_score: 90,
-      s_score: 88,
-      g_score: 94,
-    },
-
-    {
-      _id: "4",
-      company_name: "JKL",
-      e_score: 63,
-      s_score: 57,
-      g_score: 72,
-    },
-  ];
-
   const { user } = useContext(UserContext);
 
-  const [data, setData] = useState(leaderboardData);
+  const [companyData, setCompanyData] = useState(null);
+
+  // leaderboard data extracts the ESG scores for the latest year and is an array in the format {
+  //     _id: "??",
+  //     company: "??"",
+  //     environmentalScore: ??,
+  //     socialScore: ??,
+  //     governanceScore: ??,
+  //   },
+  const [leaderboardData, setLeaderboardData] = useState(null);
+  const [isLeaderboardDataReady, setIsLeaderboardDataReady] = useState(false);
+  //get all company's data
+  const fetchCompanyData = async () => {
+    try {
+      const response = await axios.get("/company/getAllCompanyData");
+      setCompanyData(response.data); // Store API data in state
+      
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCompanyData();
+  }, []);
+
+  //get leaderboard data of latest year to display in the table
+  function extractLatestLeaderboard(companyData) {
+    if (companyData === null) return;
+    console.log(companyData);
+    // Identify the latest year available across all companies
+    const latestYear = Math.max(
+      ...companyData
+        .map((company) => Object.keys(company.leaderboard || {}).map(Number))
+        .flat()
+    );
+
+    // Filter companies that have leaderboard data for the latest year
+    let filteredCompanies = companyData
+      .filter(
+        (company) => company.leaderboard && company.leaderboard[latestYear]
+      )
+      .map((company) => ({
+        _id: company.idx,
+        company: company.name,
+        environmentalScore: company.leaderboard[latestYear].environmentalScore,
+        socialScore: company.leaderboard[latestYear].socialScore,
+        governanceScore: company.leaderboard[latestYear].governanceScore,
+      }));
+
+    return filteredCompanies;
+  }
+
+  useEffect(() => {
+    setLeaderboardData(extractLatestLeaderboard(companyData));
+  }, [companyData]);
 
   const [weights, setWeights] = useState({
     environmentalWeight: null,
@@ -64,7 +87,8 @@ export default function LeaderboardPage() {
           axios.get("/weights/getAllOtherAvgWeights", { params: { user } }),
         ]);
 
-        setWeights(userAvgWeights.data);
+        // Convert weights to float using parseJsonValues then set the weights
+        setWeights(parseJsonValues(userAvgWeights.data));
 
         const companyTopRecommendations = await axios.get(
           "/clicks/getUserRecommendations",
@@ -91,36 +115,43 @@ export default function LeaderboardPage() {
     };
   }, [user]);
 
-  // Effect to update data whenever weights change
-  useEffect(() => {
-    // Only recalculate when weights change, not when data changes
+  //update total score based on user's weights
+  const updateTotalScore = () => {
     const totalWeight =
       weights.environmentalWeight +
       weights.socialWeight +
       weights.governanceWeight;
 
+    //to prevent division by total weight of 0
     if (totalWeight === 0) return;
 
-    //Update total to reflect the latest weights and sort by descending total score
-    const newData = leaderboardData
-      .map((row) => ({
-        ...row,
-        total: Math.round(
-          row.e_score * (weights.environmentalWeight / totalWeight) +
-            row.s_score * (weights.socialWeight / totalWeight) +
-            row.g_score * (weights.governanceWeight / totalWeight)
-        ),
-      }))
-      .sort((a, b) => b.total - a.total);
+    //update total score with new weights
+    if (leaderboardData) {
+      setLeaderboardData((prevData) =>
+        prevData
+          .map((row) => ({
+            ...row,
+            total: Math.round(
+              row.environmentalScore *
+                (weights.environmentalWeight / totalWeight) +
+                row.socialScore * (weights.socialWeight / totalWeight) +
+                row.governanceScore * (weights.governanceWeight / totalWeight)
+            ),
+          }))
+          .sort((a, b) => b.total - a.total)
+      );
+    }
+  };
 
-    setData(newData);
+  // Effect to update data whenever weights change
+  useEffect(() => {
+    updateTotalScore();
   }, [
     weights.environmentalWeight,
     weights.socialWeight,
     weights.governanceWeight,
-  ]); // Only depend on weights
-
-  // console.log(data);
+    companyData,
+  ]); // Only depend on weights or when companyData first loads
 
   return (
     <div className="flex-grow pt-20 text-center">
@@ -138,15 +169,26 @@ export default function LeaderboardPage() {
           </thead>
 
           <tbody className="divide-y divide-gray-300">
-            {data.map((row) => (
-              <LeaderboardRow key={row._id} data={row} />
-            ))}
+            {leaderboardData &&
+              leaderboardData.map((row) => (
+                <LeaderboardRow key={row._id} data={row} />
+              ))}
           </tbody>
         </table>
       </div>
       <div className="mt-12">
         <h1 className="text-3xl pb-8">Companies you may be interested in</h1>
-        <UserRecommendations companies={companyTopRecommendations} />
+        {/* Suspense will show the fallback until UserRecommendations is loaded */}
+        <Suspense fallback={<p>Loading recommendations...</p>}>
+            {/*<UserRecommendations companies={companyTopRecommendations} cdata={leaderboardData} />*/}
+            {leaderboardData && companyTopRecommendations && (
+            <UserRecommendations
+                companies={companyTopRecommendations}
+                cdata={leaderboardData}
+                historicalData={companyData}
+            />
+            )}
+        </Suspense>
       </div>
     </div>
   );

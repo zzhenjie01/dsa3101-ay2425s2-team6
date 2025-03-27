@@ -21,7 +21,10 @@ export const getAllCompanyData = async (req, res) => {
   for (const companyObject of allCompanyData) {
     const companyName = companyObject["name"];
     const companyData = companyObject["data"];
+    const companyLeaderboard = companyObject["leaderboard"];
     const companyMetrics = [];
+
+    // console.log(companyObject, "here");
 
     for (const yearObject of companyData) {
       const year = parseInt(yearObject["year"]);
@@ -81,6 +84,7 @@ export const getAllCompanyData = async (req, res) => {
       name: companyName,
       data: companyMetrics,
       forecast: companyForecast,
+      leaderboard: companyLeaderboard,
     };
 
     outputList.push(companyListObj);

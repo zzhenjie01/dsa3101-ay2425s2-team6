@@ -1,6 +1,5 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
 import {
   Label,
   PolarGrid,
@@ -32,6 +31,9 @@ export function Water(props) {
     },
   };
 
+  //contains the latest year's data in the format
+  //{average:???, company:"???", water:???, fill:"???"}
+  //fill is a key for chart styling
   const chartData = [{ ...props.data, fill: "var(--color-water)" }];
 
   //Get company's water consumption as a percentage of the average
@@ -83,7 +85,7 @@ export function Water(props) {
                         <tspan
                           x={viewBox.cx}
                           y={viewBox.cy}
-                          className="fill-foreground text-4xl font-bold"
+                          className="fill-foreground text-3xl font-bold"
                         >
                           {chartData[0].water.toLocaleString()}
                         </tspan>

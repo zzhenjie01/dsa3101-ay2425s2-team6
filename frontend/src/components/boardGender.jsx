@@ -29,6 +29,8 @@ export function BoardGender(props) {
     },
   };
 
+  //chartData consists of board gender data in the latest year with 2 rows (1 for male and 1 for female)
+  //Each row is in the format {gender:"???", number:???, fill:"???"}
   //Add fill key and value for styling
   const chartData = props.data.data.map((item) => ({
     ...item,
@@ -36,7 +38,7 @@ export function BoardGender(props) {
   }));
 
   //Calculate difference between company ratio and average ratio to 1dp
-  const ratio = +(props.data.company_ratio - props.data.average_ratio).toFixed(
+  const ratio = +(props.data.average_ratio - props.data.company_ratio).toFixed(
     2
   );
 
@@ -44,7 +46,9 @@ export function BoardGender(props) {
     <Card className="flex flex-col h-full">
       <CardHeader className="items-center pb-0">
         <CardTitle>Board Diversity Ratio</CardTitle>
-        <CardDescription>{props.data.year}</CardDescription>
+        <CardDescription>
+          {props.data.company}, {props.data.year}
+        </CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer

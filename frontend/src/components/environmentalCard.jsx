@@ -14,7 +14,7 @@ export default function EnvironmentalCard(props) {
     const lastYear = getLastYear(compdata);
     return {
       company: props.name,
-      water: compdata[lastYear],
+      water: Math.round(compdata[lastYear]),
       average: avgdata[lastYear] || 0, //if avgdata for that year is unavailable, set average to 0
     };
   };
@@ -25,8 +25,8 @@ export default function EnvironmentalCard(props) {
   const getEnergyData = (compdata, avgdata) => {
     return Object.keys(compdata).map((year) => ({
       year: Number(year),
-      company: compdata[year],
-      average: avgdata[year] || 0, //if avgdata for that year is unavailable, set average to 0
+      company: Math.round(compdata[year]),
+      average: Math.round(avgdata[year]) || 0, //if avgdata for that year is unavailable, set average to 0
     }));
   };
 
@@ -36,35 +36,29 @@ export default function EnvironmentalCard(props) {
         <div className="grid grid-cols-2 gap-4">
           <h3 className="col-span-2 text-xl font-semibold">Environmental</h3>
           <div>
-            {
-              <OverallGHG
-                data={props.data["GHG emissions"]}
-                name={props.name}
-                avg={props.avgdata["GHG emissions"]}
-              />
-            }
+            <OverallGHG
+              data={props.data["GHG emissions"]}
+              name={props.name}
+              avg={props.avgdata["GHG emissions"]}
+            />
           </div>
           <div>
-            {
-              <Water
-                data={getWaterData(
-                  props.data["Water consumption"],
-                  props.avgdata["Water consumption"]
-                )}
-                year={getLastYear(props.data["Water consumption"])}
-              />
-            }
+            <Water
+              data={getWaterData(
+                props.data["Water consumption"],
+                props.avgdata["Water consumption"]
+              )}
+              year={getLastYear(props.data["Water consumption"])}
+            />
           </div>
-          <div>
-            {
-              <Energy
-                data={getEnergyData(
-                  props.data["Electricity consumption"],
-                  props.avgdata["Electricity consumption"]
-                )}
-                name={props.name}
-              />
-            }
+          <div className="col-span-2 flex justify-center">
+            <Energy
+              data={getEnergyData(
+                props.data["Electricity consumption"],
+                props.avgdata["Electricity consumption"]
+              )}
+              name={props.name}
+            />
           </div>
         </div>
       </div>

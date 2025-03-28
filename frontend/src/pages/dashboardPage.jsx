@@ -1,8 +1,8 @@
 import { useState, useEffect, useContext } from "react";
-import EnvironmentalCard from "../components/environmentalCard";
-import SocialCard from "../components/socialCard";
-import GovernanceCard from "../components/governanceCard";
-import { Forecast } from "@/components/forecast";
+import EnvironmentalCard from "@/components/dashboard/environmentalCard";
+import SocialCard from "@/components/dashboard/socialCard";
+import GovernanceCard from "@/components/dashboard/governanceCard";
+import { Forecast } from "@/components/dashboard/forecast";
 import { UserContext } from "@/context/context";
 import axios from "axios";
 
@@ -14,7 +14,7 @@ export default function DashboardPage() {
 
     return compdata
       .map((company) => {
-        const { idx, name, data, forecast = {} } = company; // Default forecast to an empty object
+        const { idx, name, data, avgEsgScores, forecast = {} } = company; // Default forecast to an empty object
 
         if (!data) return null; // Ensure `data` exists
 
@@ -61,12 +61,15 @@ export default function DashboardPage() {
           });
         });
 
-        return {
+        const outputData = {
           idx,
           name,
           data: transformedData,
+          avgEsgScores: avgEsgScores,
           forecast: typeof forecast === "object" ? forecast : {}, // Ensure forecast is an object
         };
+
+        return outputData;
       })
       .filter(Boolean); // Remove null entries (skipped companies)
   };
@@ -190,6 +193,7 @@ export default function DashboardPage() {
             <Forecast
               name={currCompanyDetails.name}
               data={currCompanyDetails.forecast}
+              avgEsgScores={currCompanyDetails.avgEsgScores}
             />
           )}
         </>

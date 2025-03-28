@@ -58,6 +58,10 @@ const companySchema = new mongoose.Schema({
     type: Map,
     of: leaderboardSchema,
   },
+  avgEsgScores: {
+    type: Map,
+    of: Number,
+  },
 });
 
 const Company = mongoose.model("companies", companySchema);

@@ -1,6 +1,6 @@
-import company_data from "../../esg_data.json" with {type: "json"};
+import companyData from "../../esg_data.json" with {type: "json"};
 
-export function leaderboardScoring() {
+export function esgScoring() {
   function logMinMaxScaling(data) {
     let metricsData = {};
 
@@ -97,7 +97,7 @@ export function leaderboardScoring() {
       });
     });
 
-    //Combine ESG scores to take key as company name, and a map object as a value, with year as key and object of metrics as value
+    // Combine ESG scores to take key as company name, and a map object as a value, with year as key and object of metrics as value
     let esgScores = Object.fromEntries(
       Object.entries(companyScores).map(([company, years]) => [
         company,
@@ -120,7 +120,20 @@ export function leaderboardScoring() {
       ])
     );
 
-    return esgScores;
+    // Using the esgScores extracted before this, we will take the average of the 3 esg scores for each company and year - used for forecasting
+    const avgEsgScores = Object.fromEntries(
+      Object.entries(esgScores).map(([company, years]) => [
+        company,
+        Object.fromEntries(
+          Object.entries(years).map(([year, scores]) => [
+            year,
+            (scores.environmentalScore + scores.socialScore + scores.governanceScore) / 3
+          ])
+        )
+      ])
+    )
+
+    return { esgScores, avgEsgScores };
   }
-  return calculateESGScores(logMinMaxScaling(company_data));
+  return calculateESGScores(logMinMaxScaling(companyData));
 }

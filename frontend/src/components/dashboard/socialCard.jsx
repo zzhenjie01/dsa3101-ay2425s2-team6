@@ -1,6 +1,5 @@
 import { getLastYear, getLastYearData } from "@/components/helpers/getLastYear";
 import { GenderRatio } from "./genderRatio";
-import { convertPercentage } from "@/components/helpers/percentage";
 import { Turnover } from "./turnover";
 
 export default function SocialCard(props) {

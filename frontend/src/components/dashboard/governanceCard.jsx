@@ -1,7 +1,6 @@
 import { getLastYear } from "@/components/helpers/getLastYear";
 import { BoardGender } from "./boardGender";
 import { Corruption } from "./corruption";
-import { convertPercentage } from "@/components/helpers/percentage";
 
 export default function GovernanceCard(props) {
   //Get board gender data for the latest year, separated into male and female

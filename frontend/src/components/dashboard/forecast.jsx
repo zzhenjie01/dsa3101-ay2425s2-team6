@@ -1,15 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {
-  Line,
-  LineChart,
-  Area,
-  AreaChart,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 import {
   Card,
@@ -34,6 +26,7 @@ import {
 } from "@/components/ui/select";
 
 export function Forecast(props) {
+  // Defining chart configurations: labels and colours for each keyType
   const chartConfig = {
     historical: {
       label: "Past",
@@ -106,17 +99,39 @@ export function Forecast(props) {
       })
     );
 
-    // transformedEsgData.forEach(({ date, value }) => {
-    //   if (!combinedMap.has(date)) {
-    //     combinedMap.set(date, { date });
-    //   }
-    //   combinedMap.get(date)["avgesg"] = value;
-    // });
+    // to add interpolated points for avgesg score - a few data points are not enough for area graph to plot properly
+    const interpolatedPoints = {};
+    const dayTime = 60 * 60 * 24 * 1000;
+    for (let i = 0; i < transformedEsgData.length - 1; i++) {
+      const current = transformedEsgData[i];
+      const next = transformedEsgData[i + 1];
+
+      // get respective date and value intervals
+      const startDate = new Date(current.date);
+      const endDate = new Date(next.date);
+      const daysDiff = (endDate - startDate) / dayTime;
+      const valueDiff = next.avgesg - current.avgesg;
+      const valueInterval = valueDiff / daysDiff;
+
+      for (let i = 0; i < daysDiff; i++) {
+        // for each day, add the date and value into the interpolatedPoints
+        const interpolatedDate = new Date(startDate.getTime() + i * dayTime);
+        const interpolatedValue = current.avgesg + i * valueInterval;
+        interpolatedPoints[interpolatedDate.toISOString()] =
+          Number(interpolatedValue);
+      }
+    }
+
+    // We will only add the values where the dates are already in the existing data - to match same x-axis
+    combinedMap.forEach((key, value) => {
+      const interpolatedPoint = interpolatedPoints[value];
+      combinedMap.get(value)["avgesg"] = interpolatedPoint;
+    });
 
     // Convert the map values to an array and sort by date
-    const outputData = Array.from(combinedMap.values())
-      .concat(transformedEsgData)
-      .sort((a, b) => new Date(a.date) - new Date(b.date));
+    const outputData = Array.from(combinedMap.values()).sort(
+      (a, b) => new Date(a.date) - new Date(b.date)
+    );
 
     return outputData;
   };

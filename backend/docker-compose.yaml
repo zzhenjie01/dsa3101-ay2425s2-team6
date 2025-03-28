@@ -11,9 +11,23 @@ services:
       - ./mongodb_data:/data/db
     networks:
       - mongo_network
-    
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    networks:
+      - postgres_network
+
 volumes:
+  pgdata:
   mongodb_data:
 
 networks:
-  mongo_network:  
+  mongo_network:
+  postgres_network:

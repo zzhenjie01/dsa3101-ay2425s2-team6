@@ -1,7 +1,7 @@
-import User from "./userModel.js";
-import { hashPassword, comparePassword } from "./authHelper.js";
+import User from "../models/userModel.js";
+import { hashPassword, comparePassword, logWeights } from "./authHelper.js";
 import jwt from "jsonwebtoken";
-import { guestProfile } from "./guestProfile.js";
+import guestProfile from "../models/guestProfile.js";
 
 // JWT Secret
 const JWT_SECRET = process.env.JWT_KEY;
@@ -10,37 +10,47 @@ export const registerUser = async (req, res) => {
   try {
     const { name, email, password, cpassword } = req.body;
 
-    // Check if name is present
-    if (!name) {
-      return res.json({
-        error: "Name is required.",
-      });
-    }
+    const errors = [];
+    const errorFields = [];
 
-    if (name.length > 20) {
-      return res.json({
-        error: "Name must be less than 20 characters.",
-      });
+    // Check if name is present and less than 20 characters
+    if (!name) {
+      errors.push("Name is required.");
+      errorFields.push("name");
+    } else if (name.length > 20) {
+      errors.push("Name must be less than 20 characters.");
+      errorFields.push("name");
     }
 
     // Check if email is present
     if (!email) {
-      return res.json({
-        error: "Email is required.",
-      });
+      errors.push("Email is required.");
+      errorFields.push("email");
     }
 
     // Check if password is present
     if (!password) {
-      return res.json({
-        error: "Password is required.",
-      });
+      errors.push("Password is required.");
+      errorFields.push("password");
+    }
+
+    // Check if confirm password is present
+    if (!cpassword) {
+      errors.push("Confirm Password is required.");
+      errorFields.push("cpassword");
     }
 
     // Check if the password and compare passwords are equal
-    if (password != cpassword) {
+    if (password && cpassword && password != cpassword) {
+      errors.push("Passwords do not match.");
+      errorFields.push("password");
+      errorFields.push("cpassword");
+    }
+
+    if (errors.length !== 0) {
       return res.json({
-        error: "Passwords do not match.",
+        error: errors,
+        errorFields: errorFields,
       });
     }
 
@@ -48,7 +58,8 @@ export const registerUser = async (req, res) => {
     const emailExists = await User.findOne({ email: email });
     if (emailExists) {
       return res.json({
-        error: "Email is already taken.",
+        error: ["Email is already taken."],
+        errorFields: ["email"],
       });
     }
 
@@ -62,6 +73,8 @@ export const registerUser = async (req, res) => {
       password: hashedPassword,
     });
 
+    logWeights(user);
+
     return res.json(user);
   } catch (error) {
     console.log(error);
@@ -72,25 +85,34 @@ export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    const errors = [];
+    const errorFields = [];
+
     // Check if email is present
     if (!email) {
-      res.json({
-        error: "Email is required.",
-      });
+      errors.push("Email is required.");
+      errorFields.push("email");
     }
 
     // Check if password is present
     if (!password) {
-      res.json({
-        error: "Password is required.",
+      errors.push("Password is required.");
+      errorFields.push("password");
+    }
+
+    if (errors.length !== 0) {
+      return res.json({
+        error: errors,
+        errorFields: errorFields,
       });
     }
 
     // Check if user exists in database
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email: email });
     if (!user) {
       return res.json({
-        error: "User not found. Please try again",
+        error: ["User not found. Please try again"],
+        errorFields: ["email"],
       });
     }
 
@@ -98,7 +120,7 @@ export const loginUser = async (req, res) => {
     const match = await comparePassword(password, user.password);
     if (match) {
       jwt.sign(
-        { email: user.email, id: user._id },
+        { _id: user._id },
         JWT_SECRET,
         { expiresIn: "1h" },
         (err, token) => {
@@ -112,7 +134,8 @@ export const loginUser = async (req, res) => {
 
     if (!match) {
       return res.json({
-        error: "Password is incorrect. Please try again.",
+        error: ["Password is incorrect. Please try again."],
+        errorFields: ["password"],
       });
     }
   } catch (error) {
@@ -140,7 +163,7 @@ export const logoutUser = (req, res) => {
 export const getProfile = (req, res) => {
   const { token } = req.cookies;
   if (token) {
-    jwt.verify(token, JWT_SECRET, {}, (err, user) => {
+    jwt.verify(token, JWT_SECRET, {}, async (err, user) => {
       if (err) {
         if (err.name === "TokenExpiredError") {
           // Clear the expired token cookie
@@ -153,7 +176,12 @@ export const getProfile = (req, res) => {
           res.status(400).json({ error: "Invalid token" });
         }
       } else {
-        res.json(user);
+        const fetchedUser = await User.findById(user._id);
+        if (fetchedUser) {
+          res.json(fetchedUser);
+        } else {
+          res.json(guestProfile);
+        }
       }
     });
   } else {
@@ -165,9 +193,9 @@ export const getProfile = (req, res) => {
 export const updateProfile = async (req, res) => {
   try {
     const user = req.body;
-    const userExists = await User.findOne({ email: user.email });
+    const userExists = await User.findById(user._id);
     if (userExists) {
-      await User.replaceOne({ email: user.email }, user);
+      await User.replaceOne({ _id: user._id }, user);
       res.json("User Successfully Updated.");
     } else {
       res.json("Guest User Detected.");

@@ -52,7 +52,7 @@ export function ScopeGHG(props) {
   const chartData = convertGHGData(props.data);
 
   return (
-    <Card className="flex flex-col">
+    <Card className="flex flex-col h-full">
       <CardHeader className="items-center pb-0">
         <CardTitle>GHG Emissions by Scope</CardTitle>
         <CardDescription>{props.year}</CardDescription>

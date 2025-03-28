@@ -5,7 +5,7 @@ import ChatbotState from "./components/chatbotState";
 import { BrowserRouter } from "react-router-dom";
 import axios from "axios";
 import { Toaster } from "react-hot-toast";
-import { UserContextProvider } from "./context/contextFunction";
+import UserContextProvider from "./context/contextFunction";
 
 axios.defaults.baseURL = "http://localhost:5000";
 axios.defaults.withCredentials = true;

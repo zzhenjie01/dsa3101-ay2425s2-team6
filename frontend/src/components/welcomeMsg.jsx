@@ -7,7 +7,7 @@ export default function WelcomeMsg() {
   return (
     <p
       className="absolute top-6
-      right-[calc(6rem+8px)] 
+      right-[calc(8rem+8px)] 
       text-gray-800 
       font-medium"
     >

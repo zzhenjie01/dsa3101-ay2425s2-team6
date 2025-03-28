@@ -2,27 +2,11 @@
 import { useContext, useState } from "react";
 // import { ChatBotContext } from "../context/context";
 import { OverallGHG } from "./overallGhg";
-import { ScopeGHG } from "./scopeGhg";
 import { Water } from "./water";
 import { Energy } from "./energy";
 import { getLastYear, getLastYearData } from "./helpers/getLastYear";
 
 export default function EnvironmentalCard(props) {
-  // Get total GHG emissions per year in the format
-  // ghg: {
-  //   2021: ???,
-  //   2022: ???,
-  //   2023: ???
-  // }
-
-  const sumGHGByYear = (ghgData) => {
-    return Object.keys(ghgData).reduce((acc, year) => {
-      const { scope1 = 0, scope2 = 0, scope3 = 0 } = ghgData[year]; // Default values to 0 if missing
-      acc[year] = scope1 + scope2 + scope3;
-      return acc;
-    }, {});
-  };
-
   // Re-format water data to
   // {year:???, water: ???, average: ???}
 
@@ -30,7 +14,7 @@ export default function EnvironmentalCard(props) {
     const lastYear = getLastYear(compdata);
     return {
       company: props.name,
-      water: compdata[lastYear],
+      water: Math.round(compdata[lastYear]),
       average: avgdata[lastYear] || 0, //if avgdata for that year is unavailable, set average to 0
     };
   };
@@ -41,8 +25,8 @@ export default function EnvironmentalCard(props) {
   const getEnergyData = (compdata, avgdata) => {
     return Object.keys(compdata).map((year) => ({
       year: Number(year),
-      company: compdata[year],
-      average: avgdata[year] || 0, //if avgdata for that year is unavailable, set average to 0
+      company: Math.round(compdata[year]),
+      average: Math.round(avgdata[year]) || 0, //if avgdata for that year is unavailable, set average to 0
     }));
   };
 
@@ -52,37 +36,29 @@ export default function EnvironmentalCard(props) {
         <div className="grid grid-cols-2 gap-4">
           <h3 className="col-span-2 text-xl font-semibold">Environmental</h3>
           <div>
-            {
-              <OverallGHG
-                data={sumGHGByYear(props.data.ghg)}
-                name={props.name}
-                avg={sumGHGByYear(props.avgdata.ghg)}
-              />
-            }
+            <OverallGHG
+              data={props.data["GHG emissions"]}
+              name={props.name}
+              avg={props.avgdata["GHG emissions"]}
+            />
           </div>
           <div>
-            {
-              <ScopeGHG
-                data={getLastYearData(props.data.ghg)}
-                year={getLastYear(props.data.ghg)}
-              />
-            }
+            <Water
+              data={getWaterData(
+                props.data["Water consumption"],
+                props.avgdata["Water consumption"]
+              )}
+              year={getLastYear(props.data["Water consumption"])}
+            />
           </div>
-          <div>
-            {
-              <Water
-                data={getWaterData(props.data.water, props.avgdata.water)}
-                year={getLastYear(props.data.water)}
-              />
-            }
-          </div>
-          <div>
-            {
-              <Energy
-                data={getEnergyData(props.data.energy, props.avgdata.energy)}
-                name={props.name}
-              />
-            }
+          <div className="col-span-2 flex justify-center">
+            <Energy
+              data={getEnergyData(
+                props.data["Electricity consumption"],
+                props.avgdata["Electricity consumption"]
+              )}
+              name={props.name}
+            />
           </div>
         </div>
       </div>

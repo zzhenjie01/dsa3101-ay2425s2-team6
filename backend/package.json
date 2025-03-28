@@ -8,10 +8,11 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.10.0"
+    "mongoose": "^8.10.0",
+    "pg": "^8.14.0"
   },
   "scripts": {
-    "start": "docker compose up -d && node auth/authServer.js",
+    "start": "docker compose up -d && docker cp ./companies_stock_price_data.csv postgres:/var/lib/postgresql/data && node src/server.js",
     "end": "docker compose down -v",
     "restart": "npm run end && npm run start"
   }

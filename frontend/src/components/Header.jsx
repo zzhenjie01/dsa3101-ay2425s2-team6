@@ -7,29 +7,29 @@ import LoginBtn from "./LoginBtn";
 import LogoutBtn from "./LogoutBtn";
 import WelcomeMsg from "./welcomeMsg.jsx";
 import WeightsButton from "./WeightsButton.jsx";
-// import ChatbotDiv from "../components/ChatbotToggle";
 import { SidePanelContext } from "../context/context.js";
 import { useLocation } from "react-router-dom";
+import { GoHome, GoGraph, GoTrophy } from "react-icons/go";
 
 const sidePanelButtonsLst = [
   {
     idx: 1,
     webUrl: "/home",
-    // imgUrl: "/assets/home.png",
+    logo: <GoHome />,
     webName: "Home",
   },
 
   {
     idx: 2,
     webUrl: "/leaderboard",
-    // imgUrl: "/assets/dashboard.png",
+    logo: <GoTrophy />,
     webName: "Leaderboard",
   },
 
   {
     idx: 3,
     webUrl: "/dashboard",
-    // imgUrl: "/assets/dashboard.png",
+    logo: <GoGraph />,
     webName: "Dashboard",
   },
 ];
@@ -44,7 +44,6 @@ export default function Header() {
 
   // Do not show header if at login-page/register-page
   const location = useLocation();
-  console.log(location.pathname);
   if (
     location.pathname === "/login-page" ||
     location.pathname === "/register-page"

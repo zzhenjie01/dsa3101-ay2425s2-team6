@@ -76,7 +76,7 @@ async def text_singlechunk_test(model, testcases, metric:str, test_type:str):
     mean_row = pd.DataFrame({'testcase' : [f"{test_type}_text_singlechunk_mean"], 'metric' : [metric],
                              'score' : [metric_results['score'].mean(axis = 0)], 'reason' : ['-'],
                              'question' : ['-'], 'response' : ['-'],
-                              'retreived_context' : ['-'], 'ground_truth' : ['-']})
+                              'retrieved_context' : ['-'], 'ground_truth' : ['-']})
     metric_results = pd.concat([metric_results, mean_row], axis = 0, ignore_index=True)
     return metric_results
 
@@ -139,7 +139,7 @@ async def nonmachinereadable_test(model, testcases, metric:str, test_type:str):
     mean_row = pd.DataFrame({'testcase' : [f"{test_type}_text_singlechunk_mean"], 'metric' : [metric],
                              'score' : [metric_results['score'].mean(axis = 0)], 'reason' : ['-'],
                              'question' : ['-'], 'response' : ['-'],
-                              'retreived_context' : ['-'], 'ground_truth' : ['-']})
+                              'retrieved_context' : ['-'], 'ground_truth' : ['-']})
     metric_results = pd.concat([metric_results, mean_row], axis = 0, ignore_index=True)
     return metric_results
 
@@ -202,6 +202,6 @@ async def text_multichunk_test(model, testcases, metric:str, test_type:str):
     mean_row = pd.DataFrame({'testcase' : [f"{test_type}_text_multichunk_mean"], 'metric' : [metric],
                              'score' : [metric_results['score'].mean(axis = 0)], 'reason' : ['-'],
                              'question' : ['-'], 'response' : ['-'],
-                              'retreived_context' : ['-'], 'ground_truth' : ['-']})
+                              'retrieved_context' : ['-'], 'ground_truth' : ['-']})
     metric_results = pd.concat([metric_results, mean_row], axis = 0, ignore_index=True)
     return metric_results

@@ -1,4 +1,4 @@
-import "./leaderboardRow.css";
+import "./leaderboardRow.css"; // please do not delete this - will destroy the whole webapp
 
 export default function LeaderboardRow(props) {
   return (

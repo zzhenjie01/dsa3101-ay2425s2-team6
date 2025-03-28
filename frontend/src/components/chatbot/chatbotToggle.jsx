@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect, useRef } from "react";
-import { ChatBotContext } from "../context/context";
+import { ChatBotContext } from "@/context/context";
 import { X, Send } from "lucide-react";
-import ChatbotMessages from "../components/chatbotMessages";
+import ChatbotMessages from "./chatbotMessages";
 import ChatbotInput from "./chatbotInput";
 
 export default function ChatbotPopup() {
@@ -26,10 +26,10 @@ export default function ChatbotPopup() {
       >
         <X className="w-5 h-5" />
       </button>
-      
+
       <ChatbotMessages sendMessage={sendMessageRef} />
 
-      <ChatbotInput sendMessage={(msg) => sendMessageRef.current?.(msg)}/>
+      <ChatbotInput sendMessage={(msg) => sendMessageRef.current?.(msg)} />
     </div>
   );
 }

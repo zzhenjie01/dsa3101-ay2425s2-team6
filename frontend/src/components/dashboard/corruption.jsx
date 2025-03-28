@@ -16,7 +16,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { getLastYear, getLastYearData } from "./helpers/getLastYear";
+import { getLastYear, getLastYearData } from "@/components/helpers/getLastYear";
 
 export function Corruption(props) {
   //chartData is an array containing {year: ???, cases: ???}, both year and cases are integers

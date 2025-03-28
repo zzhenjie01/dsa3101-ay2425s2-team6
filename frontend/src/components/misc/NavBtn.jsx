@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { SidePanelContext } from "../context/context.js";
+import { SidePanelContext } from "@/context/context.js";
 
 export function SidePanelToggleButton() {
   const { sidePanelIsOpen, setSidePanelIsOpen } = useContext(SidePanelContext);

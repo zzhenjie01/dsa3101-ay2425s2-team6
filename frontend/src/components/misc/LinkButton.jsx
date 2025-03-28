@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { GoHome, GoGraph, GoTrophy } from "react-icons/go";
 import { IconContext } from "react-icons";
 
 function LinkButton(props) {

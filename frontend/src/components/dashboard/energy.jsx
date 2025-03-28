@@ -1,7 +1,7 @@
 "use client";
 
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
-import { Lightning } from "./icons/lightning";
+import { Lightning } from "@/components/icons/lightning";
 
 import {
   Card,

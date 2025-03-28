@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef } from "react";
 import LinkButton from "./LinkButton";
-import { SidePanelContext } from "../context/context.js";
+import { SidePanelContext } from "@/context/context.js";
 
 export function SidePanelOptions({ buttonLst }) {
   return (

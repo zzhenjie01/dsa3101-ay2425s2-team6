@@ -1,9 +1,6 @@
-// import "./socialCard.css";
-import { useContext, useState } from "react";
-// import { ChatBotContext } from "../context/contexts";
-import { getLastYear, getLastYearData } from "./helpers/getLastYear";
+import { getLastYear, getLastYearData } from "@/components/helpers/getLastYear";
 import { GenderRatio } from "./genderRatio";
-import { convertPercentage } from "./helpers/percentage";
+import { convertPercentage } from "@/components/helpers/percentage";
 import { Turnover } from "./turnover";
 
 export default function SocialCard(props) {

@@ -1,7 +1,6 @@
 import { useContext } from "react";
 import { UserContext } from "@/context/context.js";
 import { toast } from "react-hot-toast";
-import guestProfile from "../../../backend/src/api/models/guestProfile.js";
 import axios from "axios";
 
 export default function LogoutBtn() {
@@ -10,8 +9,8 @@ export default function LogoutBtn() {
   const handleLogout = async () => {
     try {
       const response = await axios.post("/auth/logout");
-      setUser(guestProfile);
-      toast.success("User Logged out successfully!");
+      setUser(response.data.profile);
+      toast.success(response.data.message);
     } catch (error) {
       console.error("Error logging out:", error);
     }

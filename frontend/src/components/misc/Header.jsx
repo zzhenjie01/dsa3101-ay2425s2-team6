@@ -1,13 +1,12 @@
 import React from "react";
 import { useState, useContext } from "react";
-import { UserContext } from "../context/context.js";
+import { UserContext, SidePanelContext } from "@/context/context.js";
 import SidePanel from "./SidePanel";
 import NavBtn from "./NavBtn";
-import LoginBtn from "./LoginBtn";
+import LoginBtn from "./LoginBtn.jsx";
 import LogoutBtn from "./LogoutBtn";
 import WelcomeMsg from "./welcomeMsg.jsx";
 import WeightsButton from "./WeightsButton.jsx";
-import { SidePanelContext } from "../context/context.js";
 import { useLocation } from "react-router-dom";
 import { GoHome, GoGraph, GoTrophy } from "react-icons/go";
 

@@ -4,7 +4,7 @@ import { useContext, useState } from "react";
 import { OverallGHG } from "./overallGhg";
 import { Water } from "./water";
 import { Energy } from "./energy";
-import { getLastYear, getLastYearData } from "./helpers/getLastYear";
+import { getLastYear, getLastYearData } from "@/components/helpers/getLastYear";
 
 export default function EnvironmentalCard(props) {
   // Re-format water data to

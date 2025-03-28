@@ -1,7 +1,7 @@
 import User from "../models/userModel.js";
 import { hashPassword, comparePassword, logWeights } from "./authHelper.js";
 import jwt from "jsonwebtoken";
-import guestProfile from "../models/guestProfile.js";
+import guestProfile from "../misc/guestProfile.js";
 
 /* 
 Contains all the functions for the /auth API route

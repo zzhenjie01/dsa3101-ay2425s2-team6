@@ -2,7 +2,7 @@ import "dotenv/config";
 import mongoose from "mongoose";
 import Company from "./api/models/companyModel.js";
 import extracted_output from "../esg_data.json" with {type: "json"};
-import { esgScoring } from "./api/esgScoresHelper.js";
+import { esgScoring } from "./esgScoresHelper.js";
 
 /*
 Connects to the mongoDB backend based on our user and password

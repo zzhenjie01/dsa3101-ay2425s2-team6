@@ -1,15 +1,23 @@
-# MongoDB to store user login credentials (purpose of this subfolder for now)
+# Backend
 
-Pre-requisite to start mongoDB:
-Docker locally (just download Docker Desktop to simplify set up)
+This folder will contain all the relevant files required to set up the Web Application's Backend.
+Details regarding the set-up of the Backend server can be found in the project's main README page.
 
-Steps to use mongoDB image:
+## Brief Overview of Services:
 
-1. create .env file and store mongoDB user and password as `MONGODB_USERNAME` and `MONGODB_PASSWORD`
-2. run `docker compose up -d` to start up mongoDB. This creates a mongodb_data/ folder (bind mount) which stores persistent data after stopping the container.
-3. run `docker exec -it mongodb mongosh -u <username> -p <password>`. This will bring you into the mongoDB shell within the Docker environment which allows you to interact with the database.
+- Express Server to receive and handle API calls from the frontend
+- MongoDB - Contains the Company and User collections
+- PostgreSQL DB - Contains the Weight Transactions, Click Transactions and Company Stock Price data tables
 
-Ways to interact with DB:
+## Navigating the `src` folder:
 
-1. ORM via javascript (mongoose API)
-2. through shell commands (from step 3 above)
+- `api` folder
+  - `controllers` folder: Contains all the functions (and helper) which will be executed whenever the API routes are called
+  - `misc` folder: Contains the Guest Profile configuration to be used in the respective controllers
+  - `models` folder: Contains the MongoDB collections and PostgreSQL pool configuration
+  - `routes` folder: Defines the various API routes
+- Other files
+  - `esgScoresHelper.js` file: Contains helper functions to calculate required values for our `mongoDB.js` file
+  - `mongoDB.js` file: Connects to MongoDB and sets up the collections as required
+  - `pgDB.js` file: Creates the necessary tables and data in our Postgre Database
+  - `server.js` file: Does the entire set-up of our backend services

@@ -1,3 +1,4 @@
+import "dotenv/config";
 import express from "express";
 import cookieParser from "cookie-parser";
 import authRouter from "./api/routes/authRoutes.js";
@@ -28,5 +29,5 @@ setupMongoDB();
 setupPG();
 
 // initialise express server
-const port = 5000;
-app.listen(port, () => console.log("Server running on port 5000"));
+const port = process.env.PORT;
+app.listen(port, () => console.log(`Server running on port ${port}`));

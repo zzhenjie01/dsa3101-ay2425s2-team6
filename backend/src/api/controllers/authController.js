@@ -150,7 +150,8 @@ export const logoutUser = (req, res) => {
 
     // Return a success message
     res.json({
-      message: "User logged out successfully.",
+      message: "User logged out successfully!",
+      profile: guestProfile,
     });
   } catch (error) {
     console.error("Error logging out user:", error);

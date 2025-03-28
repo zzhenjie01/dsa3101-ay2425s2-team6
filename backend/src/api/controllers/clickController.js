@@ -4,9 +4,9 @@ import { getCosineSimilarity, getAllUserTopCompanies } from "./clickHelper.js";
 
 export const insertClick = async (req, res) => {
   try {
-    const { user, companyName } = req.body;
+    const { user, name: companyName } = req.body;
     const userExists = await User.findById(user._id);
-    if (userExists) {
+    if (userExists && companyName !== null) {
       await pgPool.query(
         `
         INSERT INTO click_transactions

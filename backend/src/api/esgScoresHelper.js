@@ -1,4 +1,8 @@
-import companyData from "../../esg_data.json" with {type: "json"};
+import companyData from "@/../esg_data.json" with {type: "json"};
+
+/*
+Contains the helper functions that will be used to calculate the respective ESG scores for each company
+*/
 
 export function esgScoring() {
   function logMinMaxScaling(data) {

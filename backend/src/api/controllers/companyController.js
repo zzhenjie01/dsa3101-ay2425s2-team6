@@ -1,6 +1,12 @@
 import Company from "../models/companyModel.js";
 import pgPool from "../models/postgresDB.js";
 
+/* 
+Contains all the functions for the /company API route
+Currently using Axios and Express server for API handling
+The API routes can be found in its respective file in the /routes folder
+*/
+
 export const getAllCompanyData = async (req, res) => {
   // Get all data from 'companies' mongoDB collection
   const allCompanyData = await Company.find();

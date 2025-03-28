@@ -1,3 +1,7 @@
+/* 
+Guest profile to be used - mainly for the auth functions
+*/
+
 export const guestProfile = {
   _id: null,
   name: "Guest",

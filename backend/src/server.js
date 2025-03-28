@@ -8,6 +8,13 @@ import companyRouter from "./api/routes/companyRoutes.js";
 import setupMongoDB from "./mongoDB.js";
 import setupPG from "./pgDB.js";
 
+/*
+Sets up all the backend services:
+- Express Server to receive and handle API calls from the frontend
+- MongoDB - Company and User collections
+- PostgreSQL DB - Weight Transactions, Click Transactions and Company Stock Price data
+*/
+
 // Set up express server
 const app = express();
 

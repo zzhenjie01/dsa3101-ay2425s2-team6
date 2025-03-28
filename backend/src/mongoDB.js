@@ -4,6 +4,11 @@ import Company from "./api/models/companyModel.js";
 import extracted_output from "../esg_data.json" with {type: "json"};
 import { esgScoring } from "./api/esgScoresHelper.js";
 
+/*
+Connects to the mongoDB backend based on our user and password
+Inserts all companies' data into our 'companies' collection so that our features are able to use the data
+*/
+
 // pull details from .env file
 const mongo_user = process.env.MONGODB_USERNAME;
 const mongo_password = process.env.MONGODB_PASSWORD;
@@ -18,8 +23,10 @@ export const setupMongoDB = async () => {
     .then(() => console.log("MongoDB connected"))
     .catch((error) => console.error("MongoDB connection error:", error));
 
+  // gets the esg and average esg scores of all companies for the relevant years
   const { esgScores: leaderboardData, avgEsgScores }  = esgScoring();
 
+  // go through each company and year to input the necessary data into our mongoDB 'companies' collection
   for (const company of extracted_output) {
     const companyName = company["companyName"]
     const companyData = company["data"]
@@ -33,6 +40,7 @@ export const setupMongoDB = async () => {
 
     const companyExists = await Company.findOne({name: companyName});
     
+    // Will only create the company in our database if it does not already exist
     if (!companyExists){
       await Company.create({
         name:companyName,

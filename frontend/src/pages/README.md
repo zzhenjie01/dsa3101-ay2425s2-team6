@@ -1,1 +1,3 @@
-# This folder contains pages to be placed into the web app
+# Pages
+
+This folder contains the pages' content in our Web Application

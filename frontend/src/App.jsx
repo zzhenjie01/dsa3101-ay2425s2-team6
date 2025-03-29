@@ -11,7 +11,7 @@ axios.defaults.baseURL = "http://localhost:5000";
 axios.defaults.withCredentials = true;
 
 /*
-This folder provides the Outlet component for the react router.
+This file provides the Outlet component for the react router.
 */
 
 export default function App() {

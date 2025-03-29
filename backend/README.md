@@ -11,7 +11,7 @@ Details regarding the set-up of the Backend server can be found in the project's
 
 ## Navigating the `src` folder:
 
-- `api` folder
+- `api` folder: Contains all the functions and routes for our Express server to receive and handle API requests
   - `controllers` folder: Contains all the functions (and helper) which will be executed whenever the API routes are called
   - `misc` folder: Contains the Guest Profile configuration to be used in the respective controllers
   - `models` folder: Contains the MongoDB collections and PostgreSQL pool configuration

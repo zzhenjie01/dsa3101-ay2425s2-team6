@@ -9,6 +9,11 @@ from langchain_core.output_parsers import StrOutputParser
 import json
 import re
 from fastapi import FastAPI
+from pydantic import BaseModel
+from typing import List
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.encoders import jsonable_encoder
+from fastapi.responses import JSONResponse
 
 #%%
 # ================ Load the environmental variables ================
@@ -218,12 +223,36 @@ rag_chain = prompt | llm | StrOutputParser()
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins = ["http://localhost:5173"],
+    allow_credentials = True,
+    allow_methods = ["*"],
+    allow_headers = ["*"]
+)
+
+class ChatMessage(BaseModel):
+    sender: str
+    text: str
+    timestamp: str = None
+
+class ChatRequest(BaseModel):
+    message: str
+    history: List[ChatMessage]
+
 # Define what happens when a POST request is made to the `/chatbot` URL/endpoint
 # which will run the `chatbot()` function with the user's query and return the LLM's response
 # We need to pass a query as a parameter to the endpoint using `?question=...` in the URL
 # So its something like ".../chatbot?question='What is the GHG emissions of Citigroup in 2022?'"
 @app.post("/chatbot")
-def chatbot(question: str):
+def chatbot(req: ChatRequest):
+    question = req.message
+    chat_history = req.history
+
+    history_context = "\n".join(
+        [f"{msg.sender}: {msg.text}" for msg in chat_history]
+    )
+
     # Perform hybrid search
     search_results = hybrid_search(question, lexical_top_k, semantic_top_k)
 
@@ -241,8 +270,10 @@ def chatbot(question: str):
     source_path_actual = source_path_parts[0] + '.pdf'
     page_number = source_path_parts[1].replace('_', '')
 
+    combined_context = f"{history_context}\n\n{retrieved_context}"
+
     # Feed the retrieved context and user's query to the RAG chain
-    response = rag_chain.invoke({"user_query": question, "context": retrieved_context})
+    response = rag_chain.invoke({"user_query": question, "context": combined_context})
 
     # Create a dictionary with the LLM response and other relevant information
     response_dict = {
@@ -254,8 +285,10 @@ def chatbot(question: str):
         "page_number": page_number
     }
 
+    response_dict = jsonable_encoder(response_dict)
+
     # Convert the dictionary to a JSON response
-    return json.dumps(response_dict, indent=4)
+    return JSONResponse(content=response_dict)
 
 
 # ================ To Test the Chatbot Endpoint API ================

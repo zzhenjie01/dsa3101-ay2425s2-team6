@@ -1,3 +1,4 @@
+import "dotenv/config";
 import express from "express";
 import cookieParser from "cookie-parser";
 import authRouter from "./api/routes/authRoutes.js";
@@ -6,6 +7,13 @@ import clicksRouter from "./api/routes/clickRoutes.js";
 import companyRouter from "./api/routes/companyRoutes.js";
 import setupMongoDB from "./mongoDB.js";
 import setupPG from "./pgDB.js";
+
+/*
+Sets up all the backend services:
+- Express Server to receive and handle API calls from the frontend
+- MongoDB - Company and User collections
+- PostgreSQL DB - Weight Transactions, Click Transactions and Company Stock Price data
+*/
 
 // Set up express server
 const app = express();
@@ -28,5 +36,5 @@ setupMongoDB();
 setupPG();
 
 // initialise express server
-const port = 5000;
-app.listen(port, () => console.log("Server running on port 5000"));
+const port = process.env.PORT;
+app.listen(port, () => console.log(`Server running on port ${port}`));

@@ -1,5 +1,9 @@
 import mongoose from "mongoose";
 
+/* 
+Defines the 'companies' collection in MongoDB
+*/
+
 const metricsSchema = new mongoose.Schema({
   "GHG emissions": {
     type: String,
@@ -34,6 +38,18 @@ const yearMetricSchema = new mongoose.Schema({
   },
 });
 
+const leaderboardSchema = new mongoose.Schema({
+  environmentalScore: {
+    type: Number,
+  },
+  socialScore: {
+    type: Number,
+  },
+  governanceScore: {
+    type: Number,
+  },
+});
+
 const companySchema = new mongoose.Schema({
   name: {
     type: String,
@@ -42,8 +58,17 @@ const companySchema = new mongoose.Schema({
   data: {
     type: [yearMetricSchema],
   },
+  leaderboard: {
+    type: Map,
+    of: leaderboardSchema,
+  },
+  avgEsgScores: {
+    type: Map,
+    of: Number,
+  },
 });
 
+// Create companies model in mongoDB
 const Company = mongoose.model("companies", companySchema);
 
 export default Company;

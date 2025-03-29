@@ -1,5 +1,10 @@
 import pgPool from "../models/postgresDB.js";
 
+/*
+Contains some helper functions that will be used in the clickController.js file
+*/
+
+// function to simply normalise the weights
 const normaliseWeights = (weights) => {
   const { environmentalWeight, socialWeight, governanceWeight } = weights;
   const totalWeight = Math.sqrt(
@@ -15,6 +20,7 @@ const normaliseWeights = (weights) => {
   };
 };
 
+// function to simply do a dot product of the 2 input weights
 const dotProduct = (userWeights, otherWeights) => {
   return (
     userWeights.environmentalWeight * otherWeights.environmentalWeight +
@@ -23,6 +29,7 @@ const dotProduct = (userWeights, otherWeights) => {
   );
 };
 
+// function to simply use the normaliseWeights and dotProduct functions to get the cosine similarity between the 2 input weights
 export const getCosineSimilarity = (userWeights, otherWeights) => {
   const userNormalisedWeights = normaliseWeights(userWeights);
   const otherNormalisedWeights = normaliseWeights(otherWeights);
@@ -30,6 +37,7 @@ export const getCosineSimilarity = (userWeights, otherWeights) => {
   return dotProduct(userNormalisedWeights, otherNormalisedWeights);
 };
 
+// function to execute sql query to get the 1st, 2nd and 3rd company of all users
 export const getAllUserTopCompanies = async () => {
   try {
     const data = await pgPool.query(
@@ -58,8 +66,6 @@ export const getAllUserTopCompanies = async () => {
     );
 
     const result = data.rows;
-    // console.log(result);
-
     return result;
   } catch (error) {
     console.error("Error getting the Top Companies", error);

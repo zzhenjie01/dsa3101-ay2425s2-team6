@@ -1,7 +1,7 @@
 import { UserContext } from "./context.js";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import guestProfile from "../../../backend/src/api/models/guestProfile.js";
+import guestProfile from "./guestProfile.js";
 import { LoadingSpinner } from "@/components/ui/loading-spinner.jsx";
 
 export default function UserContextProvider({ children }) {
@@ -16,12 +16,8 @@ export default function UserContextProvider({ children }) {
           signal: abortController.signal,
         });
 
-        if (response.data === "Request Cookie not found") {
-          // Handle the case where no token is found
-          setUser(guestProfile);
-        } else {
-          setUser(response.data);
-        }
+        // set user as the response's data
+        setUser(response.data.profile);
       } catch (error) {
         if (axios.isCancel(error)) {
           console.log("Request canceled.");

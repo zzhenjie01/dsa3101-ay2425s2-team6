@@ -99,7 +99,7 @@ export default function RegistrationPage() {
     <>
       <div
         className="absolute top-0 left-0 h-[calc(100vh-40px)] 
-                            w-screen bg-[url(../assets/loginbackground.jpg)]
+                            w-screen bg-[url(@/assets/loginbackground.jpg)]
                             bg-cover bg-center bg-no-repeat z-[-1]"
       />
 
@@ -123,7 +123,9 @@ export default function RegistrationPage() {
           </div>
           {/* Name Input */}
           <input
-            className={`h-[10%] ${inputErrors.name ? errorClass : inputFieldClass}`}
+            className={`h-[10%] ${
+              inputErrors.name ? errorClass : inputFieldClass
+            }`}
             placeholder="Enter Name"
             type="name"
             name="name"
@@ -146,7 +148,9 @@ export default function RegistrationPage() {
 
           {/* Email Input */}
           <input
-            className={`h-[10%] ${inputErrors.email ? errorClass : inputFieldClass}`}
+            className={`h-[10%] ${
+              inputErrors.email ? errorClass : inputFieldClass
+            }`}
             placeholder="Enter Email"
             type="email"
             name="email"
@@ -156,14 +160,14 @@ export default function RegistrationPage() {
           />
 
           {/* Password Label */}
-            <div className="h-[10%]justify-between relative">
+          <div className="h-[10%]justify-between relative">
             <label className={labelClass} htmlFor="password">
               Password
             </label>
           </div>
 
           {/* Password Input Box */}
-            <div className="relative h-[10%] w-full flex items-center">
+          <div className="relative h-[10%] w-full flex items-center">
             {/* Password Input */}
             <input
               className={`h-full ${
@@ -223,26 +227,26 @@ export default function RegistrationPage() {
           </div>
 
           <div className="h-[40%] flex flex-col items-center space-y-4 w-full mb-6">
-          {/* Register Button */}
-          <input
-            className="w-full h-[30%] bg-[rgba(105,29,4,0.3)] h-[15%] text-[20px] 
+            {/* Register Button */}
+            <input
+              className="w-full h-[30%] bg-[rgba(105,29,4,0.3)] h-[15%] text-[20px] 
                                         font-semibold text-black text-opacity-60 rounded
                                         mb-2 mt-5 cursor-pointer hover:bg-[rgba(105,29,4,0.4)]"
-            type="submit"
-            value="Create Account"
-          />
+              type="submit"
+              value="Create Account"
+            />
 
-          {/* Back to Login Button */}
-          <button
-            type="button"
-            className="h-[20%] w-full bg-white bg-opacity-60 border 
+            {/* Back to Login Button */}
+            <button
+              type="button"
+              className="h-[20%] w-full bg-white bg-opacity-60 border 
                                                     border-[rgba(0,0,0,0.3)] rounded
                                                     text-[rgba(0,0,0,0.5)] font-semibold cursor-pointer
                                                     hover:border-[rgba(0,0,0,0.8)] hover:text-[rgba(0,0,0,0.9)]"
-            onClick={handleBack}
-          >
-            Back to Login
-                      </button>
+              onClick={handleBack}
+            >
+              Back to Login
+            </button>
           </div>
         </form>
         <Outlet />

@@ -96,7 +96,7 @@ export default function LoginCredentialsDiv() {
     <>
       <div
         className="absolute top-0 left-0 h-[calc(100vh-40px)] 
-                            w-screen bg-[url(../assets/loginbackground.jpg)]
+                            w-screen bg-[url(@/assets/loginbackground.jpg)]
                             bg-cover bg-center bg-no-repeat z-[-1]"
       />
 
@@ -121,7 +121,9 @@ export default function LoginCredentialsDiv() {
 
           {/* Email Input */}
           <input
-            className={`h-[12%] ${inputErrors.email ? errorClass : inputFieldClass}`}
+            className={`h-[12%] ${
+              inputErrors.email ? errorClass : inputFieldClass
+            }`}
             placeholder="Enter Email"
             type="email"
             autoComplete="off"
@@ -141,7 +143,9 @@ export default function LoginCredentialsDiv() {
           <div className="relative h-[12%] w-full flex items-center">
             <input
               id="password"
-              className={`h-full ${inputErrors.password ? errorClass : inputFieldClass}`}
+              className={`h-full ${
+                inputErrors.password ? errorClass : inputFieldClass
+              }`}
               placeholder="Enter Password"
               type={showPassword ? "text" : "password"}
               name="password"
@@ -160,27 +164,26 @@ export default function LoginCredentialsDiv() {
             </button>
           </div>
 
-           <div className="h-[40%] flex flex-col items-center space-y-4 w-full mb-6">
-                <input
-                    className="h-[60%] w-full bg-[rgb(0,140,0,0.5)] text-white font-bold text-[22px] 
+          <div className="h-[40%] flex flex-col items-center space-y-4 w-full mb-6">
+            <input
+              className="h-[60%] w-full bg-[rgb(0,140,0,0.5)] text-white font-bold text-[22px] 
                             py-2 rounded-md mb-5 mt-5 cursor-pointer
                             hover:bg-[rgb(0,140,0,0.8)]"
-                    type={"submit"}
-                    value="Log In"
-                />
+              type={"submit"}
+              value="Log In"
+            />
 
-                <button
-                    type="button"
-                    className="w-full bg-[rgba(256,256,256,0.5)] font-semibold border-2 
+            <button
+              type="button"
+              className="w-full bg-[rgba(256,256,256,0.5)] font-semibold border-2 
                             border-gray-400 text-gray-500 rounded-md py-2 
                             cursor-pointer hover:border-gray-600 
                             hover:text-gray-800 hover:bg-[rgba(256,256,256,0.8)]"
-                    onClick={handleGuestLogin}
-                >
-                    Continue as Guest
-                </button>
+              onClick={handleGuestLogin}
+            >
+              Continue as Guest
+            </button>
           </div>
-          
 
           <div className="mt-auto">
             <a

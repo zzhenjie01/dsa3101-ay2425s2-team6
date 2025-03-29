@@ -1,10 +1,18 @@
 import User from "../models/userModel.js";
 import pgPool from "../models/postgresDB.js";
 
+/* 
+Contains all the functions for the /weights API route
+Currently using Axios and Express server for API handling
+The API routes can be found in its respective file in the /routes folder
+*/
+
 export const insertWeights = async (req, res) => {
   try {
     const user = req.body;
     const userExists = await User.findById(user._id);
+
+    // Check if the user exists in our collections. If so, we will insert the weight transaction
     if (userExists) {
       await pgPool.query(
         `
@@ -41,6 +49,8 @@ export const getUserAvgWeights = async (req, res) => {
   try {
     const user = req.query.user;
     const userExists = await User.findById(user._id);
+
+    // If the user exists in our collections, we will simply do a sql query to retrieve the user's average weights based on the latest 5 transactions
     if (userExists) {
       const data = await pgPool.query(
         `
@@ -60,8 +70,6 @@ export const getUserAvgWeights = async (req, res) => {
 
       const result = data.rows[0];
 
-      // console.log("Average Weights Returned");
-
       const output = {
         environmentalWeight: result.avg_environmental_weight,
         socialWeight: result.avg_social_weight,
@@ -70,9 +78,7 @@ export const getUserAvgWeights = async (req, res) => {
 
       return res.json(output);
     } else {
-      // User not found in db - Guest / Will just return the weights as is
-      // console.log("Current Weights Returned");
-
+      // User not found in our collections - Guest / Will just return the weights as it is
       return res.json({
         environmentalWeight: user.environmentalWeight,
         socialWeight: user.socialWeight,
@@ -88,6 +94,9 @@ export const getAllOtherAvgWeights = async (req, res) => {
   try {
     const user = req.query.user;
     const user_id = user._id || "";
+
+    // We will simply execute a sql query to get all other users' average weights based on their last 5 weights configurations
+    // This will work even for Guests, since all users in our collection will always have an id
     const data = await pgPool.query(
       `
       SELECT
@@ -109,8 +118,6 @@ export const getAllOtherAvgWeights = async (req, res) => {
     );
 
     const result = data.rows;
-    // console.log("All Users Average Weights Returned");
-    // console.log(result);
     res.json(result);
   } catch (error) {
     console.error("Error getting all average weights", error);

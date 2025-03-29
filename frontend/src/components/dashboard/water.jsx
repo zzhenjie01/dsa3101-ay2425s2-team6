@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/card";
 import { ChartContainer } from "@/components/ui/chart";
 
-import { WaterDroplet } from "./icons/waterDroplet";
+import { WaterDroplet } from "@/components/icons/waterDroplet";
 
 export function Water(props) {
   const chartConfig = {

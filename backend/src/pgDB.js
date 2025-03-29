@@ -1,5 +1,10 @@
 import pgPool from "./api/models/postgresDB.js";
 
+/*
+Creates all the necessary tables in our postgreSQL database
+We will then load the companies stock price data into our company_stock_data table using the .csv file
+*/
+
 export const setupPG = async () => {
   try {
     // Create weight_transactions table

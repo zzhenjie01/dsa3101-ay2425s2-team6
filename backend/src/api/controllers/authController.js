@@ -1,7 +1,13 @@
 import User from "../models/userModel.js";
 import { hashPassword, comparePassword, logWeights } from "./authHelper.js";
 import jwt from "jsonwebtoken";
-import guestProfile from "../models/guestProfile.js";
+import guestProfile from "../misc/guestProfile.js";
+
+/* 
+Contains all the functions for the /auth API route
+Currently using Axios and Express server for API handling
+The API routes can be found in its respective file in the /routes folder
+*/
 
 // JWT Secret
 const JWT_SECRET = process.env.JWT_KEY;
@@ -47,6 +53,7 @@ export const registerUser = async (req, res) => {
       errorFields.push("cpassword");
     }
 
+    // return if there are any errors thus far
     if (errors.length !== 0) {
       return res.json({
         error: errors,
@@ -73,8 +80,10 @@ export const registerUser = async (req, res) => {
       password: hashedPassword,
     });
 
+    // to insert a row into the PostgreSQL weights_transactions database - so that there will at least be 1 log of the user's weight
     logWeights(user);
 
+    // return user
     return res.json(user);
   } catch (error) {
     console.log(error);
@@ -100,6 +109,7 @@ export const loginUser = async (req, res) => {
       errorFields.push("password");
     }
 
+    // if there are any errors thus far
     if (errors.length !== 0) {
       return res.json({
         error: errors,
@@ -118,6 +128,8 @@ export const loginUser = async (req, res) => {
 
     // Check if passwords match with one in the database
     const match = await comparePassword(password, user.password);
+
+    // If the passwords match, we will sign the jwt with the secret and save it into the browser's cookies.
     if (match) {
       jwt.sign(
         { _id: user._id },
@@ -132,6 +144,7 @@ export const loginUser = async (req, res) => {
       );
     }
 
+    // If the passwords do not match, we will simply return an error
     if (!match) {
       return res.json({
         error: ["Password is incorrect. Please try again."],
@@ -145,12 +158,13 @@ export const loginUser = async (req, res) => {
 
 export const logoutUser = (req, res) => {
   try {
-    // Clear the token cookie
+    // Clear the jwt cookie
     res.clearCookie("token");
 
-    // Return a success message
+    // Return a success message and use guest profile
     res.json({
-      message: "User logged out successfully.",
+      message: "User logged out successfully!",
+      profile: guestProfile,
     });
   } catch (error) {
     console.error("Error logging out user:", error);
@@ -161,43 +175,62 @@ export const logoutUser = (req, res) => {
 };
 
 export const getProfile = (req, res) => {
+  // to get the jwt from the cookies
   const { token } = req.cookies;
+
   if (token) {
+    // we will verify if the jwt is legitimate
     jwt.verify(token, JWT_SECRET, {}, async (err, user) => {
       if (err) {
         if (err.name === "TokenExpiredError") {
           // Clear the expired token cookie
           res.clearCookie("token");
           res.status(401).json({
-            error: "Session expired. Please log in again.",
+            message: "Session expired. Please log in again.",
+            profile: guestProfile,
           });
         } else {
           // Handle other JWT errors (e.g., invalid token)
-          res.status(400).json({ error: "Invalid token" });
+          res
+            .status(400)
+            .json({ message: "Invalid token", profile: guestProfile });
         }
       } else {
+        // successful: we will fetch the user from our users collection and return the user's profile if it exists
         const fetchedUser = await User.findById(user._id);
         if (fetchedUser) {
-          res.json(fetchedUser);
+          res.json({
+            message: "User successfully found!",
+            profile: fetchedUser,
+          });
         } else {
-          res.json(guestProfile);
+          res.json({
+            message: "User not found.",
+            profile: guestProfile,
+          });
         }
       }
     });
   } else {
     // Return the guest profile if no token is found
-    res.json(guestProfile);
+    res.json({
+      message: "No token found.",
+      profile: guestProfile,
+    });
   }
 };
 
 export const updateProfile = async (req, res) => {
   try {
+    // get the user data and check if it exists in our database
     const user = req.body;
     const userExists = await User.findById(user._id);
     if (userExists) {
+      // Update the user if it exists
       await User.replaceOne({ _id: user._id }, user);
       res.json("User Successfully Updated.");
     } else {
+      // Else, it is most likely a guest profile, and we will simply return a message
       res.json("Guest User Detected.");
     }
   } catch (error) {

@@ -251,6 +251,7 @@ This section will outline the necessary steps and pre-requisites to launch the W
 - `POSTGRES_USER`: Username of user accessing our PostgreSQL service using Docker.
 - `POSTGRES_PASSWORD`: Password of user accessing our PostgreSQL service using Docker.
 - `JWT_KEY`: A secret key that will be used to encrypt the frontend's user's session token. Can be any string.
+- `PORT`: Port that our Backend server will use
 
   Example of environmental variables:
 
@@ -260,6 +261,7 @@ This section will outline the necessary steps and pre-requisites to launch the W
   POSTGRES_USER = postgres
   POSTGRES_PASSWORD = root
   JWT_KEY = "testing"
+  PORT=5000
 ```
 
 ![Backend Environmental Variables](./attachments/Backend_Env_Var.png)
@@ -330,6 +332,8 @@ This section will outline the necessary steps and pre-requisites to launch the W
 > After installing, there may be some issues regarding the compatibility of the various packages.
 > Usually, the conflicts are minor, and can be solved by running the command `npm audit fix`.
 > This will be shown in the verbose after running `npm install`, so you may simply look at the output and follow up if necessary.
+> An example is shown below:
+> ![Install Packages Verbose](attachments/Backend_Install_Packages.png)
 
 6. **Running of Backend Server**
    While we have set up our docker containers, we also have a backend server that we will use for communication between the frontend and the backend. Hence, to simplify the process, we will simply need to run the following command in the terminal:
@@ -360,7 +364,7 @@ This command will run the `start` script, which runs both the `docker compose up
 > [!NOTE]
 > If there are any dependency issues, you can follow what the verbose output suggests.
 
-1. **Launching of Frontend**
+8. **Launching of Frontend**
    Now that all the necessary packages are installed, we can now launch our frontend using the following command:
 
    ```shell
@@ -369,7 +373,7 @@ This command will run the `start` script, which runs both the `docker compose up
 
    This will initalise our frontend application at the `http://localhost:5173/` URL. You should now be able to view the Web Application on your web browser!
 
-1. **Closing of Web Application**
+9. **Closing of Web Application**
    Once you are done with the Web Application, you should shut down the connected backend and frontend services.
    Backend: `Ctrl+C`, followed by `Y` to exit, then run `npm run end` to shutdown the running docker containers (script will do a `docker compose down -v`)
    Frontend: `Ctrl+C`, followed by `Y` to exit

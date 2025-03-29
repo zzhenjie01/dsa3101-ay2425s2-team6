@@ -1,10 +1,6 @@
-// import "./governanceCard.css";
-import { useContext, useState } from "react";
-// import { ChatBotContext } from "../context/contexts";
-import { getLastYear } from "./helpers/getLastYear";
+import { getLastYear } from "@/components/helpers/getLastYear";
 import { BoardGender } from "./boardGender";
 import { Corruption } from "./corruption";
-import { convertPercentage } from "./helpers/percentage";
 
 export default function GovernanceCard(props) {
   //Get board gender data for the latest year, separated into male and female

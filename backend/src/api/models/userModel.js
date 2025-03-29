@@ -1,12 +1,5 @@
 import mongoose from "mongoose";
 
-/*
-Connect to users database with following credentials
-user: root
-password: root.
-need to move on .env file
-*/
-
 // define userSchema
 const userSchema = new mongoose.Schema({
   name: {
@@ -45,7 +38,7 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-// Create User model
+// Create User model in mongoDB
 const User = mongoose.model("users", userSchema);
 
 export default User;

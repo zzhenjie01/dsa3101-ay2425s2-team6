@@ -1,9 +1,8 @@
-import "./leaderboardPage.css";
 import { useState, useEffect, useContext } from "react";
 import { UserContext } from "@/context/context";
 import axios from "axios";
-import LeaderboardRow from "@/components/leaderboardRow";
-import UserRecommendations from "@/components/userRecommendations";
+import LeaderboardRow from "@/components/leaderboard/leaderboardRow";
+import UserRecommendations from "@/components/leaderboard/UserRecommendations.jsx";
 import { parseJsonValues } from "@/components/helpers/parseJson";
 import { Suspense, lazy } from "react";
 
@@ -21,12 +20,12 @@ export default function LeaderboardPage() {
   //   },
   const [leaderboardData, setLeaderboardData] = useState(null);
   const [isLeaderboardDataReady, setIsLeaderboardDataReady] = useState(false);
+
   //get all company's data
   const fetchCompanyData = async () => {
     try {
       const response = await axios.get("/company/getAllCompanyData");
       setCompanyData(response.data); // Store API data in state
-      
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -39,7 +38,7 @@ export default function LeaderboardPage() {
   //get leaderboard data of latest year to display in the table
   function extractLatestLeaderboard(companyData) {
     if (companyData === null) return;
-    console.log(companyData);
+
     // Identify the latest year available across all companies
     const latestYear = Math.max(
       ...companyData
@@ -180,14 +179,14 @@ export default function LeaderboardPage() {
         <h1 className="text-3xl pb-8">Companies you may be interested in</h1>
         {/* Suspense will show the fallback until UserRecommendations is loaded */}
         <Suspense fallback={<p>Loading recommendations...</p>}>
-            {/*<UserRecommendations companies={companyTopRecommendations} cdata={leaderboardData} />*/}
-            {leaderboardData && companyTopRecommendations && (
+          {/*<UserRecommendations companies={companyTopRecommendations} cdata={leaderboardData} />*/}
+          {leaderboardData && companyTopRecommendations && (
             <UserRecommendations
-                companies={companyTopRecommendations}
-                cdata={leaderboardData}
-                historicalData={companyData}
+              companies={companyTopRecommendations}
+              cdata={leaderboardData}
+              historicalData={companyData}
             />
-            )}
+          )}
         </Suspense>
       </div>
     </div>

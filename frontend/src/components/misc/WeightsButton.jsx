@@ -1,5 +1,3 @@
-// "use client";
-
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "@/context/context";
 import { Button } from "@/components/ui/button";

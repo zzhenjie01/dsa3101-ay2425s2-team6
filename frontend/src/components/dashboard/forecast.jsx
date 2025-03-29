@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 import {
   Card,
@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/select";
 
 export function Forecast(props) {
+  // Defining chart configurations: labels and colours for each keyType
   const chartConfig = {
     historical: {
       label: "Past",
@@ -34,6 +35,10 @@ export function Forecast(props) {
     forecasted: {
       label: "Forecast",
       color: "#60a5fa",
+    },
+    avgesg: {
+      label: "Average ESG Score",
+      color: "#FF8000",
     },
   };
 
@@ -61,7 +66,7 @@ export function Forecast(props) {
 
   //combine both existing and forecast data into one object in the format
   // { date: "???", "existing data": ??? , "forecasted data": ??? },
-  const combineData = (forecast) => {
+  const combineData = (forecast, avgEsgScores) => {
     const {
       "Existing Data": existingData = [],
       "Forecasted Data": forecastedData = [],
@@ -86,13 +91,53 @@ export function Forecast(props) {
       combinedMap.get(date)["forecasted"] = value;
     });
 
+    // to get average esg scores data
+    const transformedEsgData = Object.entries(avgEsgScores).map(
+      ([year, value]) => ({
+        date: `${year}-01-01T16:00:00.000Z`,
+        avgesg: value,
+      })
+    );
+
+    // to add interpolated points for avgesg score - a few data points are not enough for area graph to plot properly
+    const interpolatedPoints = {};
+    const dayTime = 60 * 60 * 24 * 1000;
+    for (let i = 0; i < transformedEsgData.length - 1; i++) {
+      const current = transformedEsgData[i];
+      const next = transformedEsgData[i + 1];
+
+      // get respective date and value intervals
+      const startDate = new Date(current.date);
+      const endDate = new Date(next.date);
+      const daysDiff = (endDate - startDate) / dayTime;
+      const valueDiff = next.avgesg - current.avgesg;
+      const valueInterval = valueDiff / daysDiff;
+
+      for (let i = 0; i < daysDiff; i++) {
+        // for each day, add the date and value into the interpolatedPoints
+        const interpolatedDate = new Date(startDate.getTime() + i * dayTime);
+        const interpolatedValue = current.avgesg + i * valueInterval;
+        interpolatedPoints[interpolatedDate.toISOString()] =
+          Number(interpolatedValue);
+      }
+    }
+
+    // We will only add the values where the dates are already in the existing data - to match same x-axis
+    combinedMap.forEach((key, value) => {
+      const interpolatedPoint = interpolatedPoints[value];
+      combinedMap.get(value)["avgesg"] = interpolatedPoint;
+    });
+
     // Convert the map values to an array and sort by date
-    return Array.from(combinedMap.values()).sort(
+    const outputData = Array.from(combinedMap.values()).sort(
       (a, b) => new Date(a.date) - new Date(b.date)
     );
+
+    return outputData;
   };
 
-  const chartData = combineData(props.data);
+  // to get the chart data by combining the stock prices
+  const chartData = combineData(props.data, props.avgEsgScores);
   const maxExistingDate = getMaxDate(props.data["Existing Data"]);
 
   //Format minDate and maxDate to MMM YYYY
@@ -108,7 +153,7 @@ export function Forecast(props) {
   //timeRange state for filtering existing data by last x days
   const [timeRange, setTimeRange] = React.useState("99999d");
 
-  const filteredData = chartData.filter((item) => {
+  let filteredData = chartData.filter((item) => {
     const date = new Date(item.date);
     const referenceDate = new Date(maxExistingDate);
     let daysToSubtract = 99999;
@@ -121,6 +166,8 @@ export function Forecast(props) {
     startDate.setDate(startDate.getDate() - daysToSubtract);
     return date >= startDate;
   });
+
+  // console.log(filteredData);
 
   return (
     <section className="py-32 ">
@@ -196,6 +243,18 @@ export function Forecast(props) {
                       stopOpacity={0.1}
                     />
                   </linearGradient>
+                  <linearGradient id="fillAvgEsg" x1="0" y1="0" x2="0" y2="1">
+                    <stop
+                      offset="5%"
+                      stopColor="var(--color-avgesg)"
+                      stopOpacity={0.8}
+                    />
+                    <stop
+                      offset="95%"
+                      stopColor="var(--color-avgesg)"
+                      stopOpacity={0.1}
+                    />
+                  </linearGradient>
                 </defs>
                 <CartesianGrid vertical={false} />
                 <XAxis
@@ -212,6 +271,26 @@ export function Forecast(props) {
                       month: "short",
                       year: "numeric",
                     });
+                  }}
+                />
+                <YAxis
+                  yAxisId="left-axis"
+                  orientation="left"
+                  type="number"
+                  label={{
+                    value: "Stock Price",
+                    angle: -90,
+                    position: "insideLeft",
+                  }}
+                />
+                <YAxis
+                  yAxisId="right-axis"
+                  orientation="right"
+                  type="number"
+                  label={{
+                    value: "ESG Score",
+                    angle: 90,
+                    position: "insideRight",
                   }}
                 />
                 <ChartTooltip
@@ -240,6 +319,7 @@ export function Forecast(props) {
                   fill="url(#fillHistorical)"
                   stroke="var(--color-historical)"
                   stackId="a"
+                  yAxisId="left-axis"
                 />
                 <Area
                   dataKey="forecasted"
@@ -247,6 +327,15 @@ export function Forecast(props) {
                   fill="url(#fillForecasted)"
                   stroke="var(--color-forecasted)"
                   stackId="a"
+                  yAxisId="left-axis"
+                />
+                <Area
+                  dataKey="avgesg"
+                  type="natural"
+                  fill="url(#fillAvgEsg)"
+                  stroke="var(--color-avgesg)"
+                  stackId="a"
+                  yAxisId="right-axis"
                 />
                 <ChartLegend content={<ChartLegendContent />} />
               </AreaChart>

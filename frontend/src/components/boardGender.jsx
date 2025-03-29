@@ -29,22 +29,26 @@ export function BoardGender(props) {
     },
   };
 
+  //chartData consists of board gender data in the latest year with 2 rows (1 for male and 1 for female)
+  //Each row is in the format {gender:"???", number:???, fill:"???"}
   //Add fill key and value for styling
   const chartData = props.data.data.map((item) => ({
     ...item,
     fill: `var(--color-${item.gender})`, // Assign pie chart colors depending on male or female
   }));
 
-  //Calculate absolute difference between company ratio and average ratio to 1dp
-  const ratio = +(props.data.company_ratio - props.data.average_ratio).toFixed(
+  //Calculate difference between company ratio and average ratio to 1dp
+  const ratio = +(props.data.average_ratio - props.data.company_ratio).toFixed(
     2
   );
 
   return (
-    <Card className="flex flex-col">
+    <Card className="flex flex-col h-full">
       <CardHeader className="items-center pb-0">
         <CardTitle>Board Diversity Ratio</CardTitle>
-        <CardDescription>{props.data.year}</CardDescription>
+        <CardDescription>
+          {props.data.company}, {props.data.year}
+        </CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
@@ -67,7 +71,7 @@ export function BoardGender(props) {
       <CardFooter className="flex-col gap-2 text-sm">
         {props.data.company !== "Industry Average" && (
           <div className="flex items-center gap-2 font-medium leading-none">
-            {Math.abs(ratio) * 100}% {ratio >= 0 ? "better" : "worse"} than the
+            {Math.abs(ratio)}% {ratio >= 0 ? "better" : "worse"} than the
             industry average{" "}
             {ratio >= 0 ? (
               <TrendingUp className="h-4 w-4" />

@@ -1,14 +1,13 @@
 // import "./governanceCard.css";
 import { useContext, useState } from "react";
 // import { ChatBotContext } from "../context/contexts";
-import { getLastYear, getLastYearData } from "./helpers/getLastYear";
+import { getLastYear } from "./helpers/getLastYear";
 import { BoardGender } from "./boardGender";
+import { Corruption } from "./corruption";
+import { convertPercentage } from "./helpers/percentage";
 
 export default function GovernanceCard(props) {
-  //Board gender data will have:
-  // company, name,
-  // data array of size 2, male and female, which comprises of gender, number (normalised to 100),
-  // company ratio, average ratio (no. of female / no. of male)
+  //Get board gender data for the latest year, separated into male and female
   const getBoardGenderData = (compdata, avgdata) => {
     const lastYear = getLastYear(compdata);
     return {
@@ -17,23 +16,37 @@ export default function GovernanceCard(props) {
       data: [
         {
           gender: "male",
-          number:
-            Math.round(
-              (compdata[lastYear]?.male * 100) /
-                (compdata[lastYear]?.male + compdata[lastYear]?.female)
-            ) || 0,
+          number: compdata[lastYear] || 0,
         },
         {
           gender: "female",
-          number:
-            Math.round(
-              (compdata[lastYear]?.female * 100) /
-                (compdata[lastYear]?.male + compdata[lastYear]?.female)
-            ) || 0,
+          number: 100 - compdata[lastYear] || 0, //assume female to be the complementary percentage of male
         },
       ],
-      company_ratio: compdata[lastYear].female / compdata[lastYear].male || 0,
-      average_ratio: avgdata[lastYear].female / avgdata[lastYear].male || 0,
+      company_ratio: compdata[lastYear] || 0,
+      average_ratio: avgdata[lastYear] || 0,
+    };
+  };
+
+  //Convert company's corruption data to an array with each row containing {year:???, cases:???}
+  const transformCorruptionData = (data) => {
+    return Object.entries(data)
+      .map(([year, cases]) => ({
+        year: Number(year), // Convert year to number
+        cases,
+      }))
+      .sort((a, b) => a.year - b.year); //sort by ascending year
+  };
+
+  //Get the latest year's corruption data which includes industry average data for comparison
+  const getLastYearCorruptionData = (data, avgdata) => {
+    // Get the latest year
+    const lastYear = getLastYear(data);
+
+    return {
+      year: lastYear,
+      cases: data[lastYear], // Get cases for the latest year
+      avg: avgdata[lastYear], // Get the average for the latest year
     };
   };
 
@@ -46,8 +59,22 @@ export default function GovernanceCard(props) {
             {
               <BoardGender
                 data={getBoardGenderData(
-                  props.data.board_gender,
-                  props.avgdata.board_gender
+                  props.data["Board of Director gender ratio"],
+                  props.avgdata["Board of Director gender ratio"]
+                )}
+              />
+            }
+          </div>
+          <div>
+            {
+              <Corruption
+                data={transformCorruptionData(
+                  props.data["Number of Corruption cases"]
+                )}
+                name={props.name}
+                lastyeardata={getLastYearCorruptionData(
+                  props.data["Number of Corruption cases"],
+                  props.avgdata["Number of Corruption cases"]
                 )}
               />
             }

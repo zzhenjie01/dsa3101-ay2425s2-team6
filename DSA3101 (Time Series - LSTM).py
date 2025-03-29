@@ -93,7 +93,7 @@ def get_predicted_stock_prices(company_csv_file, working_directory, company_name
     model.add(Dropout(0.2))
     model.add(Dense(units = 1)) #output layer that will predict the next day's stock price
     model.compile(optimizer = "adam", loss = "mean_squared_error") #will compile the model
-    number_of_epochs = 5
+    number_of_epochs = 50
     batch_sized = 35
     model.fit(X_train, y_train, epochs = number_of_epochs, batch_size = batch_sized, validation_data = (X_test, y_test))
 

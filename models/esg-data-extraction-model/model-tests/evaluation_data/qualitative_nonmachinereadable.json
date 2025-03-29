@@ -1,0 +1,18 @@
+[
+    {
+        "question" : "What targets have been achieved based on Santander US's commitments for 2025?",
+        "ground_truth" : "Reduction in water consumption and reduction in paper consumption"
+    },
+    {
+        "question" : "What are core carbon market principles according to JPMorgan?",
+        "ground_truth" : "Real, Independently Verified, Measurable, Leakage Avoidance, Additional, Durability(Permanence), Unique & Traceable, Climate Equity"
+    },
+    {
+        "question" : "List some examples of services on Thailand’s Open Digital Platform for each of the Bank’s main target groups.",
+        "ground_truth" : "For payment: National E-payment, Biznow, Pointpay. For mass transit: Krungthai payment gateway. For government agencies: SBM Wallet, Savings bonds through SBM Wallet, One Baht Bond . For educational institutions: Smart University Application"
+    },
+    {
+        "question" : "Under Woori's ‘Fair Debt Collection Policy’, what are the steps for proper debt collection procedures?",
+        "ground_truth" : "Step 1: Sends mail regarding debt repayment guidance. Notifies disadvantages in case of default. Step 2: Notifies debt repayment via phone and text messages. Notifies disadvantages in case of default. Step 3: Advance notice on 'visit collection’. Visits the location for debt repayment guidance, etc. Step 4: Notifies legal action regarding the forced collection of debt amounts. Debt collection through forced execution"
+    }
+]

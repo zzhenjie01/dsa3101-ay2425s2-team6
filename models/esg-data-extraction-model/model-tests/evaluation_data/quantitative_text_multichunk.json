@@ -1,0 +1,18 @@
+[
+    {
+        "question" : "In 2023, how did DBS’s Steel sector emissions intensity compare to 2022, and what would the financed emissions have been if upstream mining companies were included in the original scope?",
+        "ground_truth" : "In 2023, our emissions intensity result for the Steel sector improved to 1.95 kgCO2e/kg steel, compared to 1.99 kgCO2e/kg steel in the previous year. If we had retained the original scope to include the upstream mining companies, our portfolio's financed emissions would have been 1.97 kgCO2"
+    },
+    {
+        "question" : "How many employee relations cases were reported in ANZ this year, and what were the outcomes following the investigations of these cases?",
+        "ground_truth" : "There were 1,400 employee relations cases involving alleged breaches of the Code this year, with 488 resulting in a formal consequence or the employee leaving ANZ (down from 501 in 2023). The outcomes following investigations included 306 warnings, 88 terminations and 94 employees otherwise leaving ANZ.."
+    },
+    {
+        "question" : "How much fuel consumption did BOQ Group avoid through the use of electric and hybrid vehicles in their fleet, and what was the impact of their digital electronic signature program on paper conservation and greenhouse gas emissions?",
+        "ground_truth" : "Through preferencing zero and low emissions vehicles we avoided the consumption of more than 10,000 litres of fuel this year and the program has resulted in a 270 per cent increase in the utilisation of digital signatures for equipment finance, mortgage refinance, and corporate operations, and is estimated to result in the conservation of 2.1 million pages of paper and the reduction of over 1,400 tonnes of greenhouse gas emissions "
+    },
+    {
+        "question" : "What was the sample size used in the joint study conducted by Mastercard, Boston Consulting Group (BCG), and the bank in 2023 to analyze the consumer experience with financial services, and what are the quantitative key findings from the study?",
+        "ground_truth" : "By conducting a granular analysis of aggregated and pseudonymized transactional and behavioral data from over 3.6 million customers between 2019 and 2021, along with surveys involving 2,000 of our customers and Brazilian consumers, we were able to evaluate and examine the process of financial inclusion. When starting their trajectory in the Access stage, about 40% of customers migrate to Usage within 12 months, and 60% within 24 months."
+    }
+]

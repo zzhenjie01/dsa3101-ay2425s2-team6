@@ -1,0 +1,18 @@
+[
+    {
+        "question" : "What is Santander Co2 emission per employee in 2023?",
+        "ground_truth" : "1.4 tCO2e."
+    },
+    {
+        "question" : "According to JPMorgan's ESG report, what portion of the total spending on multiple criteria transactions was allocated to sustainability bonds?",
+        "ground_truth" : "$12B."
+    },
+    {
+        "question" : "What are the UN Sustainable Development Goals (SDGs) associated with ANZ’s savings program in Fiji and Vanuatu?",
+        "ground_truth" : "1,10,17"
+    },
+    {
+        "question" : "How many meals has DBS subsidized through its PayLah! weekly hawker meal initiative?",
+        "ground_truth" : "DBS has subsidised 4.67 million meals through DBS PayLah! weekly hawker meal initiative"
+    }
+]

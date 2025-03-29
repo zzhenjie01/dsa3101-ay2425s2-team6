@@ -5,10 +5,16 @@ import GovernanceCard from "@/components/dashboard/governanceCard";
 import { Forecast } from "@/components/dashboard/forecast";
 import { UserContext } from "@/context/context";
 import axios from "axios";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
 export default function DashboardPage() {
-  const { user } = useContext(UserContext);
+  const { user } = useContext(UserContext); // Context of our users
 
+  const [currCompanyDetails, setCurrCompanyDetails] = useState(null); // State for the company details currently selected
+  const [companyData, setCompanyData] = useState([]); // State for all companies details
+  const [loading, setLoading] = useState(false); // State of fetching data
+
+  // Function to transform our data after fetching from API
   const transformData = (compdata) => {
     if (!compdata || !Array.isArray(compdata)) return [];
 
@@ -74,26 +80,28 @@ export default function DashboardPage() {
       .filter(Boolean); // Remove null entries (skipped companies)
   };
 
-  // State for all companies details
-  const [companyData, setCompanyData] = useState([]); // Start as null
-
-  // Function to fetch data from API
-  const fetchCompanyData = async () => {
-    try {
-      const response = await axios.get("/company/getAllCompanyData");
-      setCompanyData(transformData(response.data)); // Store API data in state
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
+  // To pull the company data using the API
   useEffect(() => {
+    const fetchCompanyData = async () => {
+      try {
+        const response = await axios.get("/company/getAllCompanyData");
+        setCompanyData(transformData(response.data)); // Store API data in state
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(true);
+      }
+    };
+
     fetchCompanyData();
   }, []);
 
-  // State for the company details currently selected
-  const [currCompanyDetails, setCurrCompanyDetails] = useState(null);
+  // If still fetching data, will return the loading component
+  if (!loading) {
+    return <LoadingSpinner />;
+  }
 
+  // Get the Industry Average details
   const avgDetails = companyData.find(
     (comp) => comp.name === "Industry Average"
   );
@@ -115,6 +123,7 @@ export default function DashboardPage() {
     }
   }
 
+  // Returns the dashboard elements
   return (
     <>
       <div className="flex-grow pt-30 text-center">

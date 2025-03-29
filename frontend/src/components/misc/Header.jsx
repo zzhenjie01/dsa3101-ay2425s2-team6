@@ -58,11 +58,12 @@ export default function Header() {
       >
         <NavBtn />
         <SidePanel buttonLst={sidePanelButtonsLst} />
-        <div className="relative">
-          <WelcomeMsg />
-          <WeightsButton />
-          {!user || user.name === "Guest" ? <LoginBtn /> : <LogoutBtn />}
-        </div>
+        <WeightsButton />
+        <h1 class="text-3xl mb-2 text-black p-4 text-center">
+          ESG Insights Platform
+        </h1>
+        <WelcomeMsg />
+        {!user || user.name === "Guest" ? <LoginBtn /> : <LogoutBtn />}
       </SidePanelContext.Provider>
     </header>
   );

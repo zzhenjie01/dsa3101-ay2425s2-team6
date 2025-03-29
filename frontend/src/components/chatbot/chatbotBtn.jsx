@@ -14,6 +14,7 @@ export default function ChatbotToggleButton() {
       <button
         className="
                   fixed bottom-11 right-0
+                  bg-white
                   w-27/100
                   h-10
                   border-black border-2

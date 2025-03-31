@@ -381,6 +381,11 @@ This command will run the `start` script, which runs both the `docker compose up
 > [!NOTE]
 > The scripts can be found in the `package.json` file in the `/backend` folder.
 
+> [!IMPORTANT]
+> Shutting down your servers after you are done with the application is important.
+> Failure to do so can cause issues later down the road, such as errors during the set-up of the backend server.
+> An example: https://stackoverflow.com/questions/54922433/postgresql-fatal-the-database-system-is-starting-up-windows-10
+
 ## 🧊 Contributing
 
 All contributions are to be merged to main via pull request.

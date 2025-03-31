@@ -82,6 +82,8 @@ export const getUserRecommendations = async (req, res) => {
         entry.first_company,
         entry.second_company,
         entry.third_company,
+        entry.fourth_company,
+        entry.fifth_company,
       ];
       return acc;
     }, {});
@@ -95,7 +97,7 @@ export const getUserRecommendations = async (req, res) => {
       // we assign a linear score to each company based on their ranking
       companies.forEach((company, position) => {
         if (!company) return; // if company is null, return
-        const weight = [3, 2, 1][position] * reciprocalRank; // weight is determined by the company's rank of the user, and the user's similarity rank of our current user
+        const weight = [5, 4, 3, 2, 1][position] * reciprocalRank; // weight is determined by the company's rank of the user, and the user's similarity rank of our current user
         acc[company] = (acc[company] || 0) + weight;
       });
 

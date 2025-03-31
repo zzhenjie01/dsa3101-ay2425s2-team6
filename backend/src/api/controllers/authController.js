@@ -62,7 +62,7 @@ export const registerUser = async (req, res) => {
     }
 
     // Check if email is already present in our database
-    const emailExists = await User.findOne({ email: email });
+    const emailExists = await User.findOne({ email: email.toLowerCase() });
     if (emailExists) {
       return res.json({
         error: ["Email is already taken."],

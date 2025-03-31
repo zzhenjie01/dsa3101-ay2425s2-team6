@@ -1,0 +1,5 @@
+**/*.pdf
+**/*.json
+**/*.csv
+**/*.env
+**/__pycache__/

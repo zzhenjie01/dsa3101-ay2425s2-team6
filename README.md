@@ -19,6 +19,12 @@ This project aims to design an automated ESG data extraction and performance eva
 3) LSTM stocks price forecasting model (`models/`)
 
 ## Brief instructions to use the web app fully
+This assumes that you have all necessary
+- Softwares (Spark, Ollama, Docker Desktop, Node etc.)
+- Programming languages (Java, Python etc.)
+- .env files created in the necessary locations (`data-pipelines/`, `docker/`, `'backend/`, `models/esg-data-extraction-model/model-code/`, `models/esg-data-extraction-model/model-test/`, `models/stock-price-forecast-model/`)
+- libraries (Python etc.)
+
 1) Head over to `docker/` and run the following command to start all the necessary docker containers using the following command:
 ```
 docker compose up -d
@@ -57,6 +63,16 @@ and
 npm run dev
 ```
 to start in development mode
+
+## Ports used (do not clash port as they are mainly TCP in nature)
+5678: postgreSQL
+9200: ElasticSearch
+27017: MongoDB
+9090: Spark Image UI
+7077: Spark master in spark iamge
+5173: Web app (client side)
+5000: Web app (server side)
+8000: ESG extraction model
 
 ## 🧊 Contributing
 

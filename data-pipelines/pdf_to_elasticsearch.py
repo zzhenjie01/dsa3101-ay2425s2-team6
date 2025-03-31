@@ -45,7 +45,7 @@ except Exception as e:
         status_code=500, detail=f"Failed to connect to Elasticsearch: {str(e)}"
     )
 
-# esg_gdrive_to_local(SERVICE_ACCOUNT_FILE, SERVICE_ACCOUNT_SCOPES, ESG_REPORTS_PDF_FOLDER)
-# esg_pdf_to_json(ESG_REPORTS_PDF_FOLDER, ESG_REPORTS_JSON_FOLDER)
-# esg_json_to_csv(ESG_REPORTS_JSON_FOLDER, ESG_REPORTS_CSV_FOLDER, SPARK)
+esg_gdrive_to_local(SERVICE_ACCOUNT_FILE, SERVICE_ACCOUNT_SCOPES, ESG_REPORTS_PDF_FOLDER)
+esg_pdf_to_json(ESG_REPORTS_PDF_FOLDER, ESG_REPORTS_JSON_FOLDER)
+esg_json_to_csv(ESG_REPORTS_JSON_FOLDER, ESG_REPORTS_CSV_FOLDER, SPARK)
 esg_csv_to_elasticsearch(ESG_REPORTS_CSV_FOLDER, ES, ES_INDEX_NAME, EMBEDDING_MODEL)

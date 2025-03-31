@@ -1,0 +1,14 @@
+fastapi==0.115.12
+uvicorn==0.34.0
+langchain-core==0.3.49
+langchain-ollama==0.2.3
+elasticsearch==8.17.2
+sentence-transformers==3.4.1
+tensorflow==2.19.0
+scikit-learn==1.6.1
+python-dotenv==1.0.1
+deepeval==2.6.5
+requests==2.32.3
+pandas==2.2.3
+numpy==1.26.4
+pydantic==2.10.6

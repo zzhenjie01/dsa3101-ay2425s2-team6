@@ -34,11 +34,11 @@ This command activates all containers required to run the app
 
 2) Create .env file in `model_code/` with the following sample environment variables
 ```
-ES_HOST='http://localhost:9200/'
-ES_INDEX_NAME='esg_reports'
+`ES_HOST`='http://localhost:9200/'
+`ES_INDEX_NAME`='esg_reports'
 ```
-ES_HOST is the URL in which ElasticSearch containing ESG report chunks is hosted.
-ESG_INDEX_NAME is the index in which ESG report chunks are stored in.
+`ES_HOST` is the URL in which ElasticSearch containing ESG report chunks is hosted.
+`ESG_INDEX_NAME` is the index in which ESG report chunks are stored in.
 
 Uploading can be done using `pdf_to_elasticsearch.py` if not already done so.
 Refer to README.md in `data-pipelines/` to find out more.
@@ -94,11 +94,15 @@ ESG_MODEL_METRIC_EXTRACTION_URL='http://localhost:8000/esg-data-extraction-model
 TC_FOLDER_DIR=evaluation_data/
 TC_EVAL_RESULT_DIR=evaluation_results/
 ```
+`ESG_MODEL_METRIC_EXTRACTION_URL`: QnA API endpoint
+`TC_FOLDER_DIR`: to store testcases in .json format
+`TC_EVAL_RESULT_DIR`: to store validation result in .csv format after evaluation
+
 2) Stay in `model-tests/` and set ollama model for deepeval
 ```
-deepeval set-ollama deepseek-r1:1.8b
+deepeval set-ollama deepseek-r1:8b
 ```
-Ensure Ollama is installed and use any reasoning model that you prefer (in this case deepseek-r1:1.8b)
+Ensure Ollama is installed and use any reasoning model that you prefer (in this case deepseek-r1:8b)
 
 3) Run `evaluate_testcases.py`
 ```

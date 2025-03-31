@@ -4,6 +4,11 @@ import requests
 import json
 import pandas as pd
 
+'''
+Given a question, ground truth,
+post the question to the model and evaluate the Faithfulness
+and context precision between ground truth and model response
+'''
 def evaluate_testcase(esg_model_qna_url, question, ground_truth, eval_metric, type_of_tc):
     evaluator_dict = {
         'faithfulness' : FaithfulnessMetric(),
@@ -35,6 +40,10 @@ def evaluate_testcase(esg_model_qna_url, question, ground_truth, eval_metric, ty
             question, response_dict['retrieved_context'], response_dict['llm_response'], ground_truth, 
             eval_score, eval_reason]
 
+'''
+Code runs all test cases from all .json file found inside
+TC_FOLDER_DIR and saves the result as a Pandas DF.
+'''
 def process_file(filename, TC_FOLDER_DIR, ESG_MODEL_METRIC_EXTRACTION_URL):
     results = []
     with open(f'{TC_FOLDER_DIR}{filename}') as json_file:

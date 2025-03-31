@@ -2,6 +2,7 @@ FROM python:3.10-bullseye AS spark-base
 
 ARG SPARK_VERSION=3.5.4
 
+# Install java, python
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
       sudo \
@@ -22,15 +23,18 @@ ENV SPARK_HOME="/opt/spark"
 RUN mkdir -p $SPARK_HOME
 WORKDIR $SPARK_HOME
 
+# Installing Spark
 RUN curl -L "https://dlcdn.apache.org/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop3.tgz" -o spark-${SPARK_VERSION}-bin-hadoop3.tgz \
  && tar xvzf spark-${SPARK_VERSION}-bin-hadoop3.tgz --directory /opt/spark --strip-components 1 \
  && rm -rf spark-${SPARK_VERSION}-bin-hadoop3.tgz
 
 FROM spark-base AS pyspark
 
+# Installing spark dependencies
 COPY requirements.txt .
 RUN pip3 install -r requirements.txt
 
+# ENV config for spark to work
 ENV SPARK_HOME="/opt/spark"
 ENV JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64/"
 ENV PATH="/usr/lib/jvm/java-11-openjdk-amd64/bin:/opt/spark/sbin:/opt/spark/bin:${PATH}"

@@ -8,6 +8,7 @@ echo "SPARK_WORKLOAD: $SPARK_WORKLOAD"
 echo "SPARK_WORKER_CORES: $SPARK_WORKER_CORES"
 echo "SPARK_WORKER_MEMORY: $SPARK_WORKER_MEMORY"
 
+# Entrypoints depending on whether we use master, worker or history as an argument
 if [ "$SPARK_WORKLOAD" == "master" ];
 then
   start-master.sh -p 7077

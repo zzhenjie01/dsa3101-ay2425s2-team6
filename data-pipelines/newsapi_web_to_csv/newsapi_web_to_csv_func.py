@@ -7,6 +7,7 @@ import pandas as pd
 import os
 import requests
 
+# for a given bank name and time period, obtain all URLs to be scraped given by NewsAPI
 def urls_given_by_newsapi_by_bankname(newsapi, start_date, end_date, bank_name):
     query = f'{bank_name} AND esg' # both bank_name and esg must appear in the article
     all_URLs = []
@@ -27,6 +28,7 @@ def urls_given_by_newsapi_by_bankname(newsapi, start_date, end_date, bank_name):
             all_sources.append(article["source"])
     return list(zip(all_URLs, all_titles, all_sources))
 
+# Given a bank name and time period, scrape websites provided by NewsAPI and upload as CSV
 def bs4_scrape_by_bankname_into_csv(newsapi, start_date, end_date, 
                                     bank_name, external_esg_data_csv_folder_dir):
     # get full text content from scraped news articles URL

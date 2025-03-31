@@ -9,7 +9,7 @@ from elasticsearch import helpers
 
 #%%
 # ================ Define Elasticsearch index mappings ================
-# For `tags` we use `text`` data type insted of 'keyword' data type
+# For `tags` we use `text`` data type instead of 'keyword' data type
 # because according to official Elasticsearch documentation,
 # 'keyword' datatype is used when you require and exact value search like zip codes etc
 # But in our case, our tags are a string of keywords separated by commas.
@@ -39,7 +39,9 @@ def create_index(es, index_name, index_mapping):
         print(f"Index '{index_name}' created successfully!")
     except Exception as e:
         print(f"Error creating index '{index_name}': {str(e)}")
-
+#%%
+# =============== Function uploads 1 CSV file into ElasticSearch ===============
+# 1 ESG report at a time
 def upload_one_csv_to_elasticsearch(esg_reports_csv_dir, filename, es, es_idx_name, embedding_model):
         if filename.endswith('.csv'):
             # Load the CSV file into a pandas DataFrame
@@ -74,6 +76,9 @@ def upload_one_csv_to_elasticsearch(esg_reports_csv_dir, filename, es, es_idx_na
             # Bulk index the data into Elasticsearch
             helpers.bulk(es, actions) 
 
+#%%
+# =============== Function uploads all CSV files into ElasticSearch ===============
+# uploads all CSV files present into ElasticSearch
 def esg_csv_to_elasticsearch(esg_reports_csv_dir, es, es_idx_name, embedding_model):
     index_mapping = {
         "properties": {

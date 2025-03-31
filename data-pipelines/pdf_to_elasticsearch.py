@@ -8,6 +8,11 @@ import sparknlp
 from elasticsearch import Elasticsearch
 from sentence_transformers import SentenceTransformer
 
+'''
+Pipeline to convert PDF files into text chunks
+and upload onto Elasticsearch
+'''
+
 # Load the environmental variables
 load_dotenv()
 SERVICE_ACCOUNT_FILE = os.getenv('SERVICE_ACCOUNT_FILE')

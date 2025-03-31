@@ -6,6 +6,11 @@ from sentence_transformers import SentenceTransformer
 from newsapi import NewsApiClient
 from elasticsearch import Elasticsearch
 
+'''
+Given a list of companies and a start and end date,
+scrape for relevant data using NewsAPI and store as CSV.
+Uploads CSV files onto ElasticSearch afterwards
+'''
 load_dotenv()
 
 LST_OF_COMPANIES = ["Citigroup", "Banco-Santander", "BOQ", "DBS", "HSBC",

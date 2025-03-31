@@ -1,5 +1,5 @@
-.env
-data/
-esg_gdrive_to_local/dsa3101-ay2425-gsvc-acc.json
-spark-jobs-input/
-spark-jobs-output/
+**/*.pdf
+**/*.json
+**/*.csv
+**/*.env
+**/__pycache__/

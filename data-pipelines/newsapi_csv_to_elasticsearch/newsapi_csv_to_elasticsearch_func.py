@@ -26,6 +26,7 @@ def create_index(es, index_name, index_mapping):
     except Exception as e:
         print(f"Error creating index '{index_name}': {str(e)}")
 
+# Since scraped data is stored as CSV, uploads 1 CSV into ElasticSearch at a time
 def upload_one_csv_to_elasticsearch(external_data_csv_dir, filename, es, es_idx_name, embedding_model):
         if filename.endswith('.csv'):
             # Load the CSV file into a pandas DataFrame
@@ -70,6 +71,7 @@ def upload_one_csv_to_elasticsearch(external_data_csv_dir, filename, es, es_idx_
             # Bulk index the data into Elasticsearch
             helpers.bulk(es, actions)
 
+# Uploads all CSV onto elasticsearch
 def external_data_csv_to_elasticsearch(external_data_csv_dir, es, es_idx_name, embedding_model):
     index_mapping = {
         "properties": {

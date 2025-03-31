@@ -2,6 +2,7 @@ import re
 import os
 import json
 
+# Obtains data from ESG reports which was previously stored as JSON
 def obtain_esg_report_json_data(rag_output_path, rag_output_filename):
     # Check if the rag_output.json file exists
     if os.path.exists(f"{rag_output_path}/{rag_output_filename}"):
@@ -12,13 +13,13 @@ def obtain_esg_report_json_data(rag_output_path, rag_output_filename):
 
 def get_embeddings(text, embedding_model):
     try:
-        # Create embeddings and convert to list from as needed by Elasticsearch
         return embedding_model.encode(text).tolist()
     except Exception as e:
         print(f"Error fetching embeddings for text: {text}. Error: {str(e)}")
         return None
     
 def knn_search(es, query, index_name, embedding_model, k = 5):
+    # Converts report chunk to be evaluated into embeddings
     query_embedding = get_embeddings(query, embedding_model)
 
     search_query = {
@@ -34,13 +35,15 @@ def knn_search(es, query, index_name, embedding_model, k = 5):
         "_source": ["title", "url", "content"]  # return these fields
     }
 
+    # Search for top 5 best external information as context chunks for cross validation
     response = es.search(index=index_name, body=search_query)
     return response
 
-# combine most relevant content together
+# combine most relevant retrieved context together
 def combine_content(response):
     return "\n\n".join([hit["_source"]["content"] for hit in response['hits']['hits']])
 
+# performs fact check between report chunk and the top 5 information
 def fact_check(factcheck_llm, es, index_name, embedding_model, query, confidence=True):
     retrieved_context = knn_search(es, query, index_name, embedding_model)
     combined_text = combine_content(retrieved_context)

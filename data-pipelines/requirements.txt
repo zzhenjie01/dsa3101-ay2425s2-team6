@@ -1,16 +1,19 @@
-langchain-core==0.3.37 # langchain dependencies
-langchain-community==0.3.17
-langchain-ollama==0.2.3 # for langchain integration with Ollama
-langchain-elasticsearch==0.3.2 # for langchain integration with Elasticsearch
-pypdf==5.3.0
-python-dotenv==1.0.1
+pandas==2.2.3
+elasticsearch
 google-api-python-client==2.157.0
 google-auth-httplib2==0.2.0
 google-auth-oauthlib==1.2.1
 pyspark==3.5.4
 spark-nlp==5.5.3
-ipykernel==6.29.4
+python-dotenv==1.0.1
+langchain-core==0.3.49 # langchain dependencies
+langchain-community==0.3.17
+langchain-ollama==0.2.3 # for langchain integration with Ollama
+langchain-elasticsearch==0.3.2 # for langchain integration with Elasticsearch
+pypdf==5.3.0
+beautifulsoup4==4.13.3
+requests==2.32.3
 sentence-transformers==3.4.1
-pandas==2.2.3
+newsapi-python==0.2.7
 fastapi==0.115.11
 uvicorn==0.34.0

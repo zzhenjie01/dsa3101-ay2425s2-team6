@@ -48,6 +48,15 @@ uvicorn esg_extraction_model_endpoint:app
 so that the chatbot has an endpoint to call to.
 
 To use other features in this app, head over to their respective folders and read their README.md
+6) start the frontend using the follow commands in `frontend/`:
+```
+npm install
+```
+and
+```
+npm run dev
+```
+to start in development mode
 
 ## 🧊 Contributing
 

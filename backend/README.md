@@ -47,6 +47,11 @@ Head over to `docker/` and run the following command:
 ```
 docker compose up -d
 ```
+Within `docker/` folder, copy the stocks data csv `companies_stock_price_data.csv` into the PSQL container using the following command:
+```
+docker cp ./companies_stock_price_data.csv postgres:/var/lib/postgresql/data
+```
+
 Ensure that inside your `docker/` folder, you already have the following variables in the .env folder inside `docker/` folder:
 ```
 MONGODB_USERNAME=root

@@ -31,3 +31,15 @@ Details regarding the set-up of the Frontend Application can be found in the pro
   - `index.css` file: Contains the global css configurations for our Web Application
   - `main.jsx` file: Contains the root of our Web Application
   - `Routes.jsx` file: Sets up all the Routes for the various pages of our Web Application
+
+## Instructions to use app:
+Have node.js and npm package manager
+
+1) Install frontend dependencies from package.json by running the following command in current directory
+```
+npm install
+```
+2) Start the app in development mode using the following command in current directory:
+```
+npm run dev
+```

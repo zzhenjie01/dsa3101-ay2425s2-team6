@@ -3,6 +3,10 @@ from langchain_ollama.llms import OllamaLLM
 from langchain_core.output_parsers import StrOutputParser
 from pydantic import BaseModel
 
+'''
+Script contains helper functions for the 
+QnA API endpoint
+'''
 class Question(BaseModel):
     question: str
 

@@ -96,6 +96,10 @@ def chatbot(req: ChatRequest):
     return JSONResponse(content=response_dict)
 
 "=============================================================="
+'''
+API endpoint that can be called via a POST request and extract
+ESG metrics given a company name, requested metric and report year
+'''
 
 @app.post("/esg-data-extraction-model/extract-esg-metrics")
 def esg_metrics(req: MetricRequest):
@@ -124,6 +128,12 @@ def esg_metrics(req: MetricRequest):
     return JSONResponse(content=response_dict)
 
 "=============================================================="
+
+'''
+Generic API endpoint that can be called via a POST request.
+Takes a question as an input. More generic than chatbot.
+One use case we have is that it is used in test case evaluation.
+'''
 
 @app.post("/esg-data-extraction-model/question-and-answer")
 def esg_metrics(req: Question):

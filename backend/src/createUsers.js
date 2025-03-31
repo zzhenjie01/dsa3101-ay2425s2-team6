@@ -182,7 +182,7 @@ export const createUsers = async () => {
       }
 
       // Insert into click transactions table 1 time for the 5th company
-      for (var i = 0; i < 3; i++) {
+      for (var i = 0; i < 1; i++) {
         pgPool.query(
           `
         INSERT INTO click_transactions

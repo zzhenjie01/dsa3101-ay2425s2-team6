@@ -5,6 +5,11 @@ import json
 import re
 from pydantic import BaseModel
 
+
+'''
+Script contains helper functions for ESG metric extraction
+API endpoint
+'''
 class MetricRequest(BaseModel):
     company_name: str = None
     esg_metric: str
@@ -60,7 +65,6 @@ def parse_llm_output(llm_output):
     Output:
         extracted_value (str): The extracted value from the LLM output which is the ESG metric value
     '''
-    # print(llm_output)
 
     # Use regex to capture everything from the first '{' to the corresponding '}' in the LLM output
     # This will extract the JSON object from the LLM output

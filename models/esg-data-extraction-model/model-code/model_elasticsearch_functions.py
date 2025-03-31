@@ -154,6 +154,11 @@ def hybrid_search(es, index_name, embedding_model, query: str, lexical_top_k: in
     combined_results = reciprocal_rank_fusion(lexical_hits, semantic_hits, k=60)
     return combined_results
 
+'''
+Function helps to retrieved relevant fields from the chunk
+obtained from ElasticSearch to be used in the future by the 
+API endpoints. It is a helper function to refactor code in API endpoint.
+'''
 def obtain_relevant_fields_from_context_chunk(retrieved_chunk):
     retrieved_context = retrieved_chunk['text_chunk']
     # Get the retrieved context's company name and report year

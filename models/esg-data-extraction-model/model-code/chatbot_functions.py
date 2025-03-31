@@ -4,6 +4,9 @@ from langchain_core.output_parsers import StrOutputParser
 from pydantic import BaseModel
 from typing import List
 
+'''
+This script contains helper functions for chatbot API endpoint
+'''
 class ChatMessage(BaseModel):
     sender: str
     text: str

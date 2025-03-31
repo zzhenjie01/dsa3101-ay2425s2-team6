@@ -1,3 +1,0 @@
-# Context
-
-This folder contains files for all react context hooks

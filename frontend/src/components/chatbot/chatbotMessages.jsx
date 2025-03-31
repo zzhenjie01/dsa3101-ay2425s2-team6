@@ -47,7 +47,7 @@ export default function ChatbotMessages({ sendMessage }) {
 
     try {
       // Send API request to backend
-      const response = await axios.post("http://localhost:8000/chatbot", {
+      const response = await axios.post("http://localhost:8000/esg-data-extraction-model/chatbot", {
         message: input,
         history: messages,
       });

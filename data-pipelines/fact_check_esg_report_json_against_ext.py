@@ -50,4 +50,4 @@ validation_df = pd.DataFrame(validation_lst, columns = ['company', 'year', 'metr
                                                         'llm_response_from_esg_report', 
                                                         'external_data', 'is_factually_true', 'confidence_score'])
 
-validation_df.to_csv(f'{ESG_REPORT_VAL_AGAINST_EXT_DATA_FOLDER}/{ESG_REPORT_VAL_AGAINST_EXT_DATA_FILENAME}.csv', index = False)
+validation_df.to_csv(f'{ESG_REPORT_VAL_AGAINST_EXT_DATA_FOLDER}/{ESG_REPORT_VAL_AGAINST_EXT_DATA_FILENAME}', index = False)

@@ -42,7 +42,7 @@ def main():
         if filename.endswith('.csv'):
             # Get the company name and report year from the CSV file name
             report_year = filename.split('_')[0]
-            company_name = filename.split('_')[1].replace('-', ' ')
+            company_name = filename.split('_')[1].replace('-', ' ').lower()
             
             # Iterate through the ESG metrics
             for esg_metric in esg_metrics:

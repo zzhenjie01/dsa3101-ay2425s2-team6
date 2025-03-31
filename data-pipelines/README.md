@@ -1,59 +1,83 @@
 # Overview of `data-pipelines` folder
 
 This folder contains scripts to run data pipelines.
+To avoid error, create the following folders as shown below:
+```
+data-pipelines/
+├── data/
+│   ├── esg-data-against-external-eval/
+│   ├── esg-json/
+│   ├── esg-metric/
+│   ├── esg-pdf/
+│   ├── esg-spark-process-csv/
+│   └── external-esg-data-csv/
+```
+`data/` folder contains **MOST** of the raw data + data outputs for the entire project.
+Missing:
+1) ESG model evaluation by test case results
+2) Stocks prediction data (should be in the `docker/` folder as it needs to be copied and fed into PSQL container subsequently via
+```
+docker cp ./companies_stock_price_data.csv postgres:/var/lib/postgresql/data
+```
+3) sample ESG data to be fed into our dashboards in `frontend/esg_data.json`
 
-This folder is supposed to contain a `data/` subfolder
-which holds all the data when working locally.
+We have 4 pipelines in total:
+1) `pdf_to_elasticsearch.py`: Converts raw PDF files **named in our convention** stored in our google drive into text chunks and uploaded onto ElasticSearch. Code has the following outputs in the following directories:
+- PDF file downloaded locally in `esg-pdf/` with the format: <report_year>_<company_name>_ESG_Report.pdf
+- JSON file containing PDF data at a page level found in `esg-json/`
+- CSV file containing smaller text chunks found in `esg-spark-process-csv` produced by sparkNLP
 
-Within `data/` subfolder, we should have the following after running the scripts
+Pipeline for `pdf_to_elasticsearch.py`:
+Google Drive (Simulating Amazon S3) -> PDF locally -> JSON -> CSV -> ElasticSearch
 
-1) `esg-pdf/`
-2) `esg-json/`
-3) `esg-csv/`
-4) `rag-output/`
+2) `generate_esg_metrics_json.py`
+Based on PDF reports stored in ElasticSearch, generate stated metrics for given companies and outputs in `esg-metric/` as `rag_output.json`
+Generation of this requires the model API endpoint to be active. Refer to README.md in `models/` to find out more.
 
-# Using this spark docker image
+3) `newsapi_to_elasticsearch.py`
+Using NewsAPI, scrape ESG data for selected companies within a given time period and produces a .csv file for each company in the following format: scraped_data_<company_name>_<start_date>_to_<end_date>.csv which will be stored in `external-esg-data-csv/`. After creating these .csv files, uploads them onto ElasticSearch
 
-This spark image uses Python3.10 and Java 11 to support SparkNLP.
-Pre-requisite to running docker commands is to have docker in the system.
-Install Docker Desktop to simplify the set up process. Leave Docker Desktop running in the background.
+4) `fact_check_esg_report_json_against_ext.py`
+Given `rag_output.json` within `esg-metric/` folder, for each output, run a cross validation with external data that is already stored in ElasticSearch. After processing, produces output in `esg-data-against-external-eval/` folder.
 
-To start using this spark image:
-1) be in the spark-docker/ directory and run `docker build -t my-spark-image .`. Running this for the first time will take awhile.
-2) Once the image has been successfully built, run `docker compose up -d` to start up the spark cluster with a default of 1 worker. Use the --scale tag to increase the number of workers. Example: `docker compose up -d scale spark-worker=3`.
-3) Docker compose automatically creates the folders spark-jobs-input/ and spark-jobs-output/. These folders are linked to the Docker environment via bind mounts. Add .py files into spark-jobs-inputs/ before submitting them for processing.
-4) To submit a task (let's say theres a `test.py` file in spark-jobs-input/), run `docker exec spark-master spark-submit --master spark://spark-master:7077 input-task/test.py`.
-This is because spark-jobs-input/ on the local desktop is bound to the input-task/ folder. If an output is generated, do use the following relative path: output-task/<file_name>.
-Example: `pandas_df.to_csv("output-task/sampleOutput.csv", header = False)`
+## Prequisites
+1) Ollama desktop with llama:3.2 pulled
+```
+ollama pull llama3.2
+```
+2) Docker desktop to run ElasticSearch container
+3) Python library dependencies within `requirements.txt` found in this directory
+```
+pip install -r requirements.txt
+```
+4) [**Python 3.10.x**](https://www.python.org/downloads/)
+  - Python >= 3.11.x may not work well with Spark NLP since the library is poorly maintained.
+5) [**Java 11**](https://www.oracle.com/sg/java/technologies/downloads/#java11)
+  - Needed for Apache Spark, PySpark and Spark NLP
+  - Although Apache Spark supports Java 8, 11, 17, Spark NLP only supports Java 8 and 11.
+  - For Java 8, older versions of it might not be supported.
+  - Thus, Java 11 is the choice for this project.
+6) [**Apache Spark**](https://spark.apache.org/downloads.html)
+  - We have only tested up to version 3.5.4
+  - For future versions, may need to manually check if it is compatible with both PySpark and SparkNLP
+  - Needed for PySpark and Spark NLP
+> [!NOTE]
+>
+> - The installation of Docker Desktop should be straightforward just by clicking the link and following the official Download instructions.
+> - For installation of Java 11 and Apache Spark, can refer to this [Article](https://medium.com/@deepaksrawat1906/a-step-by-step-guide-to-installing-pyspark-on-windows-3589f0139a30) and follow through.
+> - Note that in the article, they mentioned about downloading `winutils.exe` from a [GitHub repo](https://github.com/steveloughran/winutils).
+>   However, there are many versions.
+>   To pick the correct one, take note of "Choose a package type:" when downloading Apache Spark. For example, in the image below, it shows 3.3.
+>   Thus, we should download `winutils.exe` from the `hadoop-3.0.0/bin` [folder](https://github.com/steveloughran/winutils/tree/master/hadoop-3.0.0/bin).
+>   ![Apache_Hadoop_Version](./attachments/Apache_Hadoop_Version.png)
 
-# Convert ESG reports locally from pdf to json
+> [!IMPORTANT]
+>
+> - It is important to set the various system environment variables (`JAVA_HOME`, `SPARK_HOME`, `HADOOP_HOME`) and add their binary folders (`/bin/`) to system PATH, as stated in the article.
+> - To prevent `Py4JJavaError` when using Spark, we need to set a few extra system environment variables.
+> - Go to "Edit the system environment variables" on Windows and create new environment variables (`PYTHON_DRIVER_PYTHON`, `PYSPARK_PYTHON`, `SPARK_LOCAL_HOME`)
+>   and set their values as (`python`, `python`, `127.0.0.1`) respectively and save it. See images below for more details.
+>   ![Extra_Env_Var_1](./attachments/Extra_Env_Var_1.png) > ![Extra_Env_Var_2](./attachments/Extra_Env_Var_2.png) > ![Extra_Env_Var_3](./attachments/Extra_Env_Var_3.png)
 
-Loading files from .pdf format can be time consuming so
-we perform a 1 time processing to convert it to `.json` so that it is easier to load
-in the future
 
-To run the scripts, you need the following:
-
-1) `.env` file containing `ESG_REPORTS_FOLDER` (path to the folder containing the esg reports in .pdf)
-2) Same .env file containing `ESG_REPORTS_JSON_FOLDER` (path to the folder containing the esg reports in .json)
-3) The necessary dependencies: run `pip install -r requirements.txt` where `requirements.txt` is in `data-pipelines/` folder
-
-Once the pre-requisites are met,
-run `python esg_pdf_to_json.py`
-where command needs to be run within the folder containing `esg_pdf_to_json.py`
-
-# Downloads ESG reports from our google drive to local
-
-This is to ensure that we are aligned on the reports that we are working on
-in the absence of cloud services to store our reports.
-
-To run the scripts, you need the following:
-
-1) `.env` file containing `SERVICE_ACCOUNT_FILE` (path to service account key in JSON)
-2) Same `.env` file containing `SERVICE_ACCOUNT_SCOPES`(comma separated if more than 1)
-3) Within the same `.env` file, the destination folder (`DEST_FOLDER`) to hold your ESG reports locally (must end with `/`)
-4) The necessary dependencies: run `pip install -r requirements.txt` where `requirements.txt` is in `data-pipelines/` folder.
-
-Once the pre-requisites are met,
-run `python esg_gdrive_to_local.py`
-where command needs to be run within the folder containing `esg_gdrive_to_local.py`
+## Specific information for each pipeline batch scripts:

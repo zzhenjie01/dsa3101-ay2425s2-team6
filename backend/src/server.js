@@ -7,6 +7,7 @@ import clicksRouter from "./api/routes/clickRoutes.js";
 import companyRouter from "./api/routes/companyRoutes.js";
 import setupMongoDB from "./mongoDB.js";
 import setupPG from "./pgDB.js";
+import createUsers from "./createUsers.js";
 
 /*
 Sets up all the backend services:
@@ -34,6 +35,9 @@ setupMongoDB();
 
 // Create all necessary tables in psql
 setupPG();
+
+// Creates all the samples users in both databases
+createUsers();
 
 // initialise express server
 const port = process.env.PORT;

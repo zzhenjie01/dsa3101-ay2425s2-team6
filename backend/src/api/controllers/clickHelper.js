@@ -46,7 +46,9 @@ export const getAllUserTopCompanies = async () => {
       user_id,
       max(CASE WHEN company_rank = 1 THEN company_name ELSE null end) AS first_company,
       max(CASE WHEN company_rank = 2 THEN company_name ELSE null end) AS second_company,
-      max(CASE WHEN company_rank = 3 THEN company_name ELSE null end) AS third_company
+      max(CASE WHEN company_rank = 3 THEN company_name ELSE null end) AS third_company,
+      max(CASE WHEN company_rank = 4 THEN company_name ELSE null end) AS fourth_company,
+      max(CASE WHEN company_rank = 5 THEN company_name ELSE null end) AS fifth_company
       FROM 
         (SELECT
         user_id,

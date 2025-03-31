@@ -8,6 +8,47 @@ This repository contains the code, documentation, and resources for Group 6 of t
 
 This project aims to design an automated ESG data extraction and performance evaluation system through the use of Natural Language Processing techniques.
 
+## Key features
+1) Web app to display ESG data (`frontend/`, `backend/`)
+- Dashboard to show ESG data by company
+- Leaderboard to compare companies
+- Built in recommendation to tailor views to users
+2) ESG data extraction model (`models/`, `data-pipelines/`)
+- Web scrape ESG data (`data-pipelines/`)
+- Model Evaluator (fo ESG data extraction model) (`models/`)
+3) LSTM stocks price forecasting model (`models/`)
+
+## Brief instructions to use the web app fully
+1) Head over to `docker/` and run the following command to start all the necessary docker containers using the following command:
+```
+docker compose up -d
+```
+2) Copy stocks data into PSQL using the following command in `docker/`
+```
+docker cp ./companies_stock_price_data.csv postgres:/var/lib/postgresql/data
+```
+3) go to `backend/` to run
+```
+npm install
+```
+followed by
+```
+node src/server.js
+```
+If it does not run, remember to create root user for mongoDB. (Refer to README.md in `backend/` for more information)
+4) go to `data-pipelines/` and run
+```
+python pdf_to_elasticsearch.py
+```
+so that the chatbot has ESG data to retrieve
+5) go to `models/esg-data-extraction-model/model-code/` and run
+```
+uvicorn esg_extraction_model_endpoint:app
+```
+so that the chatbot has an endpoint to call to.
+
+To use other features in this app, head over to their respective folders and read their README.md
+
 ## 🧊 Contributing
 
 All contributions are to be merged to main via pull request.

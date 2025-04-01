@@ -89,7 +89,7 @@ Important note for mongoDB:
    ![Use Admin Database](./attachments/MongoDB_Use_Admin.png)
 
    ```shell
-   db.createUser({user: MONGODB_USERNAME, pwd: MONGODB_PASSWORD, roles:["root"]})
+   db.createUser({user: <MONGODB_USERNAME>, pwd: <MONGODB_PASSWORD>, roles:["root"]})
    ```
 
    Example:
@@ -106,7 +106,7 @@ npm install
 node src/server.js
 ```
 
-The backend server should start up
+The backend server should start up. It may seem like it is hanging (cursor not blinking) but it is normal. For subsequent tasks, open a new terminal and don't touch this terminal once it is started up.
 
 
   

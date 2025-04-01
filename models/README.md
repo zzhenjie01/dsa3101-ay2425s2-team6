@@ -5,7 +5,7 @@ We mainly have 2 models in our project:
 1) **ESG Data Extraction Model**
 2) **LSTM Model for stock price forecasting**
 
-## Prequisites
+## Pre-Requisites
 
 - [Ollama](https://ollama.com/download) desktop installed, running in background and with Llama 3.2 pulled
 

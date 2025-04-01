@@ -224,7 +224,7 @@ Once done you are done exploring the web app, press `Ctrl + C` in all the termin
 > An example: https://stackoverflow.com/questions/54922433postgresql-fatal-the-database-system-is-starting-up-windows-10
 
 >[!Note]
-> **Features not covered in the above guide. Please refer to the individual documentations for more details.
+> The following features are not covered in the above guide. Please refer to the individual documentations for more details.
 >
 > - Generating ESG metrics using ESG extraction model (under ['data-pipelines/`](data-pipelines/README.md))
 > - Scraping external data from NewsAPI (under ['data-pipelines/`](data-pipelines/README.md))

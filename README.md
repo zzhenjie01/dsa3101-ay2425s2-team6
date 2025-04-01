@@ -226,11 +226,11 @@ Once done you are done exploring the web app, press `Ctrl + C` in all the termin
 >[!Note]
 > The following features are not covered in the above guide. Please refer to the individual documentations for more details.
 >
-> - Generating ESG metrics using ESG extraction model (under ['data-pipelines/`](data-pipelines/README.md))
-> - Scraping external data from NewsAPI (under ['data-pipelines/`](data-pipelines/README.md))
-> - Fact checking of ESG report data against external data (under ['data-pipelines/`](data-pipelines/README.md))
-> - Evaluating ESG extraction model (under [`models/](models/README.md))
-> - Using LSTM forecasting model (under [`models/`](models/README.md))
+> - Generating ESG metrics using ESG extraction model (under [`data-pipelines/`](data-pipelines/))
+> - Scraping external data from NewsAPI (under [`data-pipelines/`](data-pipelines/))
+> - Fact checking of ESG report data against external data (under [`data-pipelines/`](data-pipelines/))
+> - Evaluating ESG extraction model (under [`models/`](models/))
+> - Using LSTM forecasting model (under [`models/`](models/))
 
 ## 📋 Documentations
 

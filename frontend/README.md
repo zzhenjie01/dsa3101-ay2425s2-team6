@@ -32,14 +32,20 @@ Details regarding the set-up of the Frontend Application can be found in the pro
   - `main.jsx` file: Contains the root of our Web Application
   - `Routes.jsx` file: Sets up all the Routes for the various pages of our Web Application
 
-## Instructions to use app:
-Have node.js and npm package manager
+## Instructions to use Web App:
 
-1) Install frontend dependencies from package.json by running the following command in current directory
-```
-npm install
-```
-2) Start the app in development mode using the following command in current directory:
-```
-npm run dev
-```
+Have `Node.js` and `npm` package manager installed.
+
+1. Install frontend dependencies from `package.json` by running the following command in current directory
+
+    ```shell
+    npm install
+    ```
+
+2. Start the app in development mode using the following command in current directory
+
+    ```shell
+    npm run dev
+    ```
+
+3. Once done using make sure to `Ctrl+C` in terminal to exit

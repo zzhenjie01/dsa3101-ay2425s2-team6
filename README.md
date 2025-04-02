@@ -139,7 +139,7 @@ ollama pull llama3.2
 
 ### 5. Initializing Containers
 
-Make sure Docker Desktop is running in the background. Run the following command in terminal to pull and start all the necessary containers (MongoDB, PostgreSQL, Elasticsearch)
+Make sure Docker Desktop is running in the background and you are in `docker/`. Run the following command in terminal to pull and start all the necessary containers (MongoDB, PostgreSQL, Elasticsearch)
 
 ```shell
 docker compose up -d

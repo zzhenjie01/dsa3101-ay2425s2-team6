@@ -88,7 +88,7 @@ Given `rag_output.json` within `esg-metric/` folder, for each output, run a cros
 >
 > - It is important to set the various system environment variables (`JAVA_HOME`, `SPARK_HOME`, `HADOOP_HOME`) and add their binary folders (`/bin/`) to system PATH, as stated in the article.
 > - To prevent `Py4JJavaError` when using Spark, we need to set a few extra system environment variables.
-> - Go to "Edit the system environment variables" on Windows and create new environment variables (`PYTHON_DRIVER_PYTHON`, `PYSPARK_PYTHON`, `SPARK_LOCAL_HOME`) and set their values as (`python`, `python`, `127.0.0.1`) respectively and save it.
+> - Go to "Edit the system environment variables" on Windows and create new environment variables (`PYTHON_DRIVER_PYTHON`, `PYSPARK_PYTHON`, `SPARK_LOCAL_IP`) and set their values as (`python`, `python`, `127.0.0.1`) respectively and save it.
 > The images below shows how to do it on Windows OS but the concept is same for MacOS and Linux.
 > ![Extra_Env_Var_1](./attachments/Extra_Env_Var_1.png)
 > ![Extra_Env_Var_2](./attachments/Extra_Env_Var_2.png)

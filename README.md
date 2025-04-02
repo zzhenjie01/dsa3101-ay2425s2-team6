@@ -1,5 +1,13 @@
 # 🤖 Automating ESG Data Extraction and Performance Analysis
 
+<p align="center">
+  <a href="https://youtu.be/Ydsxn9lWF8I">
+    <img alt="Static Badge" src="https://img.shields.io/badge/Video%20Walkthrough-%23FF0000?logo=youtube">
+  </a>
+</p>
+
+---
+
 ## Repository Description
 
 This repository contains the code, documentation, and resources for Group 6 of the NUS course DSA3101: Data Science in Practice for the AY24/25 Semester 2.

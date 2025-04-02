@@ -240,7 +240,7 @@ Once done you are done exploring the web app, press `Ctrl + C` in all the termin
 - [Frontend](frontend/README.md)
 - [Models](models/README.md)
 
-## Ports Used
+## 🔌 Ports Used
 
 Do not clash these ports as they are mainly TCP in nature
 

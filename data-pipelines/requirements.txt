@@ -3,7 +3,7 @@ elasticsearch
 google-api-python-client==2.157.0
 google-auth-httplib2==0.2.0
 google-auth-oauthlib==1.2.1
-pyspark==3.5.4
+pyspark
 spark-nlp==5.5.3
 python-dotenv==1.0.1
 langchain-core==0.3.49 # langchain dependencies

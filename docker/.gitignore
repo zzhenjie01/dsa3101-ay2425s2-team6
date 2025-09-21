@@ -2,3 +2,4 @@
 mongodb_data/
 pgdata/
 .DS_Store
+*.tgz

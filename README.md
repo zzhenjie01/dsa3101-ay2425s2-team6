@@ -156,7 +156,7 @@ uv pip install -r requirements.txt
 
 ### 4. Building Spark Docker Image
 
-`cd` into `docker/spark-docker-single` folder and make sure Docker Desktop is running in the background. Then, build the spark image from the docker file.
+`cd` into `docker/spark-docker-single` folder and make sure Docker Desktop is running in the background. Download the Spark 3.3.5 tarball file from [Spark Archive](https://archive.apache.org/dist/spark/spark-3.5.5/spark-3.5.5-bin-hadoop3.tgz) and put it in this directory. The reason is that downloading it via `curl` or `wget` in the Dockerfile is slow compared to browser due to Spark Archives putting in DDoS protection measures. Then, build the spark image from the Dockerfile.
 
 ```bash
 docker build -t docker-spark:3.5.5 .

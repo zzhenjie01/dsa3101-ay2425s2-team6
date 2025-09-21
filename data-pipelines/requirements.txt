@@ -1,9 +1,9 @@
 pandas==2.2.3
-elasticsearch
+elasticsearch==8.17.1
 google-api-python-client==2.157.0
 google-auth-httplib2==0.2.0
 google-auth-oauthlib==1.2.1
-pyspark
+pyspark==3.5.5
 spark-nlp==5.5.3
 python-dotenv==1.0.1
 langchain-core==0.3.49 # langchain dependencies
@@ -17,3 +17,4 @@ sentence-transformers==3.4.1
 newsapi-python==0.2.7
 fastapi==0.115.11
 uvicorn==0.34.0
+cryptography==46.0.1

@@ -1,6 +1,6 @@
 services:
   mongodb:
-    image: mongo:latest
+    image: mongo:8.0.13
     container_name: mongodb
     ports:
       - "27017:27017"
@@ -10,9 +10,9 @@ services:
     volumes:
       - ./mongodb_data:/data/db
     networks:
-      - mongo_network
+      - app_network
   postgres:
-    image: postgres:latest
+    image: postgres:16.10
     container_name: postgres
     ports:
       - "5678:5432"
@@ -22,7 +22,7 @@ services:
     volumes:
       - ./pgdata:/var/lib/postgresql/data
     networks:
-      - postgres_network
+      - app_network
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.17.1
     container_name: elasticsearch
@@ -34,58 +34,40 @@ services:
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
     networks:
-      - elastic
-  # spark-master:
-  #   container_name: spark-master
-  #   image: my-spark-image
-  #   entrypoint: ['./entrypoint.sh', 'master']
-  #   healthcheck:
-  #     test: [ "CMD", "curl", "-f", "http://localhost:8080" ]
-  #     interval: 5s
-  #     timeout: 3s
-  #     retries: 3
-  #   volumes:
-  #     - ./spark-jobs-input:/opt/spark/input-task
-  #     - ./spark-jobs-output:/opt/spark/output-task
-  #     - spark-logs:/opt/spark/spark-events
-  #   env_file:
-  #     - ./spark-docker/.env.spark
-  #   ports:
-  #     - '9090:8080'
-  #     - '7077:7077'
-
-  # spark-history-server:
-  #   container_name: spark-history
-  #   image: my-spark-image
-  #   entrypoint: ['./entrypoint.sh', 'history']
-  #   depends_on:
-  #     - spark-master
-  #   env_file:
-  #     - ./spark-docker/.env.spark
-  #   volumes:
-  #     - spark-logs:/opt/spark/spark-events
-  #   ports:
-  #     - '18080:18080'
-  # spark-worker:
-  #   image: my-spark-image
-  #   entrypoint: ['./entrypoint.sh', 'worker', '2', '4g']
-  #   depends_on:
-  #     - spark-master
-  #   env_file:
-  #     - ./spark-docker/.env.spark
-    # volumes:
-    #   - ./spark-jobs-input:/opt/spark/input-task
-    #   - ./spark-jobs-output:/opt/spark/output-task
-    #   - spark-logs:/opt/spark/spark-events
+      - app_network
+  ollama:
+    image: ollama/ollama:0.6.8
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - app_network
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    # Remove the GPU section if you don't have NVIDIA GPU
+  spark:
+    image: docker-spark:3.5.5
+    container_name: spark
+    ports:
+      - "4040:4040"  # Spark UI
+    volumes:
+      - ../data-pipelines:/app/data-pipelines
+    networks:
+      - app_network
 
 volumes:
   pgdata:
   mongodb_data:
   elasticsearch-data:
-  spark-logs:
+  ollama_data:
 
 networks:
-  mongo_network:
-  postgres_network:
-  elastic:
+  app_network:
     driver: bridge

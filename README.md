@@ -137,23 +137,46 @@ Head over to `data-pipelines/` and run the following command to install the pyth
 pip install -r requirements.txt
 ```
 
-### 4. Pulling LLM
+If using `uv`:
 
-Make sure Ollama is installed and running in the background. Open a terminal and run the following command to pull Llama 3.2 model.
+```bash
+uv venv --python 3.10
+```
 
-```shell
-ollama pull llama3.2
+```bash
+# On Windows
+.venv\Scripts\activate
+# On MacOS/Linux
+source .venv/bin/activate
+```
+
+```bash
+uv pip install -r requirements.txt
+```
+
+### 4. Building Spark Docker Image
+
+`cd` into `docker/spark-docker-single` folder and make sure Docker Desktop is running in the background. Then, build the spark image from the docker file.
+
+```bash
+docker build -t docker-spark:3.5.5 .
 ```
 
 ### 5. Initializing Containers
 
-Make sure Docker Desktop is running in the background and you are in `docker/`. Run the following command in terminal to pull and start all the necessary containers (MongoDB, PostgreSQL, Elasticsearch)
+Make sure Docker Desktop is running in the background and you are in `docker/`. Run the following command in terminal to pull and start all the necessary containers (MongoDB, PostgreSQL, Elasticsearch, Ollama, Spark)
 
 ```shell
 docker compose up -d
 ```
 
-### 6. Copy Stocks Data into PSQL
+### 6. Pulling LLM
+
+```bash
+docker exec -it ollama ollama pull llama3.2
+```
+
+### 7. Copy Stocks Data into PSQL
 
 Make sure you are in `docker/` folder. Run the following command in terminal to copy bank stocks data into PostgreSQL container.
 
@@ -161,7 +184,7 @@ Make sure you are in `docker/` folder. Run the following command in terminal to 
 docker cp ./companies_stock_price_data.csv postgres:/var/lib/postgresql/data
 ```
 
-### 7. Setting Up Backend
+### 8. Setting Up Backend
 
 Head over to `backend/` and run the following commands in terminal sequentially.
 
@@ -179,20 +202,55 @@ node src/server.js
 > [!NOTE]
 > Once the backend server starts running, do not touch the terminal. Open a new terminal for subsequent tasks.
 
-### 8. Indexing PDF Reports into Elasticsearch
+### 9. PDF to JSON
 
 First download the ESG PDF reports from [Google Drive](https://drive.google.com/drive/folders/1NXaHl4MyrZNW14tCktLxSYUmrs52NATD?usp=sharing) and place them at `data-pipelines/data/esg-pdf`.
 
-Open a new terminal and go to `data-pipelines/`. Run the following command to index the ESG PDFs into Elasticsearch so that the Chatbot has ESG data to retrieve.
+Open a new terminal and go to `data-pipelines/`. Run the following command to convert ESG PDFs into JSON format.
 
-```shell
-python pdf_to_elasticsearch.py
+```bash
+python esg_pdf_to_json/esg_pdf_to_json.py
 ```
 
-> [!CAUTION]
-> Depending on hardware, it may take a while (a few minutes) to finish running. Please wait patiently and do not exit.
+If using `uv`:
 
-### 9. Starting Model Endpoint
+```bash
+uv run esg_pdf_to_json/esg_pdf_to_json.py
+```
+
+### 10. JSON to CSV
+
+Make sure Docker and the containers are all running. Make sure you are in `data-pipelines`. Run the following to make use of Spark NLP to do keyword extraction.
+
+```bash
+# Enter the container
+docker exec -it spark bash
+
+# Navigate to your code directory
+cd /app/data-pipelines
+
+# Run the script
+python esg_json_to_csv/esg_json_to_csv.py
+
+# Exit Docker
+exit
+```
+
+### 11. Index CSV data to Elasticsearch
+
+Make sure you are in `data-pipelines/`. Run the following to index the text chunks into Elasticsearch so that chatbot can retrieve context for RAG.
+
+```bash
+python esg_csv_to_elasticsearch/esg_csv_to_elasticsearch.py
+```
+
+If using `uv`:
+
+```bash
+uv run esg_csv_to_elasticsearch/esg_csv_to_elasticsearch.py
+```
+
+### 12. Starting Model Endpoint
 
 Go to `models/esg-data-extraction-model/model-code/` and run the following in terminal. This allows the chatbot to have an endpoint to call to.
 
@@ -203,7 +261,7 @@ uvicorn esg_extraction_model_endpoint:app
 > [!NOTE]
 > Once the endpoint server starts running, do not touch the terminal. Open a new terminal for subsequent tasks.
 
-### 10. Starting the Frontend
+### 13. Starting the Frontend
 
 Open a new terminal and go to `frontend/`. Then run the following commands sequentially to install packages and run in development mode.
 6) start the frontend using the follow commands in `frontend/`:
@@ -222,7 +280,7 @@ Once the frontend is up, you you can go open a browser and paste the following t
 http://localhost:5173/
 ```
 
-### 11. Closing Web App
+### 14. Closing Web App
 
 Once done you are done exploring the web app, press `Ctrl + C` in all the terminals to exit. And you can go to Docker Desktop to stop all the containers.
 

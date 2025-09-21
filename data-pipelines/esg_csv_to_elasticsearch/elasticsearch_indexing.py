@@ -60,7 +60,7 @@ def upload_one_csv_to_elasticsearch(esg_reports_csv_dir, filename, es, es_idx_na
             actions = [
                 {
                     "_index": es_idx_name,
-                    "id": row['id'],
+                    "_id": row['id'],
                     "_source": {
                         "text_chunk": row['text_chunk'],
                         "tags": row['tags'],

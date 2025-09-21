@@ -51,7 +51,7 @@ The flow diagram below shows the flow of some of the main features but not all s
     - [**Node.js**](https://nodejs.org/en/download)
     
 > [!NOTE]
-> All the above softwares can be easily installed from the official website. For Apache Spark, it requires a few additional steps to setup correctly. Please refer to the `README.md` documentation at [`data-pipelines/`](data-pipelines/README.md) for more details.
+> Only Python 3.10, Docker Desktop, and Node.js needs to be installed locally. The rest of the services such as Spark, Ollama, PostgreSQL, MongoDB and Elasticsearch will run on Docker containers.
 
 ### 1. Cloning Repo
 
@@ -222,17 +222,26 @@ uv run esg_pdf_to_json/esg_pdf_to_json.py
 
 Make sure Docker and the containers are all running. Make sure you are in `data-pipelines`. Run the following to make use of Spark NLP to do keyword extraction.
 
+Enter the container:
+
 ```bash
-# Enter the container
 docker exec -it spark bash
+```
 
-# Navigate to your code directory
+Navigate to the data-pipelines directory:
+
+```bash
 cd /app/data-pipelines
+```
 
-# Run the script
+Run the script using `python` instead of `spark-submit` or else you need specify the Spark NLP package using `--packages` flag.
+
+```bash
 python esg_json_to_csv/esg_json_to_csv.py
+```
+Exit Docker:
 
-# Exit Docker
+```bash
 exit
 ```
 
